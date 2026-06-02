@@ -667,6 +667,10 @@ main::before {
         display: none !important;
     }
 
+    .left-part h1{
+      margin-top:25px !important;
+    }
+
     .mobile-nav-btn {
         display: flex;
         position: fixed;

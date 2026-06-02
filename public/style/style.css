@@ -64,7 +64,19 @@ h1 span{
     opacity:1;
 }
 
+.back-link{
+    color:black !important;
+    z-index:10;
+    left:25px;
+    top:25px;
+    text-decoration:none;
+    position:absolute;
+    
+}
 
+.back-link:hover{
+    text-decoration:underline
+}
 
 
 /* Ordinateur */

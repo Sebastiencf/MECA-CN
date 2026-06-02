@@ -959,6 +959,10 @@
         max-width:100%;
     }
 
+    .newsletter_form{
+        flex-wrap:wrap;
+    }
+
     .CTA-holder{
         display:flex;
         flex-direction:column;
@@ -972,7 +976,7 @@
         justify-content:flex-start;
         gap:10px;
         width:auto;
-        max-width:46%;
+        max-width:100%;
         border-radius:10px;
         background: linear-gradient(157deg,rgba(0, 63, 135, 1) 0%, rgba(0, 86, 179, 1) 100%);
         border:none;
@@ -1009,6 +1013,7 @@
         display: flex;
         gap: 16px;
         width: 100%;
+        flex-wrap:wrap;
     }
 
     .small-feature {

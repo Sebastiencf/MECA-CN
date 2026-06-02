@@ -13,8 +13,8 @@ main::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6); /* Un peu plus sombre pour le contraste */
-    z-index: 1;
+    background: rgba(255,255,255,0.8);
+    pointer-events: none;
 }
 
 .content-wrapper {
@@ -29,7 +29,9 @@ main::before {
 }
 
 /* --- Section Gauche --- */
-.left-part { color: white; }
+.left-part { 
+    color: black; 
+}
 
 .left-part h1 {
     font-size: 3.5rem;
