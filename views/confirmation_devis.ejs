@@ -51,7 +51,6 @@
     <% if (success) { %>
       var seconds = 5;
       var countdownEl = document.getElementById('countdown');
-
       var interval = setInterval(function () {
         seconds--;
         if (countdownEl) countdownEl.textContent = seconds;
