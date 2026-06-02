@@ -28,8 +28,6 @@
 }
 
 
-
-
 .modifierIcon{
     position:absolute;
     top:-18px;
@@ -72,9 +70,27 @@
         grid-template-columns: 1fr;
         padding: 40px 5%;
     }
+
+    .confirmer_modif{
+        padding-left:20% !important;
+    }
+
+    .top-part {
+        display: flex;
+        gap: 40px;
+        padding: 50px 0 !important;
+        align-items: center;
+        background: linear-gradient(135deg, #F1F5FD, #e4edfd);
+    }
+
+    .top-part > img{
+        width:80% !important;
+    }
+
+    .mission-holder > div:not(.confirmer_modif){
+        width:80% !important;
+    }
 }
-
-
 
 
 

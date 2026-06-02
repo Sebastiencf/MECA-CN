@@ -120,11 +120,16 @@ form a {
 
     input[type="text"],
     input[type="password"] {
-        max-width: 100%; /* Prend toute la largeur sur mobile */
+        max-width: 86%; /* Prend toute la largeur sur mobile */
     }
 
     button[type="submit"] {
-        width: 100%; /* Bouton plus facile à cliquer sur mobile */
+        width: 98%; /* Bouton plus facile à cliquer sur mobile */
+    }
+
+    .deconnexion{
+        width:85% !important;
+        text-align:center;
     }
 }
 
