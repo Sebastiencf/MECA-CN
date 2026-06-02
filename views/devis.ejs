@@ -702,8 +702,11 @@
     Calendar.prototype.drawHeader = function (e) {
       var headDay = document.getElementsByClassName("head-day");
       var headMonth = document.getElementsByClassName("head-month");
-      e ? (headDay[0].innerHTML = e) : (headDay[0].innerHTML = day);
-      headMonth[0].innerHTML = monthTag[month] + " - " + year;
+      
+      // Si un jour est sélectionné/passé en paramètre, on l'affiche proprement
+
+      
+      headMonth[0].innerHTML = monthTag[month] + " " + year;
     };
 
     Calendar.prototype.drawDays = function () {
@@ -750,14 +753,27 @@
       var todayMidnight = new Date();
       todayMidnight.setHours(0, 0, 0, 0);
 
+
+      // 1. Calculer la date limite (Aujourd'hui + 7 jours)
+      var minDeliveryDate = new Date(todayMidnight);
+      minDeliveryDate.setDate(minDeliveryDate.getDate() + 7); // Ajoute strictement 7 jours
+
       var dayOfWeek = clickedDate.getDay(); // ← maintenant clickedDate existe
+
+      
       if (dayOfWeek === 0 || dayOfWeek === 6) {
         showErrorModal("Jour non ouvrable", "Veuillez choisir un jour de semaine (lundi au vendredi).");
         return;
       }
 
-      if (clickedDate < todayMidnight) {
+      if (clickedDate <= todayMidnight) {
         showErrorModal("Date invalide", "La date sélectionnée ne peut pas être antérieure à aujourd'hui. Veuillez choisir une date future.");
+        return;
+        
+      }
+
+      if (clickedDate <= minDeliveryDate){
+        showErrorModal("Date invalide", "Nous ne pourrons pas répondre et réaliser vos pièces en moins d'une semaine. Veuillez choisir une date plus loingtaine.");
         return;
       }
 
@@ -794,12 +810,19 @@
     var calendar = new Calendar();
 
 
+
+
+
+
+
+
     // ── UPLOAD FICHIERS ──────────────────────────────────────────────
     var fileInput = document.getElementById("fichiers-input");
     var uploadBox = document.querySelector(".upload-box");
     var filePreview = document.getElementById("upload-files-preview");
     var uploadButton = document.querySelector(".upload-button");
     var selectedFiles = [];
+    var WARNING_FILE_SIZE = 30 * 1024 * 1024;
     var MAX_FILE_SIZE = 20 * 1024 * 1024;
     var MAX_TOTAL_SIZE = 250 * 1024 * 1024;
 
@@ -816,9 +839,19 @@
 
       files.forEach(function (file) {
         var ext = file.name.split(".").pop().toLowerCase();
-        if (ext === "zip") { errors.push("Les fichiers ZIP ne sont pas autorisés : " + file.name); return; }
-        if (file.size > MAX_FILE_SIZE) { errors.push("Fichier trop volumineux (> 20 Mo) : " + file.name); return; }
-        if (totalSize + file.size > MAX_TOTAL_SIZE) { errors.push("La taille totale dépasse 250 Mo avec : " + file.name); return; }
+        if (ext === "zip") { 
+          errors.push("Les fichiers ZIP ne sont pas autorisés : " + file.name); 
+          return; 
+        }
+
+        if (file.size > WARNING_FILE_SIZE) {
+            errors.push("Attention, notre boîte mail (orange) n'accepte pas directement les fichiers de plus de 30Mo. Afin de s'assurer du bon envoi de tout vos fichiers, nous vous conseillons de transformer les fichiers suivants en liens google drive : " + file.name) 
+        }
+        
+        if (totalSize + file.size > MAX_TOTAL_SIZE) { 
+          errors.push("La taille totale dépasse 250 Mo avec : " + file.name); 
+          return; 
+        }
         totalSize += file.size;
         filtered.push(file);
       });

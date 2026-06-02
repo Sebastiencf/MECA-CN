@@ -1148,3 +1148,172 @@ tbody td:hover, .selected {
 .tooltip-holder{
     display:flex;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   CALENDRIER COMPACT ET HARMONISÉ
+   ========================================================================== */
+.elegant-calencar {
+    width: 100%;
+    max-width: 20em; /* Réduit de 25em à 20em */
+    border: 1px solid #ebedf4;
+    border-radius: 24px; /* Harmonisé avec vos modales et cartes */
+    box-shadow: 0 10px 30px rgba(15, 38, 95, 0.05); /* Ombre plus douce */
+    text-align: center;
+    margin: 20px auto;
+    position: relative;
+    background: #fff;
+    overflow: hidden; /* Pour que l'en-tête suive l'arrondi du bloc */
+}
+
+#calendar-header-box {
+    height: 5.5em; /* Réduit drastiquement de 14em à 5.5em */
+    background-color: #0f4bb7;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1.5em;
+}
+
+.pre-button, .next-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); /* Centrage vertical parfait */
+    font-size: 1.6em; /* Plus discret que le 3em d'origine */
+    cursor: pointer;
+    width: 1.2em;
+    height: 1.2em;
+    line-height: 1.1em;
+    color: #fff;
+    transition: all 0.2s ease;
+    opacity: 0.8;
+}
+
+.pre-button:hover, .next-button:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.pre-button { 
+    left: 0.75em; 
+}
+.next-button { 
+    right: 0.75em; 
+}
+
+.head-info { 
+    margin: 0; 
+    width: auto; 
+    display: flex;
+    flex-direction: row-reverse; /* Aligne le jour après le mois si besoin, ou combiné */
+    align-items: center;
+    gap: 6px;
+}
+
+.head-day { 
+    margin: 0; 
+    font-size: 1.3rem; /* Réduit de 8em à une taille standard de titre */
+    font-weight: 700;
+}
+
+/* Ajout d'une virgule ou séparateur discret si le jour est affiché à côté */
+.head-day:not(:empty)::before {
+    content: " (";
+}
+.head-day:not(:empty)::after {
+    content: ")";
+}
+
+.head-month { 
+    margin: 0; 
+    font-size: 1.1rem; /* Ajusté de 2em à 1.1rem */
+    line-height: 1; 
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+#calendar { 
+    width: 92%; 
+    margin: 0 auto 15px; 
+    border-spacing: 0px; 
+}
+
+thead tr { 
+    color: #0f4bb7; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    font-size: 0.8rem;
+}
+
+thead th {
+    padding: 10px 0;
+}
+
+tbody td {
+    width: 14%;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 8px 0; /* Un poil plus serré */
+    font-size: 0.9rem;
+    color: #334155;
+}
+
+tbody td:hover, .selected { 
+    color: #fff !important; 
+    background-color: #0f4bb7 !important; 
+}
+
+#today { 
+    background-color: #fee2e2; 
+    color: #ef4444; 
+    font-weight: 700;
+    border-radius: 50%; 
+}
+
+#disabled { 
+    color: #cbd5e1; 
+    cursor: default; 
+}
+
+/* Ajustement pour la version mobile déjà présente dans vos media queries */
+@media (max-width: 900px) {
+    .elegant-calencar {
+        font-size: 0.85rem; /* Un peu moins minuscule que le 0.7rem qui devenait illisible */
+    }
+}

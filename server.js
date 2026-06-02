@@ -1038,7 +1038,7 @@ app.get("/admin/offres", isAdmin, async function (req, res) {
     const [categories] = await pool.query(
       "SELECT categorie, COUNT(*) AS nombre_offres FROM offres GROUP BY categorie",
     );
-
+    // console.log(offresResultat)
     res.render("admin/offres", {
       page_css1: "offres.css",
       page_css2: "headeradmin.css",
@@ -1545,11 +1545,7 @@ Sert pour la réalisation d'article
 -> lorsue l'utilisateur insère une image dans le CMS d'article, cette dernière est stockée temporairement dans le dossier /uploads/ 
 (via une config multer à retrouver en haut du server.js)
 */
-app.post(
-  "/api/upload-temp",
-  isAdmin,
-  uploadTemp.single("image"),
-  function (req, res) {
+app.post("/api/upload-temp", isAdmin, uploadTemp.single("image"), function (req, res) {
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -1571,18 +1567,12 @@ Récupère le contenu
 Trouve les images associées à ce contenu dans le dossier /uploads/ et les transfère vers le dossiers actus/ (/public/img/actus/)
 insère les données (dont le contenu) dans la bdd
 */
-app.post(
-  "/api/articles",
-  isAdmin,
-  uploadActu.single("presentation"),
-  async function (req, res) {
+app.post("/api/articles", isAdmin, uploadActu.single("presentation"), async function (req, res) {
     const { titre, baseline, contenu } = req.body;
     const presentation = req.file ? "/img/actus/" + req.file.filename : null;
 
     if (!titre || !contenu || !presentation || !baseline) {
-      return res
-        .status(400)
-        .json({
+      return res.status(400).json({
           success: false,
           message: "Tous les champs sont obligatoires.",
         });
@@ -1729,8 +1719,7 @@ app.post(
           });
         }
       }
-
-      res.json({ success: true });
+      res.status(200).json({ success: true, message: "Article publié." });
     } catch (err) {
       console.error("Erreur SQL :", err);
       res.status(500).json({ success: false, message: "Erreur serveur." });

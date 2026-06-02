@@ -6,10 +6,11 @@
     <div class="right-side">
         <h1>Rejoignez notre équipe !</h1>
         <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
-            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco 
-            laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate 
-            velit esse cillum dolore eu fugiat nulla pariatur. 
+            Vous souhaitez rejoindre une entreprise dynamique et participer à des projets concrets ? 
+            Découvrez nos opportunités de carrière et trouvez le poste qui correspond à vos compétences 
+            et à vos ambitions. Que vous soyez expérimenté ou en début de parcours, nous recherchons 
+            des personnes motivées, rigoureuses et prêtes à s'investir au sein de nos équipes. 
+            Consultez nos offres et construisez votre avenir professionnel à nos côtés.
         </p>
     </div>
 
@@ -83,13 +84,40 @@
                 <div class="main-infos-holder">
                     <%= element.intitule %>
 
-                    <div class="type-holder">
-                        <i class="fa-regular fa-newspaper" style="color: rgb(39, 34, 200);"></i>
-                        <p><%= element.type %></p>
+
+
+
+
+
+
+
+
+
+
+                    <div class="type-salary-holder">
+                        <% if (element.SalaireEnable == 1) { %>
+                            <div class="type-holder">
+                                <i class="fa-regular fa-newspaper" style="color: rgb(39, 34, 200);"></i>
+                                <p><%= element.type %></p>
+                            </div>
+                            <p class="salary"><%= element.salaire %></p>
+
+                        <% }  else { %>
+                            <div class="type-holder">
+                                <i class="fa-regular fa-newspaper" style="color: rgb(39, 34, 200);"></i>
+                                <p><%= element.type %></p>
+                            </div>
+                        <% } %>
+                        
                     </div>
                     <div class="localisation-holder">
                         <img src="/img/icons/localisation_gris.svg">
                         <p> <%= element.localisation %> </p>
+                    </div>
+                    <div class="time-holder">
+                        <p>
+                            <em>Offre publiée le <%= new Date(element.date_creation).toLocaleDateString('fr-FR') %> </em>
+                        </p>
                     </div>
                 </div>
                 <div class="button-holder">

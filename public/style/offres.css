@@ -169,7 +169,8 @@ body {
 }
 
 .type-holder,
-.localisation-holder {
+.localisation-holder,
+.time-holder {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -179,8 +180,23 @@ body {
     font-size: 14px;
 }
 
+.type-salary-holder{
+    display:flex;
+    flex-direction:column;
+}
+
+.salary{
+    margin-top:-5px;
+    font-size:0.8rem;
+    font-weight:normal;
+}
+
 .localisation-holder img {
     width: 16px;
+}
+.time-holder{
+    margin-top:-10px;
+    font-weight:bold;
 }
 
 /* bouton */

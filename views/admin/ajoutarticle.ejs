@@ -52,7 +52,6 @@
 
 <script>
 
-
   //  CONFIG COMMANDES
   const COMMANDES = [
     { label: 'Titre 1', valeur: 'titre1', icone: 'H1', placeholder: 'Titre principal' },
@@ -89,6 +88,7 @@
   const presLabel   = document.getElementById('presentation-label');
 
   presInput.addEventListener('change', () => {
+    console.log('fichier détecté :', presInput.files[0]);
     presLabel.textContent = presInput.files[0]?.name ?? 'Aucun fichier sélectionné';
   });
 
@@ -594,6 +594,12 @@
     try {
       const res = await fetch('/api/upload-temp', { method: 'POST', body: formData });
       const result = await res.json();
+      if (result.success) {
+        alert('Article publié avec succès !');
+        window.location.href = '/admin/actu';
+      } else {
+        alert('Erreur : ' + (result.message || 'Publication échouée.'));
+      }
 
       if (!result.success) {
         alert("Erreur lors de l'upload : " + (result.message || ''));
@@ -878,6 +884,7 @@
       const result = await res.json();
       if (result.success) {
         alert('Article publié avec succès !');
+        window.location.href = '/admin/actu';
       } else {
         alert('Erreur : ' + (result.message || 'Publication échouée.'));
       }
