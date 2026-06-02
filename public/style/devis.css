@@ -117,7 +117,7 @@ label {
 
 input, textarea {
     border: 1px solid #d7dce7;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 18px 0px 18px 20px;
     font-size: 1rem;
     color: #172033;
