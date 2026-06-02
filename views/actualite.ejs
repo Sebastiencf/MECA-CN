@@ -10,7 +10,14 @@
     </h1>
 
     <p class="date"> <%= new Date(article.date_publication).toLocaleDateString('fr-FR') %></p>
+    
 </section>
+
+
+
+
+
+
 
 <a href="/actualites">
     <h3>
@@ -21,6 +28,8 @@
     <div class="contenu-article">
         <%- article.contenu %>
     </div>
+
+    <div class="div-separactrice mobile-only"></div>
     <div class="right-part">
         <h3>
             Autres articles
@@ -63,6 +72,7 @@
         </div>
     </div>
 </main>
+
 
 
 <%- include("footer") %>

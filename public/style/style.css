@@ -124,4 +124,10 @@ h1 span{
     .pc-only{
         display:none;
     }
+
+
+
+    .div-separactrice{
+        height:50px;
+    }
 }

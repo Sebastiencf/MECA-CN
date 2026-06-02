@@ -380,8 +380,12 @@
         gap: 32px;
     }
 
+    .actu-presentation{
+        margin-bottom:25px !important;
+    }
     .actu-presentation .img-presentation {
         height: 200px;
+
     }
 
     /* Newsletter */

@@ -416,6 +416,7 @@
     .bandeau_texte{
         margin:0 !important;
         font-weight:bold !important;
+        padding-left:10px;
         
     }
     .bandeau_texte a{
