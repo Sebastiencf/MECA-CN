@@ -101,8 +101,12 @@ a[href="actualites"]:hover h3{
     color:#0f3d7a;
 }
 
+.suite{
+    text-decoration:none;
+}
+
 main{
-    display:grid;
+    display:flex;
     grid-template-columns:1fr 300px;
     gap:3rem;
     max-width:1100px;
@@ -371,6 +375,17 @@ button.partager:hover,
 
     main {
         padding: 1.2rem 1.2rem 2.5rem;
+    }
+
+    main{
+        display:grid;
+        grid-template-columns:1fr 300px;
+        gap:3rem;
+        max-width:1100px;
+        margin:0 auto;
+        padding:2rem 3rem 4rem;
+        box-sizing:border-box;
+        align-items:start;
     }
 }
 
