@@ -1,16 +1,12 @@
-/** 
- * @file server.js
- * @description Serveur Express principal de l'application MECA-CN
- * 
- * Configuration:
- * - Middlewares (sessions, bodyParser, static files)
- * - Multer pour la gestion des uploads (produits, machines, actualités, images temporaires, CV)
- * - Routes publiques et routes administrateur
- * - Envoi d'emails (Nodemailer)
- * 
- * @note Deux fichiers CSS sont renvoyés à chaque page pour optimiser les performances serveur
- */
+/*
+ * server.js
+ * Serveur Express principal de l'application.
+ * - Configure les middlewares (sessions, bodyParser, static)
+ * - Configure multer pour la gestion des uploads
+ * - Déclare les routes publiques et admin
 
+Lors du renvoi des différentes pages, deux pages css sont aussi renvoyées afin de permettre au serveur de ne pas se surcharger en chargeant toutes les pages CSS
+*/
 import express from "express";
 import session from "express-session";
 import crypto, { sign } from "crypto";
@@ -28,14 +24,11 @@ import StarterKit from "@tiptap/starter-kit";
 import { fileURLToPath } from "url";
 
 
-// ═══════════════════════════════════════════════════════════════
-// CONFIGURATION MULTER
-// ═══════════════════════════════════════════════════════════════
 
-/**
- * Configuration Multer pour les uploads de produits
- * @type {multer.Multer}
- */
+
+
+// Multer
+// --- CONFIGURATION MULTER POUR LES PRODUITS ---
 const storageProduits = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "public/img/produits");
@@ -48,10 +41,7 @@ const storageProduits = multer.diskStorage({
 const uploadProduits = multer({ storage: storageProduits });
 
 
-/**
- * Configuration Multer pour les uploads de machines
- * @type {multer.Multer}
- */
+// --- CONFIGURATION MULTER POUR LES MACHINES ---
 const storageMachines = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "public/img/machines");
@@ -64,10 +54,7 @@ const storageMachines = multer.diskStorage({
 const uploadMachines = multer({ storage: storageMachines });
 
 
-/**
- * Configuration Multer pour les images des actualités
- * @type {multer.Multer}
- */
+// --- CONFIGURATION MULTER POUR LES IMAGES DES ACTUS ---
 const storageActu = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "public/img/actus");
@@ -83,13 +70,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
-/**
- * Configuration Multer pour les images temporaires (édition d'articles)
- * @type {multer.Multer}
- */
+// --- CONFIGURATION MULTER POUR LES IMAGES TEMPORAIRES
 const storageTemp = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads");
+    cb(null, "uploads"); // dossier /uploads à la racine
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
@@ -99,10 +83,7 @@ const storageTemp = multer.diskStorage({
 const uploadTemp = multer({ storage: storageTemp });
 
 
-/**
- * Configuration Multer pour l'upload des CV
- * @type {multer.Multer}
- */
+// CONFIG MULTER POUR LES CV
 const storageCV = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads");
@@ -115,10 +96,26 @@ const storageCV = multer.diskStorage({
 const uploadCV = multer({ storage: storageCV });
 
 
-// ═══════════════════════════════════════════════════════════════
-// CONFIGURATION EXPRESS
-// ═══════════════════════════════════════════════════════════════
+/*
+// CONFIG MULTER POUR TOUT AUTRE FICHIER
+const storageGlobal = multer.diskStorage({
+  destination: (req, file, cb) =>{
+    cb(null, "public/img/placeholders");
+  },
+  filename: (req,file,cb) =>{
+    const ext = path.extname(file.originalname);
+    cb(null, "tmp_" + Date.now() + ext)
+  }
+})
+const globalStorage = multer({storage: storageGlobal})
+*/
 
+
+
+
+
+// Settings d'express
+// ==> sert à rendre les views
 const app = express();
 app.set("view engine", "ejs");
 
@@ -137,25 +134,23 @@ app.use(
   }),
 );
 
+
+
 app.use((req, res, next) => {
   res.locals.userRole = req.session.userRole || null;
   next();
 });
 
 
-// ═══════════════════════════════════════════════════════════════
-// MIDDLEWARES PERSONNALISÉS
-// ═══════════════════════════════════════════════════════════════
 
+
+
+
+//MIDDLEWARES MAISON
 /**
- * Middleware d'authentification
- * Vérifie que l'utilisateur est authentifié (présence de session.userID).
- * Redirige vers /connexion si non authentifié.
- * 
- * @param {Object} req - Objet requête Express
- * @param {Object} res - Objet réponse Express
- * @param {Function} next - Fonction next Express
- * @returns {void}
+Middleware "authenticate"
+Vérifie que l'utilisateur est authentifié (présence de "session.userID").
+Si authentifié -> "next()", sinon redirige vers la page de connexion.
  */
 function authenticate(req, res, next) {
   if (req.session.hasOwnProperty("userID")) {
@@ -166,14 +161,9 @@ function authenticate(req, res, next) {
 }
 
 /**
- * Middleware d'autorisation administrateur
- * Vérifie que la session correspond à un administrateur.
- * Redirige vers /connexion si l'utilisateur n'est pas admin.
- * 
- * @param {Object} req - Objet requête Express
- * @param {Object} res - Objet réponse Express
- * @param {Function} next - Fonction next Express
- * @returns {void}
+Middleware "isAdmin"
+Vérifie que la session correspond à un administrateur.
+Si oui -> "next()", sinon redirige vers la page d'accueil.
  */
 function isAdmin(req, res, next) {
   if (req.session.role == "admin") {
@@ -184,22 +174,37 @@ function isAdmin(req, res, next) {
 }
 
 
-// ═══════════════════════════════════════════════════════════════
-// ROUTES GET - PAGES PUBLIQUES
-// ═══════════════════════════════════════════════════════════════
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ROUTES
+
+
+
+
+// app.get
 
 /**
- * GET / - Page d'accueil
- * Redirige les administrateurs vers l'interface admin, sinon affiche la page publique d'accueil.
- * Récupère le nombre d'offres disponibles pour afficher un bandeau.
- * 
- * @route GET /
- * @returns {void} Renders 'accueil' view ou redirige vers /admin/accueil si admin
- */
+GET /
+Page d'accueil : redirige les administrateurs vers l'interface admin,
+sinon affiche la page publique d'accueil.
+*/
 app.get("/", async function (req, res) {
   try {
+    // regarde s'il y a des offres et affiche le bandeau dans le cas positif
     const [offres] = await pool.query("SELECT * FROM offres");
     const taille_liste_offre = offres.length;
+    // console.log(offres.length)
     if (req.session.role === "admin") {
       return res.redirect("/admin/accueil");
     } else {
@@ -217,11 +222,8 @@ app.get("/", async function (req, res) {
 
 
 /**
- * GET /presentation - Page de présentation de l'entreprise
- * Affiche les informations générales sur l'entreprise MECA-CN.
- * 
- * @route GET /presentation
- * @returns {void} Renders 'presentation' view
+GET /presentation
+Page de présentation de l'entreprise. Rend la vue adaptée selon le rôle.
  */
 app.get("/presentation", async function (req, res) {
   try {
@@ -235,26 +237,69 @@ app.get("/presentation", async function (req, res) {
   }
 });
 
+// Route publique pour lister les machines
 /**
- * GET /machines - Liste des machines (parc machine client)
- * Route publique listant toutes les machines (séparées par type: tournage, fraisage, tournage/fraisage).
- * 
- * @route GET /machines
- * @returns {void} Renders 'parcmachine' view avec les listes de machines filtrées
+GET /machines
+Route client listant toutes les machines (séparées par type).
  */
 app.get("/machines", async function (req, res) {
   try {
+    /* Récupération globale des machines de la BDD
+        Exemple de liste : 
+        [
+            {
+                id_machine: 3,
+                nom_machine: 'Mazak Quick Turn 250MSY',
+                description_courte: 'Tournage-fraisage haute productivité avec axe Y et contre-broche pour le concept Done-In-One.',
+                description_longue: "Centre de tournage haute performance équipé d'une broche de fraisage, d'un axe Y et d'une broche secondaire pour un usinage complet sans reprise manuelle.",
+                image_machine: '/img/machines/Mchn1776863314292.png',
+                statistique1_nom: 'Diamètre de tournage max',
+                statistique1_donnee: '380 mm',
+                statistique2_nom: 'Vitesse outils motorisés',
+                statistique2_donnee: '6.000 RPM',
+                avantage_titre: 'Productivité Intégrée',
+                avantage_description: 'La présence de la contre-broche (S) et des outils motorisés permet de terminer la pièce entièrement sur une seule machine.',
+                d_x: '375.00',
+                d_y: '100.00',
+                d_z: '2500.00',
+                type: 'tournage',
+                annee_entree: 2024
+            },
+            {...}
+        ]
+
+        */
     const [machines] = await pool.query("SELECT * FROM machines");
+    // Séparation des machines entre machines de tournage et de fraisage
     const machinestourneuses = machines.filter(
       (machine) => machine.type === "tournage",
     );
+    //console.log(machinestourneuses);
     const machinefraiser = machines.filter(
       (machine) => machine.type === "fraisage",
     );
+
     const machineglobale = machines.filter(
       (machine) => machine.type === "tournage/fraisage",
     );
 
+    /*
+    // ESSAI ===================================================
+    const machineunique = machines[0];
+    //console.log(machineunique);
+    for (let element in machineunique){
+      //console.log("ceci est un element : ", element);
+      if (element.includes("_nom")){
+        // console.log(element)
+        if (typeof machineunique[element] !== "object"){
+          // console.log("ceci est une statistique : ", machineunique[element], "avec comme donnée associée : ", machineunique[element.replace("_nom", "_donnee")])
+        } 
+      }  
+    }
+    // FIN ESSAI ===============================================
+    */
+
+    //console.log(machinefraiser);
     res.render("parcmachine", {
       page_css1: "headerclient.css",
       page_css2: "parcmachine.css",
@@ -270,543 +315,43 @@ app.get("/machines", async function (req, res) {
 });
 
 
-/**
- * GET /realisations - Liste des réalisations (portfolio)
- * Liste les réalisations/produits avec support du filtrage par catégorie.
- * La catégorie "-2" correspond à "autres" (produits sans catégorie assignée).
- * 
- * @route GET /realisations
- * @query {string} [categorie] - ID de la catégorie pour filtrer (ou "all" pour tous, "-2" pour autres)
- * @returns {void} Renders 'realisations' view avec les produits filtrés
- */
-app.get("/realisations", async function (req, res) {
-  try {
-    const categorieChoisie = req.query.categorie;
-    let [categories] = await pool.query(
-      "SELECT * FROM categories ORDER BY id_cat DESC",
-    );
-
-    let produitsResultat;
-    if (categorieChoisie == -2) {
-      const [rows] = await pool.query(
-        "SELECT * FROM produits WHERE categorie NOT IN (SELECT id_cat FROM categories);",
-      );
-      produitsResultat = rows;
-    } else if (categorieChoisie && categorieChoisie !== "all") {
-      const [rows] = await pool.query(
-        "SELECT * FROM produits WHERE categorie = ?",
-        [categorieChoisie],
-      );
-      produitsResultat = rows;
-    } else {
-      const [rows] = await pool.query("SELECT * FROM produits");
-      produitsResultat = rows;
-    }
-
-    const produit1 = produitsResultat.length > 0 ? produitsResultat[0] : null;
-    const produitsSuivants = produitsResultat;
-
-    res.render("realisations", {
-      page_css1: "headerclient.css",
-      page_css2: "realisationclient.css",
-      produits: produitsSuivants,
-      produit1: produit1,
-      categories: categories,
-      categorieChoisie: categorieChoisie || "all",
-    });
-  } catch (err) {
-    console.error("Erreur SQL ou Serveur :", err);
-    res.status(500).send("Erreur lors de la récupération des données");
-  }
-});
-
-
-/**
- * GET /devis - Formulaire de demande de devis
- * Récupère les dimensions maximales des machines pour validation côté client.
- * Génère une question de captcha aléatoire.
- * 
- * @route GET /devis
- * @returns {void} Renders 'devis' view avec dimensions max et captcha
- */
-app.get("/devis", async function (req, res) {
-  try {
-    const [dimensions] = await pool.query(
-      "SELECT MAX(d_x) as max_x, MAX(d_y) as max_y, MAX(d_z) as max_z, MAX(longueur_max) as max_longueur, MAX(diametre_max) as max_diametre, MAX(alesage) as max_alesage FROM machines",
-    );
-
-    const a = Math.floor(Math.random() * 10) + 1;
-    const b = Math.floor(Math.random() * 10) + 1;
-    const ops = [
-      { label: `${a} + ${b}`, answer: a + b },
-      { label: `${a} × ${b}`, answer: a * b },
-      { label: `${a + b} - ${b}`, answer: a },
-    ];
-    const op = ops[Math.floor(Math.random() * ops.length)];
-    const devis_pre = "devis";
-
-    req.session.devisCaptchaAnswer = op.answer;
-
-    res.render("devis", {
-      page_css1: "headerclient.css",
-      page_css2: "devis.css",
-      maxDimensions: dimensions[0],
-      role: req.session.role,
-      captchaQuestion: op.label,
-      page_devis: devis_pre,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /contact - Page de contact
- * Affiche le formulaire de contact avec captcha anti-spam.
- * 
- * @route GET /contact
- * @returns {void} Renders 'contact' view avec captcha
- */
-app.get("/contact", async function (req, res) {
-  try {
-    const a = Math.floor(Math.random() * 10) + 1;
-    const b = Math.floor(Math.random() * 10) + 1;
-    const ops = [
-      { label: `${a} + ${b}`, answer: a + b },
-      { label: `${a} × ${b}`, answer: a * b },
-      { label: `${a + b} - ${b}`, answer: a },
-    ];
-    const op = ops[Math.floor(Math.random() * ops.length)];
-    const contact_pre = "contact";
-
-    req.session.contactCaptchaAnswer = op.answer;
-
-    res.render("contact", {
-      page_css1: "headerclient.css",
-      page_css2: "contact.css",
-      success: null,
-      error: null,
-      captchaQuestion: op.label,
-      page_contact: contact_pre,
-      role: req.session.role,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /connexion - Page de connexion
- * Affiche le formulaire d'identification pour les administrateurs.
- * 
- * @route GET /connexion
- * @returns {void} Renders 'connexion' view
- */
-app.get("/connexion", async function (req, res) {
-  try {
-    res.render("connexion", {
-      page_css1: "connexion.css",
-      page_css2: "headerclient.css",
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /mentions - Page des mentions légales
- * Affiche les mentions légales du site.
- * 
- * @route GET /mentions
- * @returns {void} Renders 'mentions' view
- */
-app.get("/mentions", async function (req, res) {
-  try {
-    res.render("mentions", {
-      page_css1: "mentions.css",
-      page_css2: "headerclient.css",
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /offres - Liste des offres d'emploi
- * Affiche toutes les offres d'emploi avec support du filtrage par catégorie.
- * 
- * @route GET /offres
- * @query {string} [categorie] - Catégorie pour filtrer les offres (ou "all" pour toutes)
- * @returns {void} Renders 'offres' view avec liste des offres
- */
-app.get("/offres", async function (req, res) {
-  try {
-    const categorieChoisie = req.query.categorie;
-    let offresResultat;
-
-    if (categorieChoisie && categorieChoisie !== "all") {
-      const [rows] = await pool.query(
-        "SELECT * FROM offres WHERE categorie = ? ORDER BY offre_id ASC",
-        [categorieChoisie],
-      );
-      offresResultat = rows;
-    } else {
-      const [rows] = await pool.query(
-        "SELECT * FROM offres ORDER BY offre_id ASC",
-      );
-      offresResultat = rows;
-    }
-
-    const [categories] = await pool.query(
-      "SELECT categorie, COUNT(*) AS nombre_offres FROM offres GROUP BY categorie",
-    );
-
-    res.render("offres", {
-      page_css1: "offres.css",
-      page_css2: "headerclient.css",
-      offres: offresResultat,
-      categories: categories,
-      categorieChoisie: categorieChoisie || "all",
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /offre/:id - Détail d'une offre d'emploi
- * Affiche les informations complètes d'une offre spécifique.
- * 
- * @route GET /offre/:id
- * @param {number} id - ID de l'offre d'emploi
- * @returns {void} Renders 'offre' view avec les données de l'offre
- */
-app.get("/offre/:id", async function (req, res) {
-  try {
-    const offre_id = req.params.id;
-    const [offre] = await pool.query(
-      "SELECT * FROM offres WHERE offre_id = ?",
-      [offre_id],
-    );
-    res.render("offre", {
-      offre: offre[0],
-      page_css1: "offre.css",
-      page_css2: "headerclient.css",
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /postuler/:id - Formulaire de candidature
- * Affiche le formulaire d'envoi de CV pour une offre spécifique.
- * 
- * @route GET /postuler/:id
- * @param {number} id - ID de l'offre pour laquelle postuler
- * @returns {void} Renders 'cv' view avec infos de l'offre
- */
-app.get("/postuler/:id", async function (req, res) {
-  try {
-    const offre_id = req.params.id;
-    const [offre] = await pool.query(
-      "SELECT * FROM offres WHERE offre_id = ?",
-      [offre_id],
-    );
-    res.render("cv", {
-      offre: offre[0],
-      page_css1: "cv.css",
-      page_css2: "headerclient.css",
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /tests - Page de test/développement
- * Page utilitaire pour les tests en développement.
- * 
- * @route GET /tests
- * @returns {void} Renders 'tests' view
- */
-app.get("/tests", async function (req, res) {
-  try {
-    res.render("tests", {
-      page_css1: "tests.css",
-      page_css2: "headerclient.css",
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /deconnexion - Déconnexion
- * Détruit la session et redirige vers l'accueil.
- * 
- * @route GET /deconnexion
- * @returns {void} Redirige vers /
- */
-app.get("/deconnexion", async function (req, res) {
-  try {
-    req.session.destroy((err) => {
-      if (err) {
-        console.error("Erreur lors de la déconnexion :", err);
-        res.status(500).send("Erreur serveur");
-      } else {
-        res.redirect("/");
-      }
-    });
-  } catch (err) {
-    console.error("Erreur serveur :", err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /api/max-dimensions - API: Dimensions maximales des machines
- * Retourne les dimensions maximales en JSON (utilisé pour validation côté client).
- * 
- * @route GET /api/max-dimensions
- * @returns {Object} JSON {max_x, max_y, max_z}
- */
-app.get("/api/max-dimensions", async (req, res) => {
-  try {
-    const [rows] = await pool.query(
-      "SELECT MAX(d_x) as max_x, MAX(d_y) as max_y, MAX(d_z) as max_z FROM machines",
-    );
-    res.json(rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /oubli_mdp - Page de récupération de mot de passe
- * Affiche le formulaire pour demander une réinitialisation de mot de passe.
- * 
- * @route GET /oubli_mdp
- * @returns {void} Renders 'recuperation_mdp' view
- */
-app.get("/oubli_mdp", async function (req, res) {
-  try {
-    res.render("recuperation_mdp", {
-      page_css1: "headerclient.css",
-      page_css2: "recuperation.css",
-    });
-  } catch (err) {}
-});
-
-
-/**
- * GET /desabonnement - Page de désabonnement newsletter
- * Affiche le formulaire de désabonnement de la newsletter.
- * 
- * @route GET /desabonnement
- * @query {string} [email] - Email pré-rempli (optionnel)
- * @returns {void} Renders 'desabonnement' view
- */
-app.get("/desabonnement", async function (req, res) {
-  try {
-    const email = req.query.email || "";
-    res.render("desabonnement", {
-      page_css1: "headerclient.css",
-      page_css2: "contact.css",
-      email: email,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /politique-de-confidentialite - Politique de confidentialité
- * Affiche la politique de confidentialité et la gestion des données personnelles.
- * 
- * @route GET /politique-de-confidentialite
- * @returns {void} Renders 'confidentialite' view
- */
-app.get("/politique-de-confidentialite", async function (req,res){
-  try{
-    res.render("confidentialite", {
-      page_css1:"headerclient.css",
-      page_css2:"confidentialite.css"
-    })
-  } catch(err){
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-})
-
-/**
- * GET /usinage - Page d'informations sur l'usinage
- * Affiche des informations complémentaires sur les techniques d'usinage.
- * 
- * @route GET /usinage
- * @returns {void} Renders 'informations-complementaires/usinage' view
- */
-app.get("/usinage", async function(req,res){
-  try{
-    res.render("informations-complementaires/usinage", {
-      page_css1:"headerclient.css",
-      page_css2:"usinage.css"
-    })
-  } catch(err){
-    console.log(err)
-    res.status(500).send("Erreur serveur");
-  }
-})
-
-
-/**
- * GET /actualites - Liste des actualités (client)
- * Liste les actualités triées par date (plus récentes en premier), avec la une en évidence.
- * 
- * @route GET /actualites
- * @returns {void} Renders 'actualite_liste' view avec une et autres actualités
- */
-app.get("/actualites", async function (req, res) {
-  const [actualites] = await pool.query(
-    "SELECT * FROM actualite ORDER BY date_publication DESC LIMIT 99999 OFFSET 1",
-  );
-  const [une] = await pool.query(
-    "SELECT * FROM actualite ORDER BY date_publication DESC LIMIT 1",
-  );
-  const actu_une = une[0];
-
-  res.render("actualite_liste", {
-    page_css1: "headerclient.css",
-    page_css2: "actualite-liste.css",
-    une: actu_une,
-    actus: actualites,
-  });
-});
-
-/**
- * GET /articles/:id - Détail d'une actualité
- * Affiche un article spécifique avec contenu HTML généré depuis JSON (Tiptap).
- * 
- * @route GET /articles/:id
- * @param {string} id - ID de l'article (basé sur le nom du fichier JSON)
- * @returns {void} Renders 'actualite' view avec article et contenu HTML
- */
-app.get("/articles/:id", (req, res) => {
-  const file = fs.readFileSync(`articles/${req.params.id}.json`);
-  const article = JSON.parse(file);
-
-  const html = generateHTML(article.content, [StarterKit]);
-  res.render("actualite", {
-    article: article,
-    content: html,
-  });
-});
-
-/**
- * GET /actualite/:id - Détail d'une actualité (alternative)
- * Récupère et affiche les données d'une actualité depuis la BDD.
- * 
- * @route GET /actualite/:id
- * @param {number} id - ID de l'actualité en base de données
- * @returns {void} Renders 'actualite' view avec les données de l'article
- */
-app.get("/actualite/:id", async function (req, res) {
-  const [rows] = await pool.query("SELECT * FROM actualite WHERE id = ?", [
-    req.params.id,
-  ]);
-
-  const article = rows[0];
-  res.render("actualite", {
-    article,
-  });
-});
-
-
-// ═══════════════════════════════════════════════════════════════
-// ROUTES GET - PAGES ADMINISTRATEUR
-// ═══════════════════════════════════════════════════════════════
-
-/**
- * GET /admin/accueil - Tableau de bord administrateur
- * Page d'accueil de l'interface administrateur (protégée).
- * 
- * @route GET /admin/accueil
- * @access admin
- * @returns {void} Renders 'admin/accueil' view
- */
-app.get("/admin/accueil", isAdmin, async function (req, res) {
-  try {
-    res.render("admin/accueil", {
-      page_css1: "accueiladmin.css",
-      page_css2: "headeradmin.css",
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /admin/presentation - Gestion de la présentation
- * Page administrateur pour modifier le contenu de la page de présentation publique.
- * 
- * @route GET /admin/presentation
- * @access admin
- * @returns {void} Renders 'admin/presentation' view
- */
-app.get("/admin/presentation", isAdmin, async function (req, res) {
-  try {
-    res.render("admin/presentation", {
-      page_css1: "presentation.css",
-      page_css2: "headeradmin.css",
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
-
-
-/**
- * GET /admin/machines - Gestion du parc machine (admin)
- * Liste les machines avec options de gestion (protégée).
- * 
- * @route GET /admin/machines
- * @access admin
- * @query {string} [success] - Paramètre de succès (ex: "add" après ajout)
- * @returns {void} Renders 'admin/parcmachine' view avec listes de machines
- */
+// Route admin pour la gestion du parc machine (protégée)
 app.get("/admin/machines", isAdmin, async function (req, res) {
   try {
+    /* Récupération globale des machines de la BDD
+        Exemple de liste : 
+        [
+            {
+                id_machine: 3,
+                nom_machine: 'Mazak Quick Turn 250MSY',
+                description_courte: 'Tournage-fraisage haute productivité avec axe Y et contre-broche pour le concept Done-In-One.',
+                description_longue: "Centre de tournage haute performance équipé d'une broche de fraisage, d'un axe Y et d'une broche secondaire pour un usinage complet sans reprise manuelle.",
+                image_machine: '/img/machines/Mchn1776863314292.png',
+                statistique1_nom: 'Diamètre de tournage max',
+                statistique1_donnee: '380 mm',
+                statistique2_nom: 'Vitesse outils motorisés',
+                statistique2_donnee: '6.000 RPM',
+                avantage_titre: 'Productivité Intégrée',
+                avantage_description: 'La présence de la contre-broche (S) et des outils motorisés permet de terminer la pièce entièrement sur une seule machine.',
+                d_x: '375.00',
+                d_y: '100.00',
+                d_z: '2500.00',
+                type: 'tournage',
+                annee_entree: 2024
+            },
+            {...}
+        ]
+
+        */
     const [machines] = await pool.query("SELECT * FROM machines");
+    // Séparation des machines entre tournage et fraisage. Renvoie une liste
     const machinestourneuses = machines.filter(
       (machine) => machine.type === "tournage",
     );
     const machinefraiser = machines.filter(
       (machine) => machine.type === "fraisage",
     );
+
     const machineglobale = machines.filter(
       (machine) => machine.type === "tournage/fraisage",
     );
@@ -833,40 +378,372 @@ app.get("/admin/machines", isAdmin, async function (req, res) {
 
 
 /**
- * GET /admin/realisations - Gestion des réalisations (admin)
- * Liste les réalisations/produits avec options de gestion (protégée).
- * Supporte le filtrage par catégorie.
- * 
- * @route GET /admin/realisations
- * @access admin
- * @query {string} [categorie] - ID de catégorie pour filtrer (ou "all", "-2" pour autres)
- * @returns {void} Renders 'admin/realisations' view avec produits
+GET /realisations
+Liste les réalisations (portfolio). Supporte le filtrage par catégorie
+via le paramètre `categorie` en query string.
  */
-app.get("/admin/realisations", isAdmin, async function (req, res) {
+app.get("/realisations", async function (req, res) {
   try {
     const categorieChoisie = req.query.categorie;
-    const [categories] = await pool.query(
+    //console.log(categorieChoisie)
+
+    let [categories] = await pool.query(
       "SELECT * FROM categories ORDER BY id_cat DESC",
     );
 
     let produitsResultat;
+    /* 
+        La catégorie  "-2" correspond à "autres".
+        -2 a été sélectionné pour ne pas rentrer au conflit avec les id des catégories incrémentés automatiquement
+        */
     if (categorieChoisie == -2) {
       const [rows] = await pool.query(
         "SELECT * FROM produits WHERE categorie NOT IN (SELECT id_cat FROM categories);",
       );
+      //console.log(rows)
       produitsResultat = rows;
     } else if (categorieChoisie && categorieChoisie !== "all") {
+      /*
+        Sinon, si une catégorie a été choisie et qu'elle n'équivaut pas à "all" (tous)
+        */
       const [rows] = await pool.query(
         "SELECT * FROM produits WHERE categorie = ?",
         [categorieChoisie],
       );
       produitsResultat = rows;
-    } else {
+    }
+
+    // Si la catégorie sélectionnée équivaut à "all"
+    else {
       const [rows] = await pool.query("SELECT * FROM produits");
       produitsResultat = rows;
     }
 
+    // Définir le premier produit de la liste pour les visiteurs sur ordinateurs (pour la mise en page)
     const produit1 = produitsResultat.length > 0 ? produitsResultat[0] : null;
+
+    // On récupère aussi tout les produits
+    const produitsSuivants = produitsResultat;
+
+    res.render("realisations", {
+      page_css1: "headerclient.css",
+      page_css2: "realisationclient.css",
+      produits: produitsSuivants,
+      produit1: produit1,
+      categories: categories,
+      categorieChoisie: categorieChoisie || "all",
+    });
+  } catch (err) {
+    console.error("Erreur SQL ou Serveur :", err);
+    res.status(500).send("Erreur lors de la récupération des données");
+  }
+});
+
+
+/**
+GET /devis
+Page du formulaire de demande de devis. Récupère les dimensions max des machines pour éviter toutes demandes impossibles (affichage et validation côté client).
+ */
+app.get("/devis", async function (req, res) {
+  try {
+    const [dimensions] = await pool.query(
+      "SELECT MAX(d_x) as max_x, MAX(d_y) as max_y, MAX(d_z) as max_z, MAX(longueur_max) as max_longueur, MAX(diametre_max) as max_diametre, MAX(alesage) as max_alesage FROM machines",
+    );
+    // console.log(dimensions[0]);
+
+    // Générer une question math aléatoire
+    const a = Math.floor(Math.random() * 10) + 1;
+    const b = Math.floor(Math.random() * 10) + 1;
+    const ops = [
+      { label: `${a} + ${b}`, answer: a + b },
+      { label: `${a} × ${b}`, answer: a * b },
+      { label: `${a + b} - ${b}`, answer: a },
+    ];
+    const op = ops[Math.floor(Math.random() * ops.length)];
+    const devis_pre = "devis";
+    //console.log(req.session.role)
+
+    // Stocker la réponse en session (jamais exposée au client)
+    req.session.devisCaptchaAnswer = op.answer;
+
+    res.render("devis", {
+      page_css1: "headerclient.css",
+      page_css2: "devis.css",
+      maxDimensions: dimensions[0],
+      role: req.session.role,
+      captchaQuestion: op.label, // ex: "7 + 3"
+      page_devis: devis_pre,
+      role: req.session.role,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+/**
+ * GET /contact
+Page de contact et formulaire pour envoyer un message à l'entreprise.
+ */
+app.get("/contact", async function (req, res) {
+  try {
+    // Générer une question math aléatoire pour le contact
+    const a = Math.floor(Math.random() * 10) + 1;
+    const b = Math.floor(Math.random() * 10) + 1;
+    const ops = [
+      { label: `${a} + ${b}`, answer: a + b },
+      { label: `${a} × ${b}`, answer: a * b },
+      { label: `${a + b} - ${b}`, answer: a },
+    ];
+    const op = ops[Math.floor(Math.random() * ops.length)];
+    const contact_pre = "contact";
+
+    // Stocker la réponse en session (pour le contact)
+    req.session.contactCaptchaAnswer = op.answer;
+
+    res.render("contact", {
+      page_css1: "headerclient.css",
+      page_css2: "contact.css",
+      success: null,
+      error: null,
+      captchaQuestion: op.label,
+      page_contact: contact_pre,
+      role: req.session.role,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+/**
+ * GET /connexion
+Page de connexion pour les utilisateurs (identification).
+ */
+app.get("/connexion", async function (req, res) {
+  try {
+    res.render("connexion", {
+      page_css1: "connexion.css",
+      page_css2: "headerclient.css",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+/**
+ * GET /mentions
+Page des mentions légales.
+ */
+app.get("/mentions", async function (req, res) {
+  try {
+    res.render("mentions", {
+      page_css1: "mentions.css",
+      page_css2: "headerclient.css",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+/*
+GET /offres
+Renvoie la page listant toutes les offres d'emploi disponibles sur le moment 
+Gère le choix des catégories par l'utilisateur
+Gère que la quantité do'ffre par catégorie et la distribution de ces dernières
+*/
+app.get("/offres", async function (req, res) {
+  try {
+    // Récupération de la catégorie envoyée par l'utilisateur dans la requête
+    const categorieChoisie = req.query.categorie;
+    // Initialisation
+    let offresResultat;
+
+    // S'il y a une catégorie et qu'on ne demande pas TOUTES les offres
+    if (categorieChoisie && categorieChoisie !== "all") {
+      const [rows] = await pool.query(
+        "SELECT * FROM offres WHERE categorie = ? ORDER BY offre_id ASC",
+        [categorieChoisie],
+      );
+      offresResultat = rows;
+    } else {
+      const [rows] = await pool.query(
+        "SELECT * FROM offres ORDER BY offre_id ASC",
+      );
+      offresResultat = rows;
+    }
+
+    // Quantité
+    const [categories] = await pool.query(
+      "SELECT categorie, COUNT(*) AS nombre_offres FROM offres GROUP BY categorie",
+    );
+
+    res.render("offres", {
+      page_css1: "offres.css",
+      page_css2: "headerclient.css",
+      offres: offresResultat,
+      categories: categories,
+      categorieChoisie: categorieChoisie || "all",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+/*
+GET /offre/:id
+Renvoie les informations concernant une offre d'emploi
+Récupère l'id de l'offre dans la requête, puis récupère les infos dans la bdd grace à cet id
+*/
+
+app.get("/offre/:id", async function (req, res) {
+  try {
+    const offre_id = req.params.id;
+    const [offre] = await pool.query(
+      "SELECT * FROM offres WHERE offre_id = ?",
+      [offre_id],
+    );
+    // console.log(offre[0]);
+    //console.log(offre[0]);
+    res.render("offre", {
+      offre: offre[0],
+      page_css1: "offre.css",
+      page_css2: "headerclient.css",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+/*
+GET postuler/:id
+Renvoie l'utilisateur vers la page d'envoi pour postuler sur l'offre
+*/
+app.get("/postuler/:id", async function (req, res) {
+  try {
+    const offre_id = req.params.id;
+    const [offre] = await pool.query(
+      "SELECT * FROM offres WHERE offre_id = ?",
+      [offre_id],
+    );
+    // console.log(offre)
+    res.render("cv", {
+      offre: offre[0],
+      page_css1: "cv.css",
+      page_css2: "headerclient.css",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+/**
+ * GET /tests
+Page de test/de développement (utilitaire).
+ */
+app.get("/tests", async function (req, res) {
+  try {
+    res.render("tests", {
+      page_css1: "tests.css",
+      page_css2: "headerclient.css",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+/**
+ * GET /admin/accueil
+Tableau de bord administrateur (page d'accueil admin).
+ */
+app.get("/admin/accueil", isAdmin, async function (req, res) {
+  try {
+    res.render("admin/accueil", {
+      page_css1: "accueiladmin.css",
+      page_css2: "headeradmin.css",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+/**
+ * GET /admin/presentation
+Page admin pour modifier la page de présentation publique.
+ */
+app.get("/admin/presentation", isAdmin, async function (req, res) {
+  try {
+    res.render("admin/presentation", {
+      page_css1: "presentation.css",
+      page_css2: "headeradmin.css",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+/**
+ * GET /admin/realisations
+Version administrateur du listing des réalisations (avec options de gestion).
+ */
+app.get("/admin/realisations", isAdmin, async function (req, res) {
+  try {
+    // Récupération de la catégorie demandé par l'utilisateur ("all", "-2", "1", "2")
+    const categorieChoisie = req.query.categorie;
+
+    // Récupération de toutes les catégories
+    const [categories] = await pool.query(
+      "SELECT * FROM categories ORDER BY id_cat DESC",
+    );
+
+    // Initialisation de la variable qui va contenir les produits demandés
+    let produitsResultat;
+
+    // si la catégorie demandée est "autres"
+    if (categorieChoisie == -2) {
+      //récupération des produits et ajout dans la variable produitsResultat
+      const [rows] = await pool.query(
+        "SELECT * FROM produits WHERE categorie NOT IN (SELECT id_cat FROM categories);",
+      );
+      produitsResultat = rows;
+    }
+
+    // S'il y a une catégorie et qu'elle n'équivaut pas à "tous"
+    if (categorieChoisie && categorieChoisie !== "all") {
+      const [rows] = await pool.query(
+        "SELECT * FROM produits WHERE categorie = ?",
+        [categorieChoisie],
+      );
+      produitsResultat = rows;
+    }
+
+    // "Tous"
+    else {
+      const [rows] = await pool.query("SELECT * FROM produits");
+      produitsResultat = rows;
+    }
+
+    // Définition du premier produit (utile pour les utilisateurs sur ordinateur)
+    const produit1 = produitsResultat.length > 0 ? produitsResultat[0] : null;
+    // Définition de tout les produits
     const produitsSuivants = produitsResultat;
 
     res.render("admin/realisations", {
@@ -885,13 +762,47 @@ app.get("/admin/realisations", isAdmin, async function (req, res) {
 
 
 /**
- * GET /modif_realisations/:id - Formulaire de modification de réalisation
- * Récupère les informations d'une réalisation et affiche le formulaire de modification.
- * 
- * @route GET /modif_realisations/:id
- * @access admin
- * @param {number} id - ID de la réalisation à modifier
- * @returns {void} Renders 'admin/modifrealisation' view avec données du produit
+ * GET /deconnexion
+Détruit la session et déconnecte l'utilisateur.
+ */
+app.get("/deconnexion", async function (req, res) {
+  try {
+    // Déconnexion ==> S'il y a une erreur, renvoyer un message serveur pour avertir l'utilisateur, sinon, rediriger l'utilisateur vers la page d'accueil
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Erreur lors de la déconnexion :", err);
+        res.status(500).send("Erreur serveur");
+      } else {
+        res.redirect("/");
+      }
+    });
+  } catch (err) {
+    console.error("Erreur serveur :", err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+/**
+ * GET /api/max-dimensions
+Récupération des dimensions maximales des machines (capacité maximale) et renvoie de ces dernières sous format JSON
+ */
+app.get("/api/max-dimensions", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT MAX(d_x) as max_x, MAX(d_y) as max_y, MAX(d_z) as max_z FROM machines",
+    );
+    res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+/**
+ * GET /modif_realisations/:id
+Récupère les informations d'une réalisation et rend le formulaire de modification.
  */
 app.get("/modif_realisations/:id", isAdmin, async function (req, res) {
   try {
@@ -900,11 +811,13 @@ app.get("/modif_realisations/:id", isAdmin, async function (req, res) {
       produitId,
     ]);
     const categorieId = produit[0].categorie;
+    console.log(categorieId)
     const [categories] = await pool.query(
       "SELECT nom FROM categories WHERE id_cat = ?",
       [categorieId],
     );
     const listeCategories = await pool.query("SELECT * FROM categories");
+    console.log(categories[0])
     res.render("admin/modifrealisation", {
       page_css1: "headeradmin.css",
       page_css2: "modif_realisations.css",
@@ -920,12 +833,8 @@ app.get("/modif_realisations/:id", isAdmin, async function (req, res) {
 
 
 /**
- * GET /admin/suppression - Page de suppression
- * Affiche la page avec listes complètes (catégories, réalisations, machines) pour suppression.
- * 
- * @route GET /admin/suppression
- * @access admin
- * @returns {void} Renders 'admin/suppression' view avec listes
+ * GET /suppression
+Page de confirmation de suppression (catégorie, réalisations, machines).
  */
 app.get("/admin/suppression", isAdmin, async function (req, res) {
   try {
@@ -947,13 +856,8 @@ app.get("/admin/suppression", isAdmin, async function (req, res) {
 
 
 /**
- * GET /modif_machine/:id - Formulaire de modification de machine
- * Récupère une machine et affiche le formulaire d'édition.
- * 
- * @route GET /modif_machine/:id
- * @access admin
- * @param {number} id - ID de la machine à modifier
- * @returns {void} Renders 'admin/modifmachine' view ou 404 si non trouvée
+ * GET /modif_machine/:id
+Récupère une machine par son identifiant et rend le formulaire d'édition admin.
  */
 app.get("/modif_machine/:id", isAdmin, async function (req, res) {
   try {
@@ -967,6 +871,7 @@ app.get("/modif_machine/:id", isAdmin, async function (req, res) {
     }
 
     const machine = rows[0];
+
     res.render("admin/modifmachine", {
       page_css1: "headeradmin.css",
       page_css2: "modifmachine.css",
@@ -979,15 +884,12 @@ app.get("/modif_machine/:id", isAdmin, async function (req, res) {
 });
 
 /**
- * GET /admin/ajoutmachine - Formulaire d'ajout de machine
- * Affiche le formulaire de création d'une nouvelle machine avec objet vide pour prévisualisation.
- * 
- * @route GET /admin/ajoutmachine
- * @access admin
- * @returns {void} Renders 'admin/ajoutmachine' view avec machine vide
+ * Route GET permettant d'accéder à la page de création d'une machine. 
+ * Fournit un objet "machine" vide pour le rendu du formulaire et de la prévisualisation
  */
 app.get("/admin/ajoutmachine", isAdmin, async function (req, res) {
   try {
+    // Fournir un objet 'machine' par défaut pour éviter les erreurs côté template
     const machine = {
       id_machine: null,
       nom_machine: "",
@@ -1019,18 +921,15 @@ app.get("/admin/ajoutmachine", isAdmin, async function (req, res) {
 });
 
 /**
- * GET /admin/ajoutproduit - Formulaire d'ajout de produit
- * Affiche le formulaire de création d'une nouvelle réalisation avec objet vide.
- * Récupère les catégories existantes.
- * 
- * @route GET /admin/ajoutproduit
- * @access admin
- * @returns {void} Renders 'admin/ajoutrealisation' view avec produit vide et catégories
+ * Route GET
+ * Accéder à la page d'ajout de produit
+ * Fournit un objet "produit" vide pour le rendu du formulaire et de la prévisualisation
  */
 app.get("/admin/ajoutproduit", isAdmin, async function (req, res) {
   try {
     const [categories] = await pool.query("SELECT * FROM categories");
 
+    // Fournir un objet `produit` vide pour le rendu (évite checks côté template)
     const produit = {
       id: null,
       nom: "",
@@ -1052,12 +951,9 @@ app.get("/admin/ajoutproduit", isAdmin, async function (req, res) {
 });
 
 /**
- * GET /ajout_categorie - Formulaire d'ajout de catégorie
- * Récupère les produits sans catégorie pour les afficher et permettre leur catégorisation.
- * 
- * @route GET /ajout_categorie
- * @access admin
- * @returns {void} Renders 'admin/ajoutcategorie' view avec produits sans catégorie
+ * Route GET
+ * Ramène vers la page d'ajout de catégorie. 
+ * Récupère aussi les produits sans catégorie pour les afficher dans la page et permettre à l'administrateur de les catégoriser.
  */
 app.get("/ajout_categorie", isAdmin, async function (req, res) {
   try {
@@ -1066,12 +962,16 @@ app.get("/ajout_categorie", isAdmin, async function (req, res) {
     );
 
     if (produit_sans_categorie.length > 0) {
+      // console.log("il y a des produits sans catégorie");
+      // console.log(produit_sans_categorie[0]);
+      // console.log(produit_sans_categorie.length);
       res.render("admin/ajoutcategorie", {
         page_css1: "headeradmin.css",
         page_css2: "ajoutcategorie.css",
         produits: produit_sans_categorie,
       });
     } else {
+      // console.log("pas de produit 0");
       res.render("admin/ajoutcategorie", {
         page_css1: "headeradmin.css",
         page_css2: "ajoutcategorie.css",
@@ -1086,12 +986,9 @@ app.get("/ajout_categorie", isAdmin, async function (req, res) {
 });
 
 /**
- * GET /admin/profil - Profil administrateur
- * Affiche les informations personnelles de l'administrateur connecté.
- * 
- * @route GET /admin/profil
- * @access admin
- * @returns {void} Renders 'admin/profil' view avec données utilisateur
+ * route GET ramenant au profil de l'administrateur (informations personnelles). 
+ * Récupère les informations de l'utilisateur connecté grâce à son id stocké en session.
+ * La page profil n'existe et n'est accessible que pour l'admin (pas de nécessité pour les clients d'avoir un compte pour le moment)
  */
 app.get("/admin/profil", isAdmin, async function (req, res) {
   try {
@@ -1103,6 +1000,7 @@ app.get("/admin/profil", isAdmin, async function (req, res) {
       return res.status(404).send("Utilisateur non trouvé");
     }
     const user = rows[0];
+    //console.log(user);
     res.render("admin/profil", {
       page_css1: "headeradmin.css",
       page_css2: "profil.css",
@@ -1115,14 +1013,9 @@ app.get("/admin/profil", isAdmin, async function (req, res) {
 });
 
 /**
- * GET /admin/offres - Gestion des offres d'emploi (admin)
- * Liste les offres d'emploi avec options de gestion (protégée).
- * Supporte le filtrage par catégorie.
- * 
- * @route GET /admin/offres
- * @access admin
- * @query {string} [categorie] - Catégorie pour filtrer les offres
- * @returns {void} Renders 'admin/offres' view avec liste des offres
+ * Route GET
+ * Rend la lage de listing des offres d'emploi côté ADMINISTRATEUR (avec options de gestion).
+ * Gère aussi le filtrage par catégorie
  */
 app.get("/admin/offres", isAdmin, async function (req, res) {
   try {
@@ -1145,7 +1038,7 @@ app.get("/admin/offres", isAdmin, async function (req, res) {
     const [categories] = await pool.query(
       "SELECT categorie, COUNT(*) AS nombre_offres FROM offres GROUP BY categorie",
     );
-
+    // console.log(offresResultat)
     res.render("admin/offres", {
       page_css1: "offres.css",
       page_css2: "headeradmin.css",
@@ -1161,30 +1054,32 @@ app.get("/admin/offres", isAdmin, async function (req, res) {
 });
 
 /**
- * GET /ajoutoffre - Formulaire d'ajout d'offre d'emploi
- * Affiche le formulaire de création d'une nouvelle offre.
- * Récupère les types, catégories et infos existantes pour les dropdowns.
- * 
- * @route GET /ajoutoffre
- * @access admin
- * @returns {void} Renders 'admin/ajoutoffre' view avec listes de sélection
+ * Route GET
+ * Rend la page d'ajout d'offre d'emploi côté ADMINISTRATEUR.
+ * Récupère les informations nécessaires à l'affichage de la page 
+ * (ex: les types d'offres déjà présents dans la bdd pour les proposer dans un menu déroulant, le nom de l'admin connecté pour l'afficher dans le header, etc.)
  */
 app.get("/ajoutoffre", isAdmin, async function (req, res) {
   const [offres] = await pool.query("SELECT * FROM offres");
+  // console.log(offres)
   const user_id = req.session.userID;
+  // console.log("ID utilisateur : ", user_id)
   const [username] = await pool.query(
     "SELECT identifiant FROM utilisateurs WHERE id = ?",
     [user_id],
   );
   const [types] = await pool.query("SELECT DISTINCT type FROM offres");
+  // console.log(types[1].type)
   const [pres] = await pool.query("SELECT DISTINCT presentation FROM offres");
   const presentation = pres[0].presentation;
+  //console.log(presentation[0].presentation)
 
   const [categoriesData] = await pool.query(
     "SELECT DISTINCT categorie FROM offres",
   );
   const categories = categoriesData.map((cat) => cat.categorie);
 
+  //console.log(username[0].identifiant)
   res.render("admin/ajoutoffre", {
     offres: offres,
     page_css1: "headeradmin.css",
@@ -1197,20 +1092,87 @@ app.get("/ajoutoffre", isAdmin, async function (req, res) {
 });
 
 /**
- * GET /admin/actu - Gestion des actualités (admin)
- * Liste les actualités triées par date avec la une en évidence (protégée).
- * 
- * @route GET /admin/actu
- * @access admin
- * @returns {void} Renders 'admin/actualite_liste' view avec une et autres actualités
+ * Route GET
+ * Rend la page listant les actualités côté CLIENT (avec la une et les autres actualités séparées).
+ * Les actualités sont triées par date de publication (de la plus récente à la plus ancienne).
+ */
+app.get("/actualites", async function (req, res) {
+  const [actualites] = await pool.query(
+    "SELECT * FROM actualite ORDER BY date_publication DESC LIMIT 99999 OFFSET 1",
+  );
+  //console.log(actualites);
+  const [une] = await pool.query(
+    "SELECT * FROM actualite ORDER BY date_publication DESC LIMIT 1",
+  );
+  // console.log(une)
+  const actu_une = une[0];
+
+  res.render("actualite_liste", {
+    page_css1: "headerclient.css",
+    page_css2: "actualite-liste.css",
+    une: actu_une,
+    actus: actualites,
+  });
+});
+
+/**
+ * Route GET
+ * Rend la page d'une actualité spécifique côté CLIENT.
+ * Récupère l'id de l'actualité dans la requête, puis récupère les infos dans la bdd grace à cet id
+ * Génère le contenu HTML de l'article à partir du contenu JSON stocké en base de données (grâce à tiptap et son StarterKit) pour pouvoir l'afficher correctement formaté dans la page.
+ */
+app.get("/articles/:id", (req, res) => {
+  const file = fs.readFileSync(`articles/${req.params.id}.json`);
+  const article = JSON.parse(file);
+
+  const html = generateHTML(article.content, [StarterKit]);
+  res.render("actualite", {
+    article: article,
+    content: html,
+  });
+});
+
+/**
+ * Route GET
+ * Rend la page d'ajout d'actualité côté ADMINISTRATEUR.
+ */
+app.get("/ajoutarticle", isAdmin, async function (req, res) {
+  res.render("admin/ajoutarticle", {
+    page_css1: "ajoutarticle.css",
+    page_css2: "headeradmin.css",
+  });
+});
+
+/**
+ * Route GET
+ * Rend la page d'une actualité spécifique côté CLIENT
+ * Récupère l'id de l'actualité dans la requête, puis récupère les infos dans la bdd grace à cet id
+ */
+app.get("/actualite/:id", async function (req, res) {
+  const [rows] = await pool.query("SELECT * FROM actualite WHERE id = ?", [
+    req.params.id,
+  ]);
+
+  const article = rows[0];
+  res.render("actualite", {
+    article,
+  });
+});
+
+/**
+ * Route GET
+ * Rend la page listant les actualités côté ADMINISTRATEUR (avec la une et les autres actualités séprarées).
+ * Les actualités sont triées par date de publication (de la plus récente à la plus ancienne).
  */
 app.get("/admin/actu", isAdmin, async function (req, res) {
   const [actualites] = await pool.query(
     "SELECT * FROM actualite ORDER BY date_publication DESC LIMIT 99999 OFFSET 1",
   );
+  //console.log(actualites);
   const [une] = await pool.query(
     "SELECT * FROM actualite ORDER BY date_publication DESC LIMIT 1",
   );
+  // console.log(une)
   const actu_une = une[0];
 
   res.render("admin/actualite_liste", {
@@ -1222,21 +1184,65 @@ app.get("/admin/actu", isAdmin, async function (req, res) {
 });
 
 /**
- * GET /ajoutarticle - Formulaire d'ajout d'actualité
- * Affiche le formulaire de création d'une nouvelle actualité avec éditeur Tiptap.
- * 
- * @route GET /ajoutarticle
- * @access admin
- * @returns {void} Renders 'admin/ajoutarticle' view
+ * Route GET
+ * Rend la page de récupération de mot de passe côté CLIENT (formulaire pour entrer son adresse email et recevoir un lien de réinitialisation du mot de passe).
  */
-app.get("/ajoutarticle", isAdmin, async function (req, res) {
-  res.render("admin/ajoutarticle", {
-    page_css1: "ajoutarticle.css",
-    page_css2: "headeradmin.css",
-  });
+app.get("/oubli_mdp", async function (req, res) {
+  try {
+    res.render("recuperation_mdp", {
+      page_css1: "headerclient.css",
+      page_css2: "recuperation.css",
+    });
+  } catch (err) {}
 });
 
+/**
+ * Route GET
+ * Rend la page de désabonnement côté CLIENT (formulaire pour entrer son adresse email et se désabonner de la newsletter).
+ */
+app.get("/desabonnement", async function (req, res) {
+  try {
+    const email = req.query.email || "";
+    res.render("desabonnement", {
+      page_css1: "headerclient.css",
+      page_css2: "contact.css",
+      email: email,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
 
+/**
+ * Route GET
+ * Renvoie la page de politique de confidentialité.
+ * Cette page est accessible à tous les utilisateurs (pas besoin d'être connecté) et contient les informations sur la gestion des données personnelles par l'entreprise, les droits des utilisateus, ...
+ */
+
+app.get("/politique-de-confidentialite", async function (req,res){
+  try{
+    res.render("confidentialite", {
+      page_css1:"headerclient.css",
+      page_css2:"confidentialite.css"
+    })
+  } catch(err){
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+})
+
+app.get("/usinage", async function(req,res){
+  try{
+    res.render("informations-complementaires/usinage", {
+      page_css1:"headerclient.css",
+      page_css2:"usinage.css"
+    })
+  } catch(err){
+    console.log(err)
+    res.status(500).send("Erreur serveur");
+  }
+})
 
 
 
@@ -1612,7 +1618,7 @@ app.post("/api/articles", isAdmin, uploadActu.single("presentation"), async func
         [contenuFinal, date, redacteur, titre, baseline, presentation],
       );
 
-      // -- Notification newsletter -------------------------------------
+      // ── Notification newsletter -----------------------------------
       const [abonnes] = await pool.query(
         "SELECT email FROM abonnement WHERE actif = 1",
       );
