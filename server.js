@@ -7,6 +7,7 @@
 
 Lors du renvoi des différentes pages, deux pages css sont aussi renvoyées afin de permettre au serveur de ne pas se surcharger en chargeant toutes les pages CSS
 */
+
 import express from "express";
 import session from "express-session";
 import crypto, { sign } from "crypto";
@@ -26,7 +27,9 @@ import { fileURLToPath } from "url";
 
 
 
+//SECTION - CONFIGURATION
 
+//ANCHOR: Configuration Multer
 // Multer
 // --- CONFIGURATION MULTER POUR LES PRODUITS ---
 const storageProduits = multer.diskStorage({
@@ -113,7 +116,7 @@ const globalStorage = multer({storage: storageGlobal})
 
 
 
-
+//ANCHOR: Configuration express
 // Settings d'express
 // ==> sert à rendre les views
 const app = express();
@@ -145,10 +148,10 @@ app.use((req, res, next) => {
 
 
 
+//SECTION - MIDDLEWARES
 
-//MIDDLEWARES MAISON
-/**
-Middleware "authenticate"
+//ANCHOR: Authenticate
+/*
 Vérifie que l'utilisateur est authentifié (présence de "session.userID").
 Si authentifié -> "next()", sinon redirige vers la page de connexion.
  */
@@ -160,8 +163,9 @@ function authenticate(req, res, next) {
   }
 }
 
-/**
-Middleware "isAdmin"
+
+//ANCHOR: isAdmin
+/*
 Vérifie que la session correspond à un administrateur.
 Si oui -> "next()", sinon redirige vers la page d'accueil.
  */
@@ -178,24 +182,16 @@ function isAdmin(req, res, next) {
 
 
 
-
-
-
-
-
-
-
-
-
 // ROUTES
 
-
+//SECTION - ROUTES GET
 
 
 // app.get
 
-/**
-GET /
+// ANCHOR:  Page d'accueil
+/*
+GET
 Page d'accueil : redirige les administrateurs vers l'interface admin,
 sinon affiche la page publique d'accueil.
 */
@@ -221,8 +217,8 @@ app.get("/", async function (req, res) {
 });
 
 
-/**
-GET /presentation
+//ANCHOR:  Page de présentation
+/*
 Page de présentation de l'entreprise. Rend la vue adaptée selon le rôle.
  */
 app.get("/presentation", async function (req, res) {
@@ -237,9 +233,8 @@ app.get("/presentation", async function (req, res) {
   }
 });
 
-// Route publique pour lister les machines
-/**
-GET /machines
+//ANCHOR:  Page de listing des machines de l'entreprise
+/*
 Route client listant toutes les machines (séparées par type).
  */
 app.get("/machines", async function (req, res) {
@@ -315,7 +310,7 @@ app.get("/machines", async function (req, res) {
 });
 
 
-// Route admin pour la gestion du parc machine (protégée)
+//ANCHOR:  Page admin de listing des machines de l'entreprise
 app.get("/admin/machines", isAdmin, async function (req, res) {
   try {
     /* Récupération globale des machines de la BDD
@@ -377,8 +372,8 @@ app.get("/admin/machines", isAdmin, async function (req, res) {
 });
 
 
-/**
-GET /realisations
+//ANCHOR:  Page de listing des réalisations de l'entreprise
+/*
 Liste les réalisations (portfolio). Supporte le filtrage par catégorie
 via le paramètre `categorie` en query string.
  */
@@ -440,9 +435,10 @@ app.get("/realisations", async function (req, res) {
 });
 
 
-/**
-GET /devis
-Page du formulaire de demande de devis. Récupère les dimensions max des machines pour éviter toutes demandes impossibles (affichage et validation côté client).
+//ANCHOR:  Page de demande de devis
+/*
+Page du formulaire de demande de devis. 
+Récupère les dimensions max des machines pour éviter toutes demandes impossibles (affichage et validation côté client).
  */
 app.get("/devis", async function (req, res) {
   try {
@@ -482,8 +478,8 @@ app.get("/devis", async function (req, res) {
 });
 
 
-/**
- * GET /contact
+//ANCHOR:  Page de contact
+/*
 Page de contact et formulaire pour envoyer un message à l'entreprise.
  */
 app.get("/contact", async function (req, res) {
@@ -518,8 +514,8 @@ app.get("/contact", async function (req, res) {
 });
 
 
-/**
- * GET /connexion
+//ANCHOR:  Page de connexion
+/*
 Page de connexion pour les utilisateurs (identification).
  */
 app.get("/connexion", async function (req, res) {
@@ -535,25 +531,9 @@ app.get("/connexion", async function (req, res) {
 });
 
 
-/**
- * GET /mentions
-Page des mentions légales.
- */
-app.get("/mentions", async function (req, res) {
-  try {
-    res.render("mentions", {
-      page_css1: "mentions.css",
-      page_css2: "headerclient.css",
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
 
-
+//ANCHOR:  Page de listing des offres d'emploi
 /*
-GET /offres
 Renvoie la page listant toutes les offres d'emploi disponibles sur le moment 
 Gère le choix des catégories par l'utilisateur
 Gère que la quantité do'ffre par catégorie et la distribution de ces dernières
@@ -598,8 +578,9 @@ app.get("/offres", async function (req, res) {
 });
 
 
+
+//ANCHOR:  Page d'affichage d'une offre spécifique
 /*
-GET /offre/:id
 Renvoie les informations concernant une offre d'emploi
 Récupère l'id de l'offre dans la requête, puis récupère les infos dans la bdd grace à cet id
 */
@@ -625,8 +606,9 @@ app.get("/offre/:id", async function (req, res) {
 });
 
 
+
+//ANCHOR:  Page pour postuler une offre précise
 /*
-GET postuler/:id
 Renvoie l'utilisateur vers la page d'envoi pour postuler sur l'offre
 */
 app.get("/postuler/:id", async function (req, res) {
@@ -649,25 +631,11 @@ app.get("/postuler/:id", async function (req, res) {
 });
 
 
-/**
- * GET /tests
-Page de test/de développement (utilitaire).
- */
-app.get("/tests", async function (req, res) {
-  try {
-    res.render("tests", {
-      page_css1: "tests.css",
-      page_css2: "headerclient.css",
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erreur serveur");
-  }
-});
 
 
-/**
- * GET /admin/accueil
+
+//ANCHOR:  Page d'accueil admin
+/*
 Tableau de bord administrateur (page d'accueil admin).
  */
 app.get("/admin/accueil", isAdmin, async function (req, res) {
@@ -683,8 +651,9 @@ app.get("/admin/accueil", isAdmin, async function (req, res) {
 });
 
 
-/**
- * GET /admin/presentation
+
+//ANCHOR:  Page de présentation de l'entreprsie pour l'admin
+/*
 Page admin pour modifier la page de présentation publique.
  */
 app.get("/admin/presentation", isAdmin, async function (req, res) {
@@ -700,8 +669,9 @@ app.get("/admin/presentation", isAdmin, async function (req, res) {
 });
 
 
-/**
- * GET /admin/realisations
+
+//ANCHOR:  Page de listing des réalisations de l'entreprise, pour l'admin
+/*
 Version administrateur du listing des réalisations (avec options de gestion).
  */
 app.get("/admin/realisations", isAdmin, async function (req, res) {
@@ -761,8 +731,8 @@ app.get("/admin/realisations", isAdmin, async function (req, res) {
 });
 
 
-/**
- * GET /deconnexion
+//ANCHOR:  Page de déconnexion / transition pour se déconnecter et détruire la session
+/*
 Détruit la session et déconnecte l'utilisateur.
  */
 app.get("/deconnexion", async function (req, res) {
@@ -783,8 +753,8 @@ app.get("/deconnexion", async function (req, res) {
 });
 
 
-/**
- * GET /api/max-dimensions
+//ANCHOR: Récupération des dimensions maximales (x,y,z) supportées par les machines
+/*
 Récupération des dimensions maximales des machines (capacité maximale) et renvoie de ces dernières sous format JSON
  */
 app.get("/api/max-dimensions", async (req, res) => {
@@ -800,9 +770,10 @@ app.get("/api/max-dimensions", async (req, res) => {
 });
 
 
-/**
- * GET /modif_realisations/:id
+//ANCHOR:  Page de modification d'une réalisation (d'un produit)
+/*
 Récupère les informations d'une réalisation et rend le formulaire de modification.
+Vérifie d'abord si l'utilisateur est un admin via le middleware isAdmin.
  */
 app.get("/modif_realisations/:id", isAdmin, async function (req, res) {
   try {
@@ -832,8 +803,8 @@ app.get("/modif_realisations/:id", isAdmin, async function (req, res) {
 });
 
 
-/**
- * GET /suppression
+//ANCHOR:  Page de suppression globale (catégorie, machine, réalisation)
+/*
 Page de confirmation de suppression (catégorie, réalisations, machines).
  */
 app.get("/admin/suppression", isAdmin, async function (req, res) {
@@ -855,8 +826,8 @@ app.get("/admin/suppression", isAdmin, async function (req, res) {
 });
 
 
-/**
- * GET /modif_machine/:id
+//ANCHOR:  Page de modification des informations d'une machine de l'entreprise
+/*
 Récupère une machine par son identifiant et rend le formulaire d'édition admin.
  */
 app.get("/modif_machine/:id", isAdmin, async function (req, res) {
@@ -883,9 +854,10 @@ app.get("/modif_machine/:id", isAdmin, async function (req, res) {
   }
 });
 
-/**
- * Route GET permettant d'accéder à la page de création d'une machine. 
- * Fournit un objet "machine" vide pour le rendu du formulaire et de la prévisualisation
+
+//ANCHOR:  Page de rentrée d'informations pour l'ajout d'une machine sur le site
+/*
+Fournit un objet "machine" vide pour le rendu du formulaire et de la prévisualisation
  */
 app.get("/admin/ajoutmachine", isAdmin, async function (req, res) {
   try {
@@ -920,10 +892,11 @@ app.get("/admin/ajoutmachine", isAdmin, async function (req, res) {
   }
 });
 
-/**
- * Route GET
- * Accéder à la page d'ajout de produit
- * Fournit un objet "produit" vide pour le rendu du formulaire et de la prévisualisation
+
+//ANCHOR:  Page de rentrée d'information pour l'ajout d'une réalisation sur le site
+/*
+Accéder à la page d'ajout de produit
+Fournit un objet "produit" vide pour le rendu du formulaire et de la prévisualisation
  */
 app.get("/admin/ajoutproduit", isAdmin, async function (req, res) {
   try {
@@ -950,8 +923,9 @@ app.get("/admin/ajoutproduit", isAdmin, async function (req, res) {
   }
 });
 
-/**
- * Route GET
+
+//ANCHOR:  Page de rentrée d'informations pour l'ajout d'une catégorie sur le site
+/*
  * Ramène vers la page d'ajout de catégorie. 
  * Récupère aussi les produits sans catégorie pour les afficher dans la page et permettre à l'administrateur de les catégoriser.
  */
@@ -985,8 +959,9 @@ app.get("/ajout_categorie", isAdmin, async function (req, res) {
   }
 });
 
-/**
- * route GET ramenant au profil de l'administrateur (informations personnelles). 
+
+//ANCHOR:  Page de gestion du profil utilisateur
+/*
  * Récupère les informations de l'utilisateur connecté grâce à son id stocké en session.
  * La page profil n'existe et n'est accessible que pour l'admin (pas de nécessité pour les clients d'avoir un compte pour le moment)
  */
@@ -1012,8 +987,9 @@ app.get("/admin/profil", isAdmin, async function (req, res) {
   }
 });
 
-/**
- * Route GET
+
+//ANCHOR:  Page de listing des offres (côté admin)
+/*
  * Rend la lage de listing des offres d'emploi côté ADMINISTRATEUR (avec options de gestion).
  * Gère aussi le filtrage par catégorie
  */
@@ -1053,8 +1029,9 @@ app.get("/admin/offres", isAdmin, async function (req, res) {
   }
 });
 
-/**
- * Route GET
+
+//ANCHOR:  Page de rentrée d'informations pour l'ajout d'une offre d'emploi sur le site
+/*
  * Rend la page d'ajout d'offre d'emploi côté ADMINISTRATEUR.
  * Récupère les informations nécessaires à l'affichage de la page 
  * (ex: les types d'offres déjà présents dans la bdd pour les proposer dans un menu déroulant, le nom de l'admin connecté pour l'afficher dans le header, etc.)
@@ -1091,8 +1068,9 @@ app.get("/ajoutoffre", isAdmin, async function (req, res) {
   });
 });
 
-/**
- * Route GET
+
+//ANCHOR:  Page de listing des actualités de l'entreprise
+/*
  * Rend la page listant les actualités côté CLIENT (avec la une et les autres actualités séparées).
  * Les actualités sont triées par date de publication (de la plus récente à la plus ancienne).
  */
@@ -1115,8 +1093,9 @@ app.get("/actualites", async function (req, res) {
   });
 });
 
-/**
- * Route GET
+
+//ANCHOR:  Page d'affichage d'un article d'actualités précise
+/*
  * Rend la page d'une actualité spécifique côté CLIENT.
  * Récupère l'id de l'actualité dans la requête, puis récupère les infos dans la bdd grace à cet id
  * Génère le contenu HTML de l'article à partir du contenu JSON stocké en base de données (grâce à tiptap et son StarterKit) pour pouvoir l'afficher correctement formaté dans la page.
@@ -1132,21 +1111,9 @@ app.get("/articles/:id", (req, res) => {
   });
 });
 
-/**
- * Route GET
- * Rend la page d'ajout d'actualité côté ADMINISTRATEUR.
- */
-app.get("/ajoutarticle", isAdmin, async function (req, res) {
-  res.render("admin/ajoutarticle", {
-    page_css1: "ajoutarticle.css",
-    page_css2: "headeradmin.css",
-  });
-});
-
-/**
- * Route GET
- * Rend la page d'une actualité spécifique côté CLIENT
- * Récupère l'id de l'actualité dans la requête, puis récupère les infos dans la bdd grace à cet id
+/*
+Rend la page d'une actualité spécifique côté CLIENT
+Récupère l'id de l'actualité dans la requête, puis récupère les infos dans la bdd grace à cet id
  */
 app.get("/actualite/:id", async function (req, res) {
   const [rows] = await pool.query("SELECT * FROM actualite WHERE id = ?", [
@@ -1159,10 +1126,24 @@ app.get("/actualite/:id", async function (req, res) {
   });
 });
 
-/**
- * Route GET
- * Rend la page listant les actualités côté ADMINISTRATEUR (avec la une et les autres actualités séprarées).
- * Les actualités sont triées par date de publication (de la plus récente à la plus ancienne).
+
+//ANCHOR:  Page d'entrée d'informations pour l'ajout d'article d'actualités sur le site
+/*
+Rend la page d'ajout d'actualité côté ADMINISTRATEUR.
+*/
+app.get("/ajoutarticle", isAdmin, async function (req, res) {
+  res.render("admin/ajoutarticle", {
+    page_css1: "ajoutarticle.css",
+    page_css2: "headeradmin.css",
+  });
+});
+
+
+
+//ANCHOR:  Page de listing des actualités (admin)
+/*
+Rend la page listant les actualités côté ADMINISTRATEUR (avec la une et les autres actualités séprarées).
+Les actualités sont triées par date de publication (de la plus récente à la plus ancienne).
  */
 app.get("/admin/actu", isAdmin, async function (req, res) {
   const [actualites] = await pool.query(
@@ -1183,9 +1164,10 @@ app.get("/admin/actu", isAdmin, async function (req, res) {
   });
 });
 
-/**
- * Route GET
- * Rend la page de récupération de mot de passe côté CLIENT (formulaire pour entrer son adresse email et recevoir un lien de réinitialisation du mot de passe).
+
+//ANCHOR:  Page de récupération du mot de passe oublié
+/*
+Rend la page de récupération de mot de passe côté CLIENT (formulaire pour entrer son adresse email et recevoir un lien de réinitialisation du mot de passe).
  */
 app.get("/oubli_mdp", async function (req, res) {
   try {
@@ -1196,9 +1178,10 @@ app.get("/oubli_mdp", async function (req, res) {
   } catch (err) {}
 });
 
-/**
- * Route GET
- * Rend la page de désabonnement côté CLIENT (formulaire pour entrer son adresse email et se désabonner de la newsletter).
+
+//ANCHOR:  Page de désabonnement à la newsletter de l'entreprise
+/*
+Rend la page de désabonnement côté CLIENT (formulaire pour entrer son adresse email et se désabonner de la newsletter).
  */
 app.get("/desabonnement", async function (req, res) {
   try {
@@ -1214,11 +1197,12 @@ app.get("/desabonnement", async function (req, res) {
   }
 });
 
-/**
- * Route GET
- * Renvoie la page de politique de confidentialité.
- * Cette page est accessible à tous les utilisateurs (pas besoin d'être connecté) et contient les informations sur la gestion des données personnelles par l'entreprise, les droits des utilisateus, ...
- */
+
+//ANCHOR:  Page des politiques de confidentialité
+/*
+Renvoie la page de politique de confidentialité.
+Cette page est accessible à tous les utilisateurs (pas besoin d'être connecté) et contient les informations sur la gestion des données personnelles par l'entreprise, les droits des utilisateus, ...
+*/
 
 app.get("/politique-de-confidentialite", async function (req,res){
   try{
@@ -1232,6 +1216,8 @@ app.get("/politique-de-confidentialite", async function (req,res){
   }
 })
 
+
+//ANCHOR:  Page d'explication "tournage" et "fraisage"
 app.get("/usinage", async function(req,res){
   try{
     res.render("informations-complementaires/usinage", {
@@ -1242,21 +1228,63 @@ app.get("/usinage", async function(req,res){
     console.log(err)
     res.status(500).send("Erreur serveur");
   }
-})
+});
+
+//ANCHOR: Page de mentions légales
+/*
+Page des mentions légales.
+ */
+app.get("/mentions", async function (req, res) {
+  try {
+    res.render("mentions", {
+      page_css1: "mentions.css",
+      page_css2: "headerclient.css",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
 
 
 
+//ANCHOR:  Page de tests
+/**
+Page de test/de développement (utilitaire).
+ */
+app.get("/tests", async function (req, res) {
+  try {
+    res.render("tests", {
+      page_css1: "tests.css",
+      page_css2: "headerclient.css",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erreur serveur");
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+//SECTION - ROUTES POST
 
 // app.post
 
 
-
-
-/**
- * Route POST /envoyer_cv
- * Traite le formulaire de candidature et envoi le CV ainsi que les informations du candidat par email à l'entreprise grâce à Nodemailer.
- * Gère aussi la validation basique du formulaire (présence du nom et de l'email) et le nettoyage des fichiers orphelins en cas d'erreur de validation.
- * Les fichiers sont stockés temporairement sur le serveur grâce à la configuration Multer (ligne 87) et sont joints à l'email envoyé à l'entreprise.
+//ANCHOR:  Envoi du CV à l’entreprise lors de la candidature à une offre d’emploi.
+/*
+Traite le formulaire de candidature et envoi le CV ainsi que les informations du candidat par email à l'entreprise grâce à Nodemailer.
+Gère aussi la validation basique du formulaire (présence du nom et de l'email) et le nettoyage des fichiers orphelins en cas d'erreur de validation.
+Les fichiers sont stockés temporairement sur le serveur grâce à la configuration Multer (ligne 87) et sont joints à l'email envoyé à l'entreprise.
+Envoi d'un mail avec les informations de l'utilisateur à l'entreprsie, ainsi qu'un mail à l'utilsiateur pour lui confirmer sa candidature
  */
 app.post("/envoyer_cv", uploadCV.array("fichiers", 5), async function (req, res) {
     try {
@@ -1473,8 +1501,9 @@ app.post("/envoyer_cv", uploadCV.array("fichiers", 5), async function (req, res)
 );
 
 
+
+//ANCHOR:  Suppression d'un article d'actualités de l'entreprise
 /*
-Route POST permettant la suppression d'un article d'actualités
 Récupère l'id de l'URL
 -> supprime l'image principale de l'article du disque de stockage
 -> Recherche toutes les images présentent dans l'article en lui-même, et les supprimes elles-aussi du stockage
@@ -1539,7 +1568,7 @@ app.post("/supprimerArticle", isAdmin, async function (req, res) {
 });
 
 
-// Route : upload temporaire d'une image inline
+//ANCHOR:  Stockage temporaire des images d'articles via Multer
 /*
 Sert pour la réalisation d'article
 -> lorsue l'utilisateur insère une image dans le CMS d'article, cette dernière est stockée temporairement dans le dossier /uploads/ 
@@ -1561,8 +1590,9 @@ app.post("/api/upload-temp", isAdmin, uploadTemp.single("image"), function (req,
 );
 
 
+
+//ANCHOR:  Transformation du texte d'un article pour l'insérer dans la BDD
 /*
-Route POST permettant (au click de validation sur la page CMS) d'ajouter l'article dans la bdd
 Récupère le contenu
 Trouve les images associées à ce contenu dans le dossier /uploads/ et les transfère vers le dossiers actus/ (/public/img/actus/)
 insère les données (dont le contenu) dans la bdd
@@ -1728,14 +1758,14 @@ app.post("/api/articles", isAdmin, uploadActu.single("presentation"), async func
 );
 
 
-/**
- * Route POST
- * Traite le formulaire de désabonnement de la newsletter.
- * Récupère l'adresse email depuis le formulaire, vérifie si elle est présente dans la base de données et active, puis la désactive 
- * (actif = false) pour arrêter les envois de newsletter à cette adresse.
- * 
- * Gère aussi les cas d'erreur (email manquante, email non trouvée ou déjà désabonnée) et renvoie des messages d'erreur appropriés à la page de désabonnement.
- */
+//ANCHOR:  Désabonnement de l'utilisateur à la newsletter
+/*
+Traite le formulaire de désabonnement de la newsletter.
+Récupère l'adresse email depuis le formulaire, vérifie si elle est présente dans la base de données et active, puis la désactive 
+(actif = false) pour arrêter les envois de newsletter à cette adresse.
+
+Gère aussi les cas d'erreur (email manquante, email non trouvée ou déjà désabonnée) et renvoie des messages d'erreur appropriés à la page de désabonnement.
+*/
 
 app.post("/desabonnement", async function (req, res) {
   try {
@@ -1781,8 +1811,8 @@ app.post("/desabonnement", async function (req, res) {
 });
 
 
+//ANCHOR:  Ajout de l'adresse mail dans la BDD
 /*
-route POST ajoutant l'adresse mail de la personne à la table de newslette
 Vérifie si l'adresse est déjà présente dans la bdd ou non, ou bien si elle est "active" ou "innactive"
 */
 app.post("/newsletter_add", async function (req, res) {
@@ -1837,8 +1867,8 @@ app.post("/newsletter_add", async function (req, res) {
 });
 
 
+//ANCHOR:  Renvoie les informations d'un article d'actualité précis pour l'afficher sur la page
 /*
-route POST qui renvoie à la page des détails sur un article d'actualité précis
 Récupération de l'id depuis l'URL (envoyé grace au formulaire metho POST)
 récupération de l'article grace à cet id
 */
@@ -1869,7 +1899,9 @@ app.post("/article", async function (req, res) {
 });
 
 
-/* Route post qui permet d'arriver sur une offre d'emploi précise
+
+//ANCHOR:  Renvoie les informations sur une offre d'emploi précise pour l'affichage
+/*
 l'id de l'offre est passée en paramètre d'URL, puis récupéré
 Grâce à l'id récupéré, on trouve tout les détails de l'offre dans la bdd, puis on les envoie avec la page
 Attention -> Différence entre "offre" et "offres". 
@@ -1912,11 +1944,15 @@ app.post("/consulter_offre", async function (req, res) {
 });
 
 
+
+//ANCHOR:  Ajout d'une offre d'emploi
 /*
-route POST pour ajouter une offre d'emploi
-Elle est longue, il faut pas se décourager
+Récupère les infos du formulaire dans la requête POST
+Définition de la date de création
+Insertion de toutes les données dans la BDD
 */
-app.post("/ajouteroffre", async function (req, res) {
+
+app.post("/ajouteroffre", isAdmin, async function (req, res) {
   //cconsole.log(req.body)
 
   /* 
@@ -2045,14 +2081,13 @@ app.post("/ajouteroffre", async function (req, res) {
 });
 
 
+//ANCHOR:  Confirmation des modifications apportées à une offre d'emploi
 /*
-route POST pour confirmer les modifications apportées à une offre d'emploi.
 récupère toutes les informations dans l'URL
-
 La route compare les anciennes versions des différentes informations avec les "nouvelles" pour ne modifier que celles qui ont été changées
 -> performances améliorées
 */
-app.post("/confirmer_modif/:id", async (req, res) => {
+app.post("/confirmer_modif/:id", isAdmin, async (req, res) => {
   try {
     const id = req.params.id;
 
@@ -2076,7 +2111,7 @@ app.post("/confirmer_modif/:id", async (req, res) => {
 
     Je vais être honnête, les conditions (if) n'apportent apparemment rien étant donné que 
     tout les console.log s'effectuent lorsque je modifies une seule section de l'offre.
-    Seul problème : j'ai modifié plein de trucs en même temps, donc je ne sais pas si les if ont aidé ou non
+    Seul problème : j'ai modifié plein d'éléments en même temps, donc je ne sais pas si les if ont aidé ou non.
 
     Si vous voyez ce message, ca veut surement dire que je n'ai pas eu le temps ou le courage de confirmer l'utilité 
     des "if" utilisés ci-dessous
@@ -2257,11 +2292,12 @@ app.post("/confirmer_modif/:id", async (req, res) => {
 });
 
 
+
+//ANCHOR:  Consulter une offre d'emploi en tant qu'admin
 /*
-Route POST pour consulter une offre en tant qu'admin
 récupère les informations de l'offre séparément pour les différencier plus facilement dans le fichier EJS
 */
-app.post("/admin/consulter_offre", async function (req, res) {
+app.post("/admin/consulter_offre", isAdmin, async function (req, res) {
   try {
     const id = req.body.offre_id;
     // console.log(id)
@@ -2296,11 +2332,11 @@ app.post("/admin/consulter_offre", async function (req, res) {
 });
 
 
+//ANCHOR:  Permet d'accéder à la page de modification d'une offre
 /* 
-Route POST qui permet d'arriver sur la page de modification de l'offre
 récupère l'id de l'offre concernée pour ensuite récupérer les infos de l'offre depuis la bdd et les renvoyer à la page correspondante
 */
-app.post("/modifier_offre_access", async function (req, res) {
+app.post("/modifier_offre_access", isAdmin, async function (req, res) {
   try {
     const id = req.body.offre_id;
     const [offre_format_liste] = await pool.query(
@@ -2326,12 +2362,13 @@ app.post("/modifier_offre_access", async function (req, res) {
 });
 
 
+
+//ANCHOR:  Suppression d'une offre d'emploi
 /*
-route POST pour supprimer une offre d'emploi
 demande validation avant l'envoi de l'appel (géré par fichier EJS)
 Récupère l'id de l'offre dans l'URL, puis la supprime de la BDD
 */
-app.post("/supprimer_offre", async function (req, res) {
+app.post("/supprimer_offre", isAdmin, async function (req, res) {
   try {
     const id = req.body.offre_id;
     const requete = "DELETE FROM offres WHERE offre_id = ?";
@@ -2345,7 +2382,7 @@ app.post("/supprimer_offre", async function (req, res) {
 });
 
 
-// Modifications infos profil (identifiant, email, téléphone, mot de passe)
+//ANCHOR:  Modification de l'identifiant de l'utilisateur
 /*
 Vérifie que l'utilisateur est admin (middleware isAdmin)
     - Récupère l'ID de l'utilisateur connect via la session
@@ -2376,8 +2413,9 @@ app.post("/modifier-id", isAdmin, async function (req, res) {
 });
 
 
+
+//ANCHOR:  Modification de l'adresse mail de l'utilisateur
 /*
-route POST pour modifier l'adresse email de l'utilisateur
 vérifie si l'ancien email = le nouveau pour éviter d'update la bdd inutilement
 */
 app.post("/modifier-email", isAdmin, async function (req, res) {
@@ -2404,8 +2442,9 @@ app.post("/modifier-email", isAdmin, async function (req, res) {
 });
 
 
+
+//ANCHOR:  Modification du numéro de téléphone de l'utilisateur
 /*
-route POST pour modifier le numéro de téléphone de l'utilisateur
 Récupère le nouveau et l'ancien numéro de téléphone depuis l'URL (formulaire method POST)
 compare l'ancien numéro et le nouveau pour éviter toutes interactions inutiles si l'utilisateur ne l'a pas changé -> performances du site
 */
@@ -2437,8 +2476,9 @@ app.post("/modifier-telephone", isAdmin, async function (req, res) {
 });
 
 
+
+//ANCHOR:  Modification du mot de passe de l'utilisateur
 /*
-route POST pour modifier le mot de passe de l'utilisateur
 Utilisation de sha256 -> hashage de mot de passe sécurisé
 */
 app.post("/modifier-mot-de-passe", isAdmin, async function (req, res) {
@@ -2528,8 +2568,9 @@ app.post("/modifier-mot-de-passe", isAdmin, async function (req, res) {
 });
 
 
+
+//ANCHOR:  Suppression d'une catégorie de produits de la BDD
 /*
-route POST pour supprimer une catégorie de la BDD
 Demande la confirmation avant l'envoi de l'appel /supprimer-categorie (fait dans le fichier ejs directement)
 récupère l'id de la catégorie concernée depuis l'URL pour ensuite la supprimer de la base de données
 */
@@ -2547,8 +2588,9 @@ app.post("/supprimer-categorie", isAdmin, async function (req, res) {
 });
 
 
+
+//ANCHOR:  Suppression d'une réalisation de la BDD
 /*
-route POST pour supprimer une réalisation de la BDD
 Demande confirmation avant d'envoyer l'appel /supprimer-realisation
 Récupère l'id de la réalisation concernée via l'URL puis la supprime de la base de donnée
 */
@@ -2580,8 +2622,8 @@ app.post("/supprimer-realisation", isAdmin, async function (req, res) {
 });
 
 
+//ANCHOR:  Suppression d'une machine de la BDD
 /*
-Route POST pour supprimer une machine de la BDD
 Demande la confirmation avant suppression (réalisé sur le EJS directement)
 Récupère l'id de la machine concernée dans l'URL et supprime grace à ce dernier
 */
@@ -2612,8 +2654,9 @@ app.post("/supprimer-machine", isAdmin, async function (req, res) {
 });
 
 
+
+//ANCHOR:  Création d'une catégorie de réalisations dans la BDD
 /*
-Route POSTpour ajouter une catégorie de produit à la bdd
 récupère les paramètres "categorie" (nom de la catégorie) et "produit_associe" reçus dans l'URL (via le formulaire method=POST)
 Il n'est pas nécessaire de renseigner un produit associé pour que la fonction fonctionne. C'est additionnel
 */
@@ -2641,15 +2684,12 @@ app.post("/ajouter_categorie", isAdmin, async function (req, res) {
 });
 
 
-/**
- * POST /ajouter_produit
- * Traite l'ajout d'une nouvelle réalisation (produit) depuis le back-office.
+
+//ANCHOR:  Création d'une réalisation dans la BDD
+/*
+Traite l'ajout d'une nouvelle réalisation (produit) depuis le back-office.
  */
-app.post(
-  "/ajouter_produit",
-  isAdmin,
-  uploadProduits.single("image_produit"),
-  async function (req, res) {
+app.post("/ajouter_produit", isAdmin, uploadProduits.single("image_produit"), async function (req, res) {
     try {
       const { nom_produit, description_produit, categorie } = req.body;
       const image = req.file ? "/img/produits/" + req.file.filename : null;
@@ -2674,8 +2714,9 @@ app.post(
 );
 
 
-/**
-POST /ajouter_machine
+
+//ANCHOR:  Création d'une machine dans la BDD
+/*
 Traite le formulaire d'ajout d'une nouvelle machine (admin).
 Gère l'upload d'image et insère la nouvelle ligne dans la table `machines`.
  */
@@ -2764,19 +2805,79 @@ app.post(
   },
 );
 
+//ANCHOR:  Modification d'une réalisation de la BDD
+/*
+Traite le formulaire d'édition d'une réalisation (admin), 
+Gère l'image
+*/
+app.post("/modifier_infos_realisation", uploadProduits.array("fichiers", 1), async function (req, res) {
+    try {
+      const { id_produit, nom_produit, description, categorie } = req.body;
 
+      let requete =
+        "UPDATE produits SET nom = ?, description = ?, categorie = ?";
+      let values = [nom_produit, description, categorie];
+
+      // 1. Gestion de la nouvelle image
+      if (req.files && req.files.length > 0) {
+        // --- LOGIQUE DE SUPPRESSION DE L'ANCIENNE IMAGE ---
+        // On cherche l'ancien nom de fichier en BDD avant d'écraser la donnée
+        const [ancienProduit] = await pool.query(
+          "SELECT image FROM produits WHERE id = ?",
+          [id_produit],
+        );
+
+        if (ancienProduit.length > 0 && ancienProduit[0].image) {
+          // On extrait juste le nom du fichier (au cas où tu stockes le chemin complet)
+          const nomFichierAncien = path.basename(ancienProduit[0].image);
+          const cheminAncienneImage = path.join(
+            "public/img/produits",
+            nomFichierAncien,
+          );
+
+          // On vérifie si le fichier existe avant de tenter de le supprimer
+          if (fs.existsSync(cheminAncienneImage)) {
+            fs.unlink(cheminAncienneImage, (err) => {
+              if (err)
+                console.error(
+                  "Erreur lors de la suppression de l'ancienne image :",
+                  err,
+                );
+              else
+                console.log(
+                  "Ancienne image supprimée avec succès :",
+                  nomFichierAncien,
+                );
+            });
+          }
+        }
+
+        const nouveauNomFichier = "/img/produits/" + req.files[0].filename;
+        requete += ", image = ?";
+        values.push(nouveauNomFichier);
+      }
+
+      requete += " WHERE id = ?";
+      values.push(id_produit);
+
+      await pool.query(requete, values);
+
+      res.redirect("/admin/realisations");
+    } catch (err) {
+      console.error("Erreur SQL ou Serveur :", err);
+      res.status(500).send("Erreur lors de la modification");
+    }
+  },
+);
+
+//ANCHOR:  Modification des informations d'une machine
 /**
- * Route POST
- * Sert à enregistrer les modifications d'une machine (avec gestion de l'image via Multer -> config en haut du serveur.js).
- * Si une nouvelle image est envoyée, l'ancienne est supprimée du serveur (si elle existe) pour : 
- * -> éviter d'avoir des fichiers orphelins
- * -> Sauver de l'espace disque
+Sert à enregistrer les modifications d'une machine (avec gestion de l'image via Multer -> config en haut du serveur.js).
+Si une nouvelle image est envoyée, l'ancienne est supprimée du serveur (si elle existe) pour : 
+-> éviter d'avoir des fichiers orphelins
+-> Sauver de l'espace disque
  */
-app.post(
-  "/modifier_infos_machine",
-  isAdmin,
-  uploadMachines.single("image_machine"),
-  async function (req, res) {
+app.post("/modifier_infos_machine", isAdmin, uploadMachines.single("image_machine"), async function (req, res) {
     try {
       const {
         id_machine,
@@ -2884,11 +2985,12 @@ app.post(
 );
 
 
-/**
- POST /envoyer-devis
+
+//ANCHOR:  Envoi de demande de devis
+/*
 Traite le formulaire de demande de devis, envoie un email avec les pièces jointes.
 Style du mail géré par le serveur
-// Limitation Multer à 10 fichiers (uploadProduits.array("fichiers", 10)) pour éviter les abus / le spam
+Limitation Multer à 10 fichiers (uploadProduits.array("fichiers", 10)) pour éviter les abus / le spam
  */
 app.post("/envoyer-devis", uploadProduits.array("fichiers", 10), async (req, res) => {
     try {
@@ -3138,79 +3240,11 @@ app.post("/envoyer-devis", uploadProduits.array("fichiers", 10), async (req, res
 );
 
 
-/**
- * POST /modifier_infos_realisation
- * Traite le formulaire d'édition d'une réalisation (admin), gère l'image.
- */
-app.post(
-  "/modifier_infos_realisation",
-  uploadProduits.array("fichiers", 1),
-  async function (req, res) {
-    try {
-      const { id_produit, nom_produit, description, categorie } = req.body;
-
-      let requete =
-        "UPDATE produits SET nom = ?, description = ?, categorie = ?";
-      let values = [nom_produit, description, categorie];
-
-      // 1. Gestion de la nouvelle image
-      if (req.files && req.files.length > 0) {
-        // --- LOGIQUE DE SUPPRESSION DE L'ANCIENNE IMAGE ---
-        // On cherche l'ancien nom de fichier en BDD avant d'écraser la donnée
-        const [ancienProduit] = await pool.query(
-          "SELECT image FROM produits WHERE id = ?",
-          [id_produit],
-        );
-
-        if (ancienProduit.length > 0 && ancienProduit[0].image) {
-          // On extrait juste le nom du fichier (au cas où tu stockes le chemin complet)
-          const nomFichierAncien = path.basename(ancienProduit[0].image);
-          const cheminAncienneImage = path.join(
-            "public/img/produits",
-            nomFichierAncien,
-          );
-
-          // On vérifie si le fichier existe avant de tenter de le supprimer
-          if (fs.existsSync(cheminAncienneImage)) {
-            fs.unlink(cheminAncienneImage, (err) => {
-              if (err)
-                console.error(
-                  "Erreur lors de la suppression de l'ancienne image :",
-                  err,
-                );
-              else
-                console.log(
-                  "Ancienne image supprimée avec succès :",
-                  nomFichierAncien,
-                );
-            });
-          }
-        }
-
-        const nouveauNomFichier = "/img/produits/" + req.files[0].filename;
-        requete += ", image = ?";
-        values.push(nouveauNomFichier);
-      }
-
-      requete += " WHERE id = ?";
-      values.push(id_produit);
-
-      await pool.query(requete, values);
-
-      res.redirect("/admin/realisations");
-    } catch (err) {
-      console.error("Erreur SQL ou Serveur :", err);
-      res.status(500).send("Erreur lors de la modification");
-    }
-  },
-);
-
-
-/**
- * POST /envoyer-contact
- * Envoie un email de contact avec les informations fournies.
- * Utilise Nodemailer pour l'envoi => passage par une adresse mail définie dans le .env => envoi à l'adresse mail définitive
- */
+//ANCHOR:  Prise de contact depuis la page dédiée
+/*
+Envoie un email de contact avec les informations fournies.
+Utilise Nodemailer pour l'envoi => passage par une adresse mail définie dans le .env => envoi à l'adresse mail définitive
+*/
 app.post("/envoyer-contact", async function (req, res) {
   const { nom, entreprise, email, telephone, objet, message } = req.body;
 
@@ -3364,11 +3398,12 @@ app.post("/envoyer-contact", async function (req, res) {
 });
 
 
-/**
-* POST /connexion
- * Authentifie un utilisateur en comparant les identifiants au hash stocké.
- * Remplit la session et redirige selon le rôle.
- */
+
+//ANCHOR: Connexion de l'utilisateur
+/*
+Authentifie un utilisateur en comparant les identifiants au hash stocké.
+Remplit la session et redirige selon le rôle.
+*/
 app.post("/connexion", async function (req, res) {
   const { id_user, password } = req.body;
   try {
@@ -3414,13 +3449,13 @@ app.post("/connexion", async function (req, res) {
 });
 
 
-/**
- * Route POST /recup_mdp/envoi_code
- * Traite la première étape de la récupération de mot de passe
- * - Vérifie si le mail existe dans la base
- * - Génère un code à 6 chiffres + token unique + expiration
- * - Invalide les anciens tokens non utilisés pour ce mail
- */
+//ANCHOR: Envoi du code de récupération de mot de passe
+/*
+Traite la première étape de la récupération de mot de passe
+  - Vérifie si le mail existe dans la base
+  - Génère un code à 6 chiffres + token unique + expiration
+  - Invalide les anciens tokens non utilisés pour ce mail
+*/
 app.post("/recup_mdp/envoi_code", async (req, res) => {
   const { mail } = req.body;
   //console.log(mail);
@@ -3488,9 +3523,10 @@ app.post("/recup_mdp/envoi_code", async (req, res) => {
 });
 
 
-/**
- * POST /recup_mdp/verif_code
- * Vérifie le code saisi par l'utilisateur
+
+//ANCHOR: Vérification du code de récupération du MDP
+/*
+Vérifie le code saisi par l'utilisateur
  */
 app.post("/recup_mdp/verif_code", async (req, res) => {
   const { mail, code } = req.body;
@@ -3535,10 +3571,11 @@ app.post("/recup_mdp/verif_code", async (req, res) => {
 });
 
 
-/**
- * POST /recup_mdp/nouveau_mdp
- * Réinitialise réellement le mot de passe
- */
+
+//ANCHOR: Rentrée du nouveau mot de passe suite à l'oubli de l'ancien
+/*
+Réinitialise réellement le mot de passe
+*/
 app.post("/recup_mdp/nouveau_mdp", async (req, res) => {
   const { token, password, password_confirm } = req.body;
 
@@ -3607,8 +3644,18 @@ app.post("/recup_mdp/nouveau_mdp", async (req, res) => {
   }
 });
 
-// Formate le mail pour reset le password
 
+
+
+
+
+
+//SECTION - Fonctions annexes
+
+
+
+//ANCHOR: Formatage du mail d'oubli de mot de passe
+// Formate le mail pour reset le password
 function buildResetEmail(code) {
   return `
     <!DOCTYPE html>
@@ -3723,8 +3770,11 @@ function buildResetEmail(code) {
 
 
 
+//SECTION - LOCAL ONLY
 
 
+
+//ANCHOR: Route de connexion rapide en tant qu'admin
 /* Fonction POST permettant de se connecter directement aux pages Admin
 Utile en production
 Afin d'afficher ce bouton, voici le code à insérer : 
@@ -3733,11 +3783,9 @@ Afin d'afficher ce bouton, voici le code à insérer :
   <button class="connexion-rapide" type="submit">Connexion Rapide</button>
 </form>
 
-
 ---
 À SUPPRIMER JUSTE AVANT LA MISE EN LIGNE SUR LE SERVEUR
 ---
-
 */
 app.post("/connexionrapide", async function (req, res) {
   try {
@@ -3758,8 +3806,10 @@ app.post("/connexionrapide", async function (req, res) {
 
 
 
+//SECTION - 404 Handler
 
 
+//ANCHOR: Page 404
 // Renvoie la page 404 si aucune des routes au dessus n'a récupéré l'appel
 
 app.use((req, res) => {
