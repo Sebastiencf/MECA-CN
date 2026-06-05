@@ -1,4 +1,4 @@
-/*
+/** 
  * server.js
  * Serveur Express principal de l'application.
  * - Configure les middlewares (sessions, bodyParser, static)
@@ -1282,7 +1282,7 @@ app.post("/envoyer_cv", uploadCV.array("fichiers", 5), async function (req, res)
         });
       }
 
-      // ── Transport Nodemailer ──
+      // -- Transport Nodemailer --
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -1297,7 +1297,7 @@ app.post("/envoyer_cv", uploadCV.array("fichiers", 5), async function (req, res)
         path: file.path,
       }));
 
-      // ── Offre concernée (si tu veux la tracer) ───────────────────
+      // ── Offre concernée ───────────────────
       // L'offre_id peut être passée en champ caché dans le formulaire :
       // <input type="hidden" name="offre_id" value="<%= offre.offre_id %>" />
       const offreId = req.body.offre_id || "Non précisé";
@@ -1390,7 +1390,7 @@ app.post("/envoyer_cv", uploadCV.array("fichiers", 5), async function (req, res)
         attachments,
       });
 
-      // ── Envoi du mail de confirmation au candidat ──
+      // ── Envoi du mail de confirmation au candidat --
       await transporter.sendMail({
         from: `"MECA-CN" <${process.env.EMAIL_USER}>`,
         to: mail,
@@ -1433,7 +1433,7 @@ app.post("/envoyer_cv", uploadCV.array("fichiers", 5), async function (req, res)
         `,
       });
 
-      // ── Suppression des fichiers temporaires ──
+      // -- Suppression des fichiers temporaires --
       req.files.forEach((file) => {
         fs.unlink(file.path, (err) => {
           if (err)
@@ -1441,7 +1441,7 @@ app.post("/envoyer_cv", uploadCV.array("fichiers", 5), async function (req, res)
         });
       });
 
-      // ── Succès ──
+      // -- Succès --
       res.render("confirmation_cv", {
         success: true,
         message: "Votre candidature a été envoyée avec succès !",
@@ -1579,7 +1579,7 @@ app.post("/api/articles", isAdmin, uploadActu.single("presentation"), async func
     }
 
     try {
-      // ── Déplacement des images temporaires inline ────────────────────
+      // -- Déplacement des images temporaires inline -------------------
       let contenuFinal = contenu;
       const regex = /src="\/uploads\/(tmp_[^"]+)"/g;
       let match;
@@ -1601,7 +1601,7 @@ app.post("/api/articles", isAdmin, uploadActu.single("presentation"), async func
           `/img/actus/${filename}`,
         );
       }
-      // ────────────────────────────────────────────────────────────────
+      // --------------------------------------------
 
       const date = new Date();
       const redacteur_id = req.session.userID;
@@ -1618,7 +1618,7 @@ app.post("/api/articles", isAdmin, uploadActu.single("presentation"), async func
         [contenuFinal, date, redacteur, titre, baseline, presentation],
       );
 
-      // ── Notification newsletter ──────────────────────────────────────
+      // -- Notification newsletter -------------------------------------
       const [abonnes] = await pool.query(
         "SELECT email FROM abonnement WHERE actif = 1",
       );

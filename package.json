@@ -21,5 +21,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js"
+  },
+  "devDependencies": {
+    "jsdoc": "^4.0.5"
   }
 }
