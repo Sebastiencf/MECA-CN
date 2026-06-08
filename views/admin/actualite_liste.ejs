@@ -6,7 +6,7 @@
         <div class="une-container">
             <div class="left-side">
                 <span class="une-span">
-                    <img src="/img/icons/star.svg" class="star-icon">
+                    <img src="/img/icons/star.svg" class="star-icon" alt="">
                     <p>À la une</p>
                 </span>
 
@@ -28,14 +28,14 @@
                 </form>
             </div>
             <div class="right-side">
-                <img src="<%=une.img_presentation %>" class="img-presentation">
+                <img src="<%=une.img_presentation %>" class="img-presentation" alt="Image de présentation de la une">
             </div>
 
 
             <form method="POST" action="/supprimerArticle" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article mis à la une ?');">
                 <input name="id" value="<%= une.id %>" type="hidden">
                 <button type="submit" class="supprimer-article">
-                    <img src="/img/icons/poubelle.png" class="supprimer-icon">
+                    <img src="/img/icons/poubelle.png" class="supprimer-icon" alt="Suppression d'actualité">
                 </button> 
             </form>
         </div>
@@ -55,7 +55,7 @@
         <div class="liste-actu">
             <% for (const element of actus){ %>
                 <div class="actu-presentation">
-                    <img src="<%= element.img_presentation %>" class="img-presentation">
+                    <img src="<%= element.img_presentation %>" class="img-presentation" alt="Image de présentation de l'acutalité">
                     <p class="date">Publié le <%= new Date(element.date_publication).toLocaleDateString('fr-FR') %></p>
                     <h3>
                         <%= element.titre %>
@@ -74,7 +74,7 @@
                     <form method="POST" action="/supprimerArticle" onsubmit="return confirm('Voulez-vous vraiment supprimer l\'article : \n« <%= element.titre %> » ?');">
                         <input name="id" value="<%= element.id %>" type="hidden">
                         <button type="submit" class="supprimer-article" >
-                            <img src="/img/icons/poubelle.png" class="supprimer-icon">
+                            <img src="/img/icons/poubelle.png" class="supprimer-icon" alt="suppression d'actualité">
                         </button> 
                     </form>
                 </div>

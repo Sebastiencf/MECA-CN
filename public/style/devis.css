@@ -1251,14 +1251,6 @@ tbody td:hover, .selected {
     font-weight: 700;
 }
 
-/* Ajout d'une virgule ou séparateur discret si le jour est affiché à côté */
-.head-day:not(:empty)::before {
-    content: " (";
-}
-.head-day:not(:empty)::after {
-    content: ")";
-}
-
 .head-month { 
     margin: 0; 
     font-size: 1.1rem; /* Ajusté de 2em à 1.1rem */

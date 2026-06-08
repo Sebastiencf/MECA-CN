@@ -394,7 +394,7 @@
     .machine-right-side img{
         width:100%;
         height:auto;
-        border-radius: 28px;
+        border-radius: 14px;
         object-fit:cover;
         box-shadow:0 30px 70px rgba(20,31,75,0.12);
     }
@@ -809,6 +809,7 @@
         margin: 0 0 8px;
         font-size: 1.2rem;
         line-height: 1.2;
+        color:white !important;
     }
 
     .machine-carousel-card-content p{
@@ -829,7 +830,7 @@
 
 
     .product-carousel-section{
-        padding: 80px 40px;
+        padding: 80px 20px;
         margin: 0 auto 40px;
         max-width: 1200px;
         background: #f8f9fb;
@@ -1275,7 +1276,7 @@
 
 
     .product-carousel-section{
-        padding: 80px 40px;
+        padding: 80px 20px;
         margin: 0 auto 40px;
         max-width: 1200px;
         background: #f8f9fb;

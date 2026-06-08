@@ -1,0 +1,86 @@
+@import url('usinage.css');
+
+
+
+/* ===== PAGE GUIDE ===== */
+
+.guide-cont {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px 20px;
+  line-height: 1.8;
+  color: #333333;
+}
+
+.guide-cont h1.title1 {
+  color: #2c4563;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 30px 0;
+  padding-bottom: 20px;
+  border-bottom: 3px solid #2c4563;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.guide-cont h2.title2 {
+  color: #2c4563;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-top: 40px;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid #2c4563;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.guide-cont p {
+  margin: 15px 0;
+  color: #555555;
+  line-height: 1.7;
+}
+
+.guide-cont ul {
+  margin: 20px 0;
+  padding-left: 30px;
+}
+
+.guide-cont li {
+  margin: 10px 0;
+  color: #555555;
+  line-height: 1.7;
+}
+
+
+
+
+
+.guide-img {
+  width: 100%;
+  max-width: 900px;
+  display: block;
+  margin: 25px auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+
+
+
+.guide-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 12px 25px;
+  background: #2c4563;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.guide-btn:hover {
+  background: #1f3348;
+  transform: translateY(-2px);
+}

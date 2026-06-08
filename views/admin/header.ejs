@@ -4,6 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Meta-description -->
+    <% if (typeof meta_description !== "undefined") { %>
+        <meta name="description" content="<%= meta_description %>">
+    <% } else { %>
+        <meta name="description" content="MECA-CN est une entreprise d’usinage située dans le Pas-de-Calais, spécialisée dans la fabrication de pièces mécaniques pour les industries B2B.">
+    <% } %>
+
     <title>MECA-CN</title>
 
 

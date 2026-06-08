@@ -32,7 +32,7 @@
       <h1>Vous voulez un devis ? <span>Nous nous en occupons.</span></h1>
       <p class="devis-hero-text">
         Vous avez un projet d"usinage complexe ou une pièce spécifique à
-        réaliser ? Transmettez-nous vos plans. Nos experts analysent vos besoins
+        réaliser ? Transmettez-nous vos plans. Nous analysons vos besoins
         techniques avec précision.
       </p>
     </div>
@@ -127,10 +127,6 @@
                   </div>
                 </div>
               </div>
-
-
-
-
           </div>
           <div class="nav-btns mobile-only">
             <button type="button" class="btn-next" onclick="nextStep(3)">
@@ -173,9 +169,6 @@
 
             <p class="usinage-savoir-plus"><em>Pour en savoir plus sur ce que sont le tournage et le fraisage, <a href="/usinage">cliquez ici</a></em></p>
          </div>
-
-
-
 
          <!-- ========== Dimensions tournage =========== -->
         <div id="dims-tournage" class="form-row dims-group" style="margin-bottom: 24px; display:none; flex-wrap:wrap;">
@@ -227,7 +220,6 @@
             <input type="hidden" name="dim_x" />
           </div>
 
-
           <div class="form-group">
             <div class="tooltip-holder">
               <label>Dimension Y *</label>
@@ -246,7 +238,6 @@
             </div>
             <input type="hidden" name="dim_y" />
           </div>
-
 
           <div class="form-group">
             <div class="tooltip-holder">
@@ -267,8 +258,6 @@
             <input type="hidden" name="dim_z" />
           </div>
         </div>
-
-
 
           <label>Choisissez une date de livraison souhaitée *</label>
           <div class="elegant-calencar">
@@ -385,11 +374,17 @@
           </div>
           <p class="upload-restrictions">
             Les fichiers compressés (ZIP) ne sont pas acceptés. <br />Taille
-            maximale par fichier : 20 Mo. <br />Taille totale maximale : 250 Mo.
+            maximale par fichier : 15 Mo. <br />Taille totale maximale : 30 Mo.
+            <small><br><br>Si vous possèdez des fichiers de plus de 30 Mo, nous vous conseillons <br>de les transformer en <a href="/aide">lien Google Drive</a> et de renseigner ce lien <br>dans la section "Informations Complémentaires".</small>
           </p>
           <br />
           <div class="upload-files-preview" id="upload-files-preview">
             <p class="upload-files-empty">Aucun fichier sélectionné.</p>
+          </div>
+          <!-- Avertissement fichier volumineux -->
+          <div id="google-drive-warning" class="google-drive-warning" style="display: none; margin-top: 16px; padding: 12px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px;">
+            <p style="margin: 0; color: #78350f; font-size: 14px;"><strong>⚠️ Fichier volumineux détecté</strong><br>
+            <span id="google-drive-warning-text" style="display: block; margin-top: 4px;"></span></p>
           </div>
           <div class="nav-btns mobile-only">
             <button type="button" class="btn-next" onclick="nextStep(5)">
@@ -455,12 +450,17 @@
             ← Retourner en arrière
           </button>
           <h2>Description <span>complémentaire</span></h2>
+          <!-- Note pour fichiers volumineux -->
+          <div id="step5-google-drive-note" style="display: none; margin-bottom: 20px; padding: 12px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px;">
+            <p style="margin: 0; color: #78350f; font-size: 14px;"><strong>📎 Fichier volumineux</strong><br>
+            Vous avez téléchargé un fichier volumineux. Pour améliorer la transmission, vous pouvez <strong>renseigner le lien Google Drive</strong> ci-dessous (optionnel).</p>
+          </div>
           <div class="form-group full">
             <label>Avez-vous d'autres informations ?</label>
             <textarea
               name="description"
               rows="6"
-              placeholder="Précisions techniques, finitions..."
+              placeholder="Précisions techniques, finitions... Lien Google Drive si fichier volumineux (ex: https://drive.google.com/file/d/...)"
               maxlength="8192"
             ></textarea>
           </div>
@@ -491,9 +491,6 @@
     </div>
   </section>
 
-
-
-
   <div class="sending-overlay" id="sending-overlay" aria-hidden="true">
     <div class="sending-card">
       <div class="sending-spinner"></div>
@@ -501,10 +498,6 @@
       <p class="sending-subtitle">Merci de patienter, votre demande est en cours d'envoi.</p>
     </div>
   </div>
-
-
-
-
 </main>
 
 <script>
@@ -513,6 +506,7 @@
     // ── VARIABLES GLOBALES ───────────────────────────────────────────
     var maxDimensions = null;
     var captchaQuestion = "<%= captchaQuestion %>";
+    var hasLargeFiles = false;
 
     // Charger les dimensions max des machines
     fetch("/api/max-dimensions")
@@ -523,9 +517,7 @@
       })
       .catch((err) => console.error("Erreur chargement dimensions:", err));
 
-
     console.log("Captcha question:", captchaQuestion);
-
 
     // ── CONVERSION D'UNITÉS ──────────────────────────────────────────
     function convertToMm(value, unit) {
@@ -542,7 +534,6 @@
       var procede = document.getElementById("type_usinage").value;
       var showTournage = procede === "tournage";
       var showFraisage = procede === "fraisage";
-      // "les_deux" et "Je ne sais pas" → tout afficher
       var showBoth = procede === "les_deux" || procede === "" || procede === "Je ne sais pas";
 
       var dimsTournage = document.getElementById("dims-tournage");
@@ -551,7 +542,6 @@
       dimsTournage.style.display = (showTournage || showBoth) ? "flex" : "none";
       dimsFraisage.style.display = (showFraisage || showBoth) ? "flex" : "none";
 
-      // Gérer le required dynamiquement
       var inputsTournage = dimsTournage.querySelectorAll("input[type='number']");
       var inputsFraisage = dimsFraisage.querySelectorAll("input[type='number']");
 
@@ -564,7 +554,7 @@
     }
 
     document.getElementById("type_usinage").addEventListener("change", toggleDimensions);
-    toggleDimensions(); // appel initial
+    toggleDimensions();
 
     function updateHiddenDimensions() {
       var procede = document.getElementById("type_usinage").value;
@@ -588,8 +578,7 @@
         var unitDiametre = document.getElementById("unit_diametre").value;
         document.querySelector('input[name="diametre"]').value = convertToMm(displayDiametre, unitDiametre);
       }
-}
-
+    }
 
     function validateDimensions() {
       if (!maxDimensions) {
@@ -608,47 +597,34 @@
 
         const maxLength = Math.max(maxDimensions.max_x, maxDimensions.max_longueur);
         if (dimX > maxLength) {
-          showErrorModal(
-            "Dimensions incompatibles",
-            "La longueur de votre pièce dépasse les capacités de nos machines (max : " + maxLength + " mm)."
-          );
+          showErrorModal("Dimensions incompatibles", "La longueur de votre pièce dépasse les capacités de nos machines (max : " + maxLength + " mm).");
           return false;
         }
 
         const maxWidth = Math.max(maxDimensions.max_y, maxDimensions.max_diametre);
         if (dimY > maxWidth) {
-          showErrorModal(
-            "Dimensions incompatibles",
-            "La largeur de votre pièce dépasse les capacités de nos machines (max : " + maxWidth + " mm)."
-          );
+          showErrorModal("Dimensions incompatibles", "La largeur de votre pièce dépasse les capacités de nos machines (max : " + maxWidth + " mm).");
           return false;
         }
 
         const maxHeight = Math.max(maxDimensions.max_z, maxDimensions.max_diametre);
         if (dimZ > maxHeight) {
-          showErrorModal(
-            "Dimensions incompatibles",
-            "La hauteur de votre pièce dépasse les capacités de nos machines (max : " + maxHeight + " mm)."
-          );
+          showErrorModal("Dimensions incompatibles", "La hauteur de votre pièce dépasse les capacités de nos machines (max : " + maxHeight + " mm).");
           return false;
         }
-      } // ← accolade fermante du if (usesFraisage) — c'était celle-ci qui manquait
+      }
 
       if (usesTournage && maxDimensions.max_longueur && maxDimensions.max_diametre) {
         var longueur = parseFloat(document.querySelector("input[name='longueur']").value) || 0;
         var diametre = parseFloat(document.querySelector("input[name='diametre']").value) || 0;
         if (longueur > maxDimensions.max_longueur || diametre > maxDimensions.max_diametre) {
-          showErrorModal(
-            "Dimensions incompatibles",
-            "Les dimensions tournage (L:" + longueur + " mm / Ø:" + diametre + " mm) dépassent les capacités (max L:" + maxDimensions.max_longueur + " / Ø:" + maxDimensions.max_diametre + " mm)."
-          );
+          showErrorModal("Dimensions incompatibles", "Les dimensions tournage (L:" + longueur + " mm / Ø:" + diametre + " mm) dépassent les capacités (max L:" + maxDimensions.max_longueur + " / Ø:" + maxDimensions.max_diametre + " mm).");
           return false;
         }
       }
 
       return true;
     }
-
 
     // ── MODAL ERREUR DIMENSIONS ──────────────────────────────────────
     var errorModal = document.getElementById("error-modal");
@@ -670,7 +646,6 @@
     errorModal.addEventListener("click", function (e) {
       if (e.target === errorModal) hideErrorModal();
     });
-
 
     // ── CALENDRIER ───────────────────────────────────────────────────
     var today = new Date(),
@@ -699,14 +674,16 @@
       }
     };
 
-    Calendar.prototype.drawHeader = function (e) {
+    Calendar.prototype.drawHeader = function (selectedDate) {
       var headDay = document.getElementsByClassName("head-day");
       var headMonth = document.getElementsByClassName("head-month");
       
-      // Si un jour est sélectionné/passé en paramètre, on l'affiche proprement
-
-      
-      headMonth[0].innerHTML = monthTag[month] + " " + year;
+      if (selectedDate && !isNaN(selectedDate)) {
+        headDay[0].innerHTML = selectedDate + " " + monthTag[month] + " " + year;
+      } else {
+        headDay[0].innerHTML = monthTag[month] + " " + year;
+      }
+    
     };
 
     Calendar.prototype.drawDays = function () {
@@ -749,18 +726,15 @@
     Calendar.prototype.clickDay = function (o) {
       if (o.innerHTML === "") return;
 
-      var clickedDate = new Date(year, month, o.innerHTML); // ← déclaré EN PREMIER
+      var clickedDate = new Date(year, month, o.innerHTML);
       var todayMidnight = new Date();
       todayMidnight.setHours(0, 0, 0, 0);
 
-
-      // 1. Calculer la date limite (Aujourd'hui + 7 jours)
       var minDeliveryDate = new Date(todayMidnight);
-      minDeliveryDate.setDate(minDeliveryDate.getDate() + 7); // Ajoute strictement 7 jours
+      minDeliveryDate.setDate(minDeliveryDate.getDate() + 7);
 
-      var dayOfWeek = clickedDate.getDay(); // ← maintenant clickedDate existe
+      var dayOfWeek = clickedDate.getDay();
 
-      
       if (dayOfWeek === 0 || dayOfWeek === 6) {
         showErrorModal("Jour non ouvrable", "Veuillez choisir un jour de semaine (lundi au vendredi).");
         return;
@@ -769,7 +743,6 @@
       if (clickedDate <= todayMidnight) {
         showErrorModal("Date invalide", "La date sélectionnée ne peut pas être antérieure à aujourd'hui. Veuillez choisir une date future.");
         return;
-        
       }
 
       if (clickedDate <= minDeliveryDate){
@@ -809,13 +782,6 @@
 
     var calendar = new Calendar();
 
-
-
-
-
-
-
-
     // ── UPLOAD FICHIERS ──────────────────────────────────────────────
     var fileInput = document.getElementById("fichiers-input");
     var uploadBox = document.querySelector(".upload-box");
@@ -823,8 +789,28 @@
     var uploadButton = document.querySelector(".upload-button");
     var selectedFiles = [];
     var WARNING_FILE_SIZE = 30 * 1024 * 1024;
-    var MAX_FILE_SIZE = 20 * 1024 * 1024;
-    var MAX_TOTAL_SIZE = 250 * 1024 * 1024;
+    var MAX_FILE_SIZE = 15 * 1024 * 1024;
+    var MAX_TOTAL_SIZE = 30 * 1024 * 1024;
+
+    function showGoogleDriveWarning(file) {
+      var warningDiv = document.getElementById("google-drive-warning");
+      var warningText = document.getElementById("google-drive-warning-text");
+      var step5Note = document.getElementById("step5-google-drive-note");
+      
+      warningText.innerHTML = "<strong>" + file.name + "</strong> (" + formatBytes(file.size) + ") dépasse les 30 Mo maximums supportés par notre serveur. Nous vous suggérons de partager ce fichier via Google Drive dans la section « Informations complémentaires ».";
+      
+      warningDiv.style.display = "block";
+      step5Note.style.display = "block";
+      hasLargeFiles = true;
+    }
+    
+    function hideGoogleDriveWarning() {
+      var warningDiv = document.getElementById("google-drive-warning");
+      var step5Note = document.getElementById("step5-google-drive-note");
+      warningDiv.style.display = "none";
+      step5Note.style.display = "none";
+      hasLargeFiles = false;
+    }
 
     function formatBytes(bytes) {
       if (bytes === 0) return "0 octet";
@@ -836,25 +822,37 @@
     function validateFiles(files, existingFiles) {
       var filtered = [], errors = [];
       var totalSize = existingFiles.reduce(function (sum, f) { return sum + f.size; }, 0);
-
+      var largestFile = null;
+      var largestFileSize = 0;
+    
       files.forEach(function (file) {
         var ext = file.name.split(".").pop().toLowerCase();
         if (ext === "zip") { 
           errors.push("Les fichiers ZIP ne sont pas autorisés : " + file.name); 
           return; 
         }
-
-        if (file.size > WARNING_FILE_SIZE) {
-            errors.push("Attention, notre boîte mail (orange) n'accepte pas directement les fichiers de plus de 30Mo. Afin de s'assurer du bon envoi de tout vos fichiers, nous vous conseillons de transformer les fichiers suivants en liens google drive : " + file.name) 
+    
+        if (file.size > largestFileSize) {
+          largestFileSize = file.size;
+          largestFile = file;
         }
         
         if (totalSize + file.size > MAX_TOTAL_SIZE) { 
-          errors.push("La taille totale dépasse 250 Mo avec : " + file.name); 
+          errors.push("La taille totale dépasse " + MAX_TOTAL_SIZE / 1024 / 1024 + " Mo avec : " + file.name); 
           return; 
         }
         totalSize += file.size;
         filtered.push(file);
       });
+    
+      var finalTotalSize = totalSize;
+      filtered.forEach(function (f) { finalTotalSize += f.size; });
+      
+      if (finalTotalSize > WARNING_FILE_SIZE && largestFile) {
+        showGoogleDriveWarning(largestFile);
+      } else {
+        hideGoogleDriveWarning();
+      }
 
       return { files: filtered, errors: errors };
     }
@@ -867,7 +865,9 @@
 
     function clearUploadError() {
       var errorNode = filePreview.querySelector(".upload-files-error");
-      if (errorNode) errorNode.remove();
+      if (errorNode){
+        errorNode.remove();
+      } 
     }
 
     function updateFileInput() {
@@ -879,6 +879,7 @@
     function updateFilePreview() {
       clearUploadError();
       if (selectedFiles.length === 0) {
+        hideGoogleDriveWarning();
         filePreview.innerHTML = '<p class="upload-files-empty">Aucun fichier sélectionné.</p>';
         return;
       }
@@ -891,9 +892,6 @@
         }).join("") +
         "</ul><div class='upload-files-total'>Total : " + formatBytes(totalSize) + " / 250 Mo</div>";
     }
-
-
-
 
     // ── MODALE FOURNITURE MATIÈRE ────────────────────────────────────
     var matiereInput = document.querySelector('input[name="matiere"]');
@@ -919,9 +917,6 @@
       matiereModal.classList.remove("visible");
       matiereModal.setAttribute("aria-hidden", "true");
     });
-
-
-
 
     var pendingRemoveIndex = null;
     var confirmModal = document.getElementById("confirm-modal");
@@ -982,7 +977,6 @@
 
     updateFilePreview();
 
-
     // ── STEPPER (NAVIGATION MOBILE) ──────────────────────────────────
     window.nextStep = function (step) {
       if (window.innerWidth <= 768) {
@@ -1000,7 +994,6 @@
       }
       if (step === 6) generateRecap();
     };
-
 
     // ── RÉCAPITULATIF ────────────────────────────────────────────────
     function generateRecap() {
@@ -1055,7 +1048,6 @@
         "</div>";
     }
 
-
     // ── CAPTCHA MAISON ───────────────────────────────────────────────
     var captchaModal = document.getElementById("captcha-modal");
     var captchaInput = document.getElementById("captcha-input");
@@ -1079,7 +1071,6 @@
       captchaModal.setAttribute("aria-hidden", "true");
     }
 
-    // Intercepte le submit → ouvre la modal captcha
     devisForm.addEventListener("submit", function (e) {
       e.preventDefault();
       updateHiddenDimensions();
@@ -1087,14 +1078,13 @@
       openCaptchaModal();
     });
 
-    // Bouton "Envoyer" dans la modal captcha
     confirmCaptchaBtn.addEventListener("click", function () {
       if (captchaInput.value.trim() === "") {
         captchaError.textContent = "Veuillez entrer une réponse.";
         captchaInput.focus();
         return;
       }
-
+    
       var hiddenInput = document.getElementById("captcha-answer-hidden");
       if (!hiddenInput) {
         hiddenInput = document.createElement("input");
@@ -1104,17 +1094,16 @@
         devisForm.appendChild(hiddenInput);
       }
       hiddenInput.value = captchaInput.value.trim();
-
+    
       closeCaptchaModal();
-
+    
       var overlay = document.getElementById("sending-overlay");
       overlay.classList.add("visible");
       overlay.setAttribute("aria-hidden", "false");
-
+    
       devisForm.submit();
     });
 
-    // Valider avec la touche Entrée
     captchaInput.addEventListener("keydown", function (e) {
       if (e.key === "Enter") confirmCaptchaBtn.click();
     });

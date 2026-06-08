@@ -23,6 +23,7 @@ import { findSourceMap } from "module";
 import { generateHTML } from "@tiptap/html";
 import StarterKit from "@tiptap/starter-kit";
 import { fileURLToPath } from "url";
+import helmet from "helmet";
 
 
 
@@ -128,6 +129,7 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(helmet());
 app.use(
   session({
     secret: "keyboard cat",
@@ -427,6 +429,10 @@ app.get("/realisations", async function (req, res) {
       produit1: produit1,
       categories: categories,
       categorieChoisie: categorieChoisie || "all",
+      meta_description:`
+        MECA-CN réalise des pièces d’usinage de haute précision 
+        pour les secteurs médical, automobile, agroalimentaire et électronique.
+      `,
     });
   } catch (err) {
     console.error("Erreur SQL ou Serveur :", err);
@@ -469,7 +475,10 @@ app.get("/devis", async function (req, res) {
       role: req.session.role,
       captchaQuestion: op.label, // ex: "7 + 3"
       page_devis: devis_pre,
-      role: req.session.role,
+      meta_description: `
+        MECA-CN fabrique des pièces mécaniques de haute qualité en 
+        respectant vos délais et contraintes. Contactez-nous pour vos projets d’usinage.
+      `
     });
   } catch (err) {
     console.error(err);
@@ -506,6 +515,10 @@ app.get("/contact", async function (req, res) {
       captchaQuestion: op.label,
       page_contact: contact_pre,
       role: req.session.role,
+      meta_description: `
+        Besoin d’informations sur l’usinage ? MECA-CN vous conseille 
+        et vous accompagne dans vos projets de fabrication de pièces mécaniques.
+      `
     });
   } catch (err) {
     console.error(err);
@@ -570,6 +583,11 @@ app.get("/offres", async function (req, res) {
       offres: offresResultat,
       categories: categories,
       categorieChoisie: categorieChoisie || "all",
+      meta_description: `
+        MECA-CN recrute régulièrement de nouveaux talents pour 
+        renforcer ses équipes en usinage et production industrielle. 
+        Rejoignez-nous !
+      `,
     });
   } catch (err) {
     console.error(err);
@@ -723,6 +741,10 @@ app.get("/admin/realisations", isAdmin, async function (req, res) {
       produit1: produit1,
       categories: categories,
       categorieChoisie: categorieChoisie || "all",
+      meta_description:`
+        MECA-CN réalise des pièces d’usinage de haute précision 
+        pour les secteurs médical, automobile, agroalimentaire et électronique.
+      `,
     });
   } catch (err) {
     console.error("Erreur SQL ou Serveur :", err);
@@ -1022,6 +1044,11 @@ app.get("/admin/offres", isAdmin, async function (req, res) {
       offres: offresResultat,
       categories: categories,
       categorieChoisie: categorieChoisie || "all",
+      meta_description: `
+        Vous recherchez du travail ?
+        Vous êtes au bon endroit !
+        Nous recherchons régulièrement de nouveaux éléments pour intégrer nos équipes !
+      `,
     });
   } catch (err) {
     console.error(err);
@@ -1066,6 +1093,7 @@ app.get("/ajoutoffre", isAdmin, async function (req, res) {
     presentation: presentation,
     categories: categories,
   });
+  
 });
 
 
@@ -1090,6 +1118,9 @@ app.get("/actualites", async function (req, res) {
     page_css2: "actualite-liste.css",
     une: actu_une,
     actus: actualites,
+    meta_description: `
+        Suivez l’actualité de MECA-CN : nouvelles machines, certifications et innovations dans l’usinage industriel et la production mécanique.
+      `,
   });
 });
 
@@ -1208,7 +1239,8 @@ app.get("/politique-de-confidentialite", async function (req,res){
   try{
     res.render("confidentialite", {
       page_css1:"headerclient.css",
-      page_css2:"confidentialite.css"
+      page_css2:"confidentialite.css",
+      role: req.session.role,
     })
   } catch(err){
     console.error(err);
@@ -1222,7 +1254,13 @@ app.get("/usinage", async function(req,res){
   try{
     res.render("informations-complementaires/usinage", {
       page_css1:"headerclient.css",
-      page_css2:"usinage.css"
+      page_css2:"usinage.css",
+      meta_description: `
+        Quelle différence entre fraisage et tournage ? 
+        Découvrez les principales méthodes d’usinage 
+        utilisées pour la fabrication de pièces mécaniques.
+
+      `,
     })
   } catch(err){
     console.log(err)
@@ -1239,6 +1277,7 @@ app.get("/mentions", async function (req, res) {
     res.render("mentions", {
       page_css1: "mentions.css",
       page_css2: "headerclient.css",
+      role: req.session.role,
     });
   } catch (err) {
     console.error(err);
@@ -1246,6 +1285,25 @@ app.get("/mentions", async function (req, res) {
   }
 });
 
+app.get("/aide", async function(req,res){
+  try{
+
+    if (req.session.role === "admin"){
+      res.render("aide", {
+        page_css1:"aide.css",
+        page_css2:"headeradmin.css"
+      })
+    } else{
+      res.render("aide", {
+        page_css1:"aide.css",
+        page_css2:"headerclient.css"
+      })
+    }
+  } catch(err){
+    console.error(err);
+    res.status(500).send("Erreur serveur")
+  }
+})
 
 
 //ANCHOR:  Page de tests
@@ -1263,6 +1321,8 @@ app.get("/tests", async function (req, res) {
     res.status(500).send("Erreur serveur");
   }
 });
+
+
 
 
 

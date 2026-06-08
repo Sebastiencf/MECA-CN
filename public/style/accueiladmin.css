@@ -393,7 +393,7 @@
     .machine-right-side img{
         width:100%;
         height:auto;
-        border-radius: 28px;
+        border-radius: 14px;
         object-fit:cover;
         box-shadow:0 30px 70px rgba(20,31,75,0.12);
     }
@@ -771,7 +771,7 @@
 
 
     .product-carousel-section{
-        padding: 80px 40px;
+        padding: 80px 20px;
         margin: 0 auto 40px;
         max-width: 1200px;
         background: #f8f9fb;
@@ -987,7 +987,6 @@
         color:white;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
     .landing_btn:hover{
         transform:translateY(-2px);
         box-shadow:0 22px 40px rgba(0,0,0,0.18);
@@ -1051,7 +1050,8 @@
         object-fit: contain;
     }
 
-    .presentation-mobile .landing_btn.know-more-btn {
+    .presentation-mobile 
+    .landing_btn.know-more-btn {
         margin-top: 10px;
         background: #000;
         justify-content: center;
@@ -1183,6 +1183,7 @@
         margin: 0 0 8px;
         font-size: 1.2rem;
         line-height: 1.2;
+        color:white !important;
     }
 
     .machine-carousel-card-content p{
@@ -1202,14 +1203,30 @@
     }
 
 
-    .machine-carousel-bottom-header { overflow-x: auto; min-width: 0; }
-    .machine-carousel-bottom-header .separateur-horizontal { flex: 1 1 0; min-width: 0; max-width: 120px; height: 10px; margin: 0; border-radius: 999px; }
-    .machine-carousel-bottom-header .machine-carousel-link { flex-shrink: 0; }
+    .machine-carousel-bottom-header { 
+        overflow-x: auto; 
+        min-width: 0; 
+    }
+
+    .machine-carousel-bottom-header 
+    .separateur-horizontal { 
+        flex: 1 1 0;
+        min-width: 0; 
+        max-width: 120px; 
+        height: 10px; 
+        margin: 0; 
+        border-radius: 999px; 
+    }
+
+    .machine-carousel-bottom-header 
+    .machine-carousel-link { 
+        flex-shrink: 0; 
+    }
 
 
 
     .product-carousel-section{
-        padding: 80px 40px;
+        padding: 80px 20px;
         margin: 0 auto 40px;
         max-width: 1200px;
         background: #f8f9fb;

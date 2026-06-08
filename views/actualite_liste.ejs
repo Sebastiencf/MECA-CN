@@ -6,7 +6,7 @@
         <div class="une-container">
             <div class="left-side">
                 <span class="une-span">
-                    <img src="/img/icons/star.svg" class="star-icon">
+                    <img src="/img/icons/star.svg" class="star-icon" alt="">
                     <p>À la une</p>
                 </span>
 
@@ -28,7 +28,7 @@
                 </form>
             </div>
             <div class="right-side">
-                <img src="<%=une.img_presentation %>" class="img-presentation">
+                <img src="<%=une.img_presentation %>" class="img-presentation" alt="Image de présentation de la une">
             </div>
         </div>
 
@@ -47,7 +47,7 @@
         <div class="liste-actu">
             <% for (const element of actus){ %>
                 <div class="actu-presentation">
-                    <img src="<%= element.img_presentation %>" class="img-presentation">
+                    <img src="<%= element.img_presentation %>" class="img-presentation" alt="Image de présentation de l'article">
                     <p class="date"><%= new Date(element.date_publication).toLocaleDateString('fr-FR') %></p>
                     <h3>
                         <%= element.titre %>

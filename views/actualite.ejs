@@ -4,7 +4,7 @@
 
 
 <section class="presentation">
-    <img src="<%= article.img_presentation %>" class="presentation_img">
+    <img src="<%= article.img_presentation %>" class="presentation_img" alt="Image de présentation de l'actualité">
     <h1>
         <%= article.titre %>
     </h1>
@@ -42,7 +42,7 @@
                     <input name="id" value="<%= element.id %>">
                 </form>
                 <div class="autre">
-                    <img src="<%=element.img_presentation %>" class="autres-presentation">
+                    <img src="<%=element.img_presentation %>" class="autres-presentation" alt="Image de présentation d'une autre actualité">
                     <p class="date"><%= new Date(element.date_publication).toLocaleDateString('fr-FR') %></p>
                     <h4>
                         <%= element.titre %>
