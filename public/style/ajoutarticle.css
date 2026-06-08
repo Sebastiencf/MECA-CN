@@ -370,13 +370,15 @@ input[type=file]::file-selector-button:hover {
     background:#e8e8e8;
 }
 
-.admin-meta-file #presentation{
+.admin-meta-file 
+#presentation{
     display:none;
 }
 
-.admin-meta-file #presentation-label{
+.admin-meta-file 
+#presentation-label{
     font-size:13px;
-    color:#888;
+    color:#404040;
     font-family:sans-serif;
 }
 
@@ -563,7 +565,10 @@ input[type=file]::file-selector-button:hover {
     border-radius:4px
 }
 
-.cms-bloc:focus .cms-bloc-type-label, .cms-editor-wrap:hover .cms-bloc-type-label{
+.cms-bloc:focus 
+.cms-bloc-type-label, 
+.cms-editor-wrap:hover 
+.cms-bloc-type-label{
     opacity: 1;
 }
 
@@ -668,7 +673,8 @@ input[type=file]::file-selector-button:hover {
     min-height:40px;
 }
 
-#preview .article-titre1{
+#preview 
+.article-titre1{
     font-size:1.35rem;
     font-weight:700;
     color:#111827;
@@ -676,20 +682,23 @@ input[type=file]::file-selector-button:hover {
     letter-spacing:-0.01em;
 }
 
-#preview .article-titre2{
+#preview 
+.article-titre2{
     font-size:1.1rem;
     font-weight:700;
     color:#111827;
     margin:2rem 0 0.7rem;
 }
 
-#preview .article-paragraphe{
+#preview 
+.article-paragraphe{
     margin:0 0 1.2rem;
     color: #374151;
     font-size:1em;
 }
 
-#preview .article-citation{
+#preview 
+.article-citation{
     border-left: 3px solid #1a56a0;
     background:#f7f9fc;
     margin:2rem 0;
@@ -701,7 +710,8 @@ input[type=file]::file-selector-button:hover {
     line-height:1.7;
 }
 
-#preview .article-citation-auteur{
+#preview 
+.article-citation-auteur{
     display:block;
     margin-top:0.6rem;
     font-style:normal;
@@ -710,13 +720,15 @@ input[type=file]::file-selector-button:hover {
     color:#1a56a0;
 }
 
-#preview .article-separateur{
+#preview 
+.article-separateur{
     border:none;
     border-top:1px solid #dddddd;
     margin:20px 0;
 }
 
-#preview .article-image{
+#preview 
+.article-image{
     display: block !important ;
     max-width: 350px !important ;
     max-height: 350px !important ;
@@ -762,8 +774,10 @@ mark{
     display:list-item;
 }
 
-#preview .article-liste-puces,
-#preview .article-liste-numerotee{
+#preview 
+.article-liste-puces,
+#preview 
+.article-liste-numerotee{
     margin:0.2rem 0 0.2rem 1.5rem;
     font-size:1em;
     color:#374151;

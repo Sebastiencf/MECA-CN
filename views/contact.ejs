@@ -2,157 +2,159 @@
 <%# Contact page %>
 <%- include("header") %>
 
-<!-- Modal Captcha -->
-<div class="captcha-modal-overlay" id="captcha-modal" aria-hidden="true">
-  <div class="captcha-modal" role="dialog" aria-modal="true" aria-labelledby="captcha-modal-title">
-    <h3 id="captcha-modal-title">Vérification anti-robot</h3>
-    <p>Répondez à cette question pour confirmer votre envoi.</p>
-    <div class="captcha-question">
-      <span id="captcha-question-text"></span> = ?
-    </div>
-    <input
-      type="number"
-      id="captcha-input"
-      placeholder="Votre réponse"
-      autocomplete="off"
-    />
-    <p class="captcha-error" id="captcha-error" aria-live="polite"></p>
-    <div class="captcha-modal-actions">
-      <button type="button" id="cancel-captcha">Annuler</button>
-      <button type="button" id="confirm-captcha" class="btn-captcha-confirm">
-        Envoyer
-      </button>
-    </div>
-  </div>
-</div>
 
-
-<section class="title-holder">
-
-    <h3 class="pc-only">
-        RÉPONSE EN MOINS DE 24H
-    </h3>
-
-    <h1>
-        Collaborons sur votre <br><span>prochain défi technique</span>
-    </h1>
-
-    <p>
-        Basés à Widehem, nous transformons vos plans les plus complexes en composants de précision. Nos experts sont à votre disposition pour toute demande technique ou commerciale.
-    </p>
-</section>
-
-
-<section class="contact-holder">
-    <div class="left-part">
-
-        <div class="info-grid">
-            <div class="info-card">
-                <div class="main-info-holder">
-                    <div class="info-icon">
-                        <img src="/img/icons/mail_bleu.png" alt="Icône email">
-                    </div>
-                    <div>
-                        <h4>Email</h4>
-                    </div>
-                </div>
-                <p>meca.cn@wanadoo.fr</p>
-            </div>
-            
-            <div class="info-card">
-                <div class="main-info-holder">
-                    <div class="info-icon">
-                        <img src="/img/icons/phone_bleu.png" alt="Icône téléphone">
-                    </div>
-                    <div>
-                        <h4>Téléphone</h4>
-                        
-                    </div>
-                </div>
-                <p>+33 3 21 84 25 11</p>
-            </div>
+<main>
+    <!-- Modal Captcha -->
+    <div class="captcha-modal-overlay" id="captcha-modal" aria-hidden="true">
+    <div class="captcha-modal" role="dialog" aria-modal="true" aria-labelledby="captcha-modal-title">
+        <h3 id="captcha-modal-title">Vérification anti-robot</h3>
+        <p>Répondez à cette question pour confirmer votre envoi.</p>
+        <div class="captcha-question">
+        <span id="captcha-question-text"></span> = ?
         </div>
+        <input
+        type="number"
+        id="captcha-input"
+        placeholder="Votre réponse"
+        autocomplete="off"
+        />
+        <p class="captcha-error" id="captcha-error" aria-live="polite"></p>
+        <div class="captcha-modal-actions">
+        <button type="button" id="cancel-captcha">Annuler</button>
+        <button type="button" id="confirm-captcha" class="btn-captcha-confirm">
+            Envoyer
+        </button>
+        </div>
+    </div>
+    </div>
 
-        <div class="info-card info-card-large pc-only">
-            <div class="main-info-holder">
-                <div class="info-icon">
-                    <img src="/img/icons/localisation.png" alt="Icône localisation">
-                </div>
-                <div>
-                    <h4>Notre localisation</h4>
-                </div>
-            </div>
 
-            <p>Route de Camiers<br>62630, Widehem</p>
+    <section class="title-holder">
+
+        <h3 class="pc-only">
+            RÉPONSE EN MOINS DE 24H
+        </h3>
+
+        <h1>
+            Collaborons sur votre <br><span>prochain défi technique</span>
+        </h1>
+
+        <p>
+            Basés à Widehem, nous transformons vos plans les plus complexes en composants de précision. Nos experts sont à votre disposition pour toute demande technique ou commerciale.
+        </p>
+    </section>
+
+
+    <section class="contact-holder">
+        <div class="left-part">
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="main-info-holder">
+                        <div class="info-icon">
+                            <img src="/img/icons/mail_bleu.png" alt="Icône email">
+                        </div>
+                        <div>
+                            <h4>Email</h4>
+                        </div>
+                    </div>
+                    <p>meca.cn@wanadoo.fr</p>
+                </div>
                 
+                <div class="info-card">
+                    <div class="main-info-holder">
+                        <div class="info-icon">
+                            <img src="/img/icons/phone_bleu.png" alt="Icône téléphone">
+                        </div>
+                        <div>
+                            <h4>Téléphone</h4>
+                            
+                        </div>
+                    </div>
+                    <p>+33 3 21 84 25 11</p>
+                </div>
+            </div>
+
+            <div class="info-card info-card-large pc-only">
+                <div class="main-info-holder">
+                    <div class="info-icon">
+                        <img src="/img/icons/localisation.png" alt="Icône localisation">
+                    </div>
+                    <div>
+                        <h4>Notre localisation</h4>
+                    </div>
+                </div>
+
+                <p>Route de Camiers<br>62630, Widehem</p>
+                    
+            </div>
+                
+
+            <div class="summary-card">
+                <p class="horaire">Efficacité et rapidité</p>
+                <p><strong>Une analyse rapide et précise de vos demandes.</strong> 
+                    Transmettez vos fichiers STEP, DXF, PDF ou autres formats 
+                    afin de nous permettre de vous répondre dans les meilleures conditions.
+                </p>
+            </div>
         </div>
-            
-
-        <div class="summary-card">
-            <p class="horaire">Efficacité et rapidité</p>
-            <p><strong>Une analyse rapide et précise de vos demandes.</strong> 
-                Transmettez vos fichiers STEP, DXF, PDF ou autres formats 
-                afin de nous permettre de vous répondre dans les meilleures conditions.
-            </p>
-        </div>
-    </div>
-
-    <div class="right-part">
-
-
 
         <div class="right-part">
-            <% if (locals.success) { %>
-                <div class="alert alert-success">
-                    <%= success %>
+
+
+
+            <div class="right-part">
+                <% if (locals.success) { %>
+                    <div class="alert alert-success">
+                        <%= success %>
+                    </div>
+                <% } %>
+
+                <% if (locals.error) { %>
+                    <div class="alert alert-error">
+                        <%= error %>
+                    </div>
+                <% } %>
+
+
+            <form method="POST" action="/envoyer-contact" class="contact-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nom">Nom complet *</label>
+                        <input type="text" id="nom" name="nom" placeholder="Jean Dupont" value="<%= locals.nom || '' %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="entreprise">Nom de l'entreprise *</label>
+                        <input type="text" id="entreprise" name="entreprise" placeholder="MECA-CN" value="<%= locals.entreprise || '' %>" required>
+                    </div>
                 </div>
-            <% } %>
 
-            <% if (locals.error) { %>
-                <div class="alert alert-error">
-                    <%= error %>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Adresse email *</label>
+                        <input type="email" id="email" name="email" placeholder="contact@exemple.com" value="<%= locals.email || '' %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone">Téléphone</label>
+                        <input type="tel" id="telephone" name="telephone" placeholder="+33 6 12 34 56 78" value="<%= locals.telephone || '' %>">
+                    </div>
                 </div>
-            <% } %>
 
-
-        <form method="POST" action="/envoyer-contact" class="contact-form">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="nom">Nom complet *</label>
-                    <input type="text" id="nom" name="nom" placeholder="Jean Dupont" value="<%= locals.nom || '' %>" required>
+                <div class="form-group full-width">
+                    <label for="objet">Objet du mail *</label>
+                    <input type="text" id="objet" name="objet" placeholder="Demande de devis / Informations" value="<%= locals.objet || '' %>" required>
                 </div>
-                <div class="form-group">
-                    <label for="entreprise">Nom de l'entreprise *</label>
-                    <input type="text" id="entreprise" name="entreprise" placeholder="MECA-CN" value="<%= locals.entreprise || '' %>" required>
+
+                <div class="form-group full-width">
+                    <label for="message">Contenu du mail *</label>
+                    <textarea id="message" name="message" rows="8" placeholder="Décrivez votre besoin, précisez les quantités, dimensions, matériaux, etc." required><%= locals.message || '' %></textarea>
                 </div>
-            </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="email">Adresse email *</label>
-                    <input type="email" id="email" name="email" placeholder="contact@exemple.com" value="<%= locals.email || '' %>" required>
-                </div>
-                <div class="form-group">
-                    <label for="telephone">Téléphone</label>
-                    <input type="tel" id="telephone" name="telephone" placeholder="+33 6 12 34 56 78" value="<%= locals.telephone || '' %>">
-                </div>
-            </div>
-
-            <div class="form-group full-width">
-                <label for="objet">Objet du mail *</label>
-                <input type="text" id="objet" name="objet" placeholder="Demande de devis / Informations" value="<%= locals.objet || '' %>" required>
-            </div>
-
-            <div class="form-group full-width">
-                <label for="message">Contenu du mail *</label>
-                <textarea id="message" name="message" rows="8" placeholder="Décrivez votre besoin, précisez les quantités, dimensions, matériaux, etc." required><%= locals.message || '' %></textarea>
-            </div>
-
-            <button type="submit" class="submit-button">Envoyer</button>
-        </form>
-    </div>
-</section>
-
+                <button type="submit" class="submit-button">Envoyer</button>
+            </form>
+        </div>
+    </section>
+</main>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     var captchaQuestion = "<%= captchaQuestion %>";

@@ -323,19 +323,19 @@
     }
 
     .mobile-stat-box {
-        background: #EDF2F7;
+        background: #f5faff;
         padding: 10px;
         border-radius: 6px;
     }
 
     .mobile-stat-box.highlight {
-        background: #EBF8FF;
+        background: #f5faff;
     }
 
     .stat-label {
         display: block;
         font-size: 0.65rem;
-        color: #718096;
+        color: #000000;
     }
 
     .stat-value {
@@ -492,7 +492,7 @@
 }
 
 .title-holder p{
-    color:#b6b6b6;
+    color:#595959;
     font-size:1rem;
     margin-left:125px;
     width:60%;

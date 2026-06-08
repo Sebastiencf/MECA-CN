@@ -31,7 +31,7 @@
 .connexion-hero h1 {
     font-size: 3rem;
     font-weight: 800;
-    line-height: .6;
+    line-height: 1.2;
     color: #0f172a;
 }
 
@@ -60,11 +60,11 @@
 
 .card-head p {
     text-transform: uppercase;
-    font-size: 0.75rem;
+    font-size: 1.3rem;
     letter-spacing: 0.1em;
     font-weight: 700;
     color: #0b63b6;
-    margin-bottom: 5px;
+    margin-bottom: 25px;
 }
 
 .card-head h2 {
@@ -79,8 +79,14 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
 }
 
 .hidden {

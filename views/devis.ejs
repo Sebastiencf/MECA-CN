@@ -58,27 +58,28 @@
           <h2>Renseignez vos <span>informations</span></h2>
           <div class="form-row">
             <div class="form-group">
-              <label>Nom complet *</label>
-              <input type="text" name="nom" placeholder="Votre nom" required />
+              <label for="username">Nom complet *</label>
+              <input type="text" id="username" name="nom" placeholder="Votre nom" required />
             </div>
             <div class="form-group">
-              <label>Nom de l'entreprise *</label>
-              <input type="text" name="entreprise" placeholder="Société" required />
+              <label for="entreprise">Nom de l'entreprise *</label>
+              <input type="text" id="entreprise" name="entreprise" placeholder="Société" required />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Adresse email *</label>
+              <label for="mail">Adresse email *</label>
               <input
                 type="email"
                 name="email"
+                id="mail"
                 placeholder="votre@email.com"
                 required
               />
             </div>
             <div class="form-group">
-              <label>Téléphone *</label>
-              <input type="tel" name="telephone" placeholder="06 .. .. .. .." required/>
+              <label for="phone">Téléphone *</label>
+              <input type="tel" id="phone" name="telephone" placeholder="06 .. .. .. .." required/>
             </div>
           </div>
           <div class="nav-btns mobile-only">
@@ -99,19 +100,21 @@
           <h2>Détails du <span>produit</span></h2>
           <div class="form-row">
             <div class="form-group">
-              <label>Nom du produit *</label>
+              <label for="name">Nom du produit *</label>
               <input
                 type="text"
                 name="produit"
+                id="name"
                 placeholder="Ex: Engrenage"
                 required
               />
             </div>
             <div class="form-group">
-              <label>Matière souhaitée</label>
+              <label for="matiere">Matière souhaitée</label>
               <input
                 type="text"
                 name="matiere"
+                id="matiere"
                 placeholder="Ex: Acier, Alu..."
               />
               <input type="hidden" name="matiere_fourniture" id="matiere-fourniture-hidden" value="" />
@@ -146,10 +149,11 @@
           <h2>Quantité et <span>délais</span></h2>
 
           <div class="form-group" style="margin-bottom: 24px">
-            <label>Quantité demandée *</label>
+            <label for="qte">Quantité demandée *</label>
             <input
               type="number"
               name="quantite"
+              id="qte"
               min="1"
               placeholder="Nombre de pièces"
               required
@@ -158,7 +162,7 @@
 
 
           <div class="form-group" style="margin-bottom : 24px;">
-            <label>Procédé souhaité </label>
+            <label for="type_usinage">Procédé souhaité </label>
             <em style="font-weight:400; color:#64748B; margin:-5px; font-size:0.8rem;">(optionnel)</em> 
             <select name="type_usinage" id="type_usinage" class="procece-form">
               <option claue="" selected>Je ne sais pas</option>
@@ -173,10 +177,10 @@
          <!-- ========== Dimensions tournage =========== -->
         <div id="dims-tournage" class="form-row dims-group" style="margin-bottom: 24px; display:none; flex-wrap:wrap;">
           <div class="form-group">
-            <label>Longueur *</label>
+            <label for="longueur">Longueur *</label>
             <div class="input-unit-group">
-              <input type="number" name="display_longueur" min="0.01" step="0.01" placeholder="Long." />
-              <select class="unit-selector" id="unit_longueur">
+              <input type="number" id="longueur" name="display_longueur" min="0.01" step="0.01" placeholder="Long." />
+              <select class="unit-selector" id="unit_longueur" aria-label="Unité de la longueur de la pièce">
                 <option value="mm">mm</option>
                 <option value="cm">cm</option>
                 <option value="dm">dm</option>
@@ -185,10 +189,10 @@
             <input type="hidden" name="longueur" />
           </div>
           <div class="form-group">
-            <label>Diamètre *</label>
+            <label for="diametre">Diamètre *</label>
             <div class="input-unit-group">
-              <input type="number" name="display_diametre" min="0.01" step="0.01" placeholder="Diamètre" />
-              <select class="unit-selector" id="unit_diametre">
+              <input type="number" id="diametre" name="display_diametre" min="0.01" step="0.01" placeholder="Diamètre" />
+              <select class="unit-selector" id="unit_diametre" aria-label="Unité du diamètre de la pièce">
                 <option value="mm">mm</option>
                 <option value="cm">cm</option>
                 <option value="dm">dm</option>
@@ -203,15 +207,15 @@
 
           <div class="form-group">
             <div class="tooltip-holder">
-              <label>Dimension X *</label>
+              <label for="dim_x">Dimension X *</label>
               <span class="tooltip-wrap">
                 <span class="tooltip-icon">?</span>
                 <span class="tooltip-bubble">Longueur de la pièce (axe horizontal principal)</span>
               </span>
             </div>
             <div class="input-unit-group">
-              <input type="number" name="display_dim_x" min="0.01" step="0.01" placeholder="Long." />
-              <select class="unit-selector" id="unit_x">
+              <input type="number" id="dim_x" name="display_dim_x" min="0.01" step="0.01" placeholder="Long." />
+              <select class="unit-selector" id="unit_x" aria-label="Unité de la dimension X">
                 <option value="mm">mm</option>
                 <option value="cm">cm</option>
                 <option value="dm">dm</option>
@@ -222,15 +226,15 @@
 
           <div class="form-group">
             <div class="tooltip-holder">
-              <label>Dimension Y *</label>
+              <label for="dim_y">Dimension Y *</label>
               <span class="tooltip-wrap">
                 <span class="tooltip-icon">?</span>
                 <span class="tooltip-bubble">Largeur de la pièce (axe horizontal secondaire)</span>
               </span>
             </div>
             <div class="input-unit-group">
-              <input type="number" name="display_dim_y" min="0.01" step="0.01" placeholder="Larg." />
-              <select class="unit-selector" id="unit_y">
+              <input type="number" id="dim_y" name="display_dim_y" min="0.01" step="0.01" placeholder="Larg." />
+              <select class="unit-selector" id="unit_y" aria-label="Unité de la dimension Y">
                 <option value="mm">mm</option>
                 <option value="cm">cm</option>
                 <option value="dm">dm</option>
@@ -241,15 +245,15 @@
 
           <div class="form-group">
             <div class="tooltip-holder">
-              <label>Dimension Z *</label>
+              <label for="dim_z">Dimension Z *</label>
               <span class="tooltip-wrap">
                 <span class="tooltip-icon">?</span>
                 <span class="tooltip-bubble">Hauteur de la pièce (axe vertical)</span>
               </span>
             </div>
             <div class="input-unit-group">
-              <input type="number" name="display_dim_z" min="0.01" step="0.01" placeholder="Haut." />
-              <select class="unit-selector" id="unit_z">
+              <input type="number" id="dim_z" name="display_dim_z" min="0.01" step="0.01" placeholder="Haut." />
+              <select class="unit-selector" id="unit_z" aria-label="Unité de la dimension Z">
                 <option value="mm">mm</option>
                 <option value="cm">cm</option>
                 <option value="dm">dm</option>
@@ -259,7 +263,7 @@
           </div>
         </div>
 
-          <label>Choisissez une date de livraison souhaitée *</label>
+          <label for="date_livraison_input">Choisissez une date de livraison souhaitée *</label>
           <div class="elegant-calencar">
             <input
               type="hidden"
@@ -365,12 +369,14 @@
           <h2>Plans et <span>fichiers</span></h2>
           <div class="upload-box">
             <div class="upload-icon">⇪</div>
-            <p>Glissez-déposez vos plans</p>
+            <label for="fichiers">
+              <p>Glissez-déposez vos plans</p>
+            </label>
             <span>Fichiers 3D, PDF, images...</span>
             <button type="button" class="upload-button">
               Chercher un/des fichiers
             </button>
-            <input type="file" name="fichiers" multiple id="fichiers-input" />
+            <input type="file" name="fichiers" id="fichiers" multiple id="fichiers-input" />
           </div>
           <p class="upload-restrictions">
             Les fichiers compressés (ZIP) ne sont pas acceptés. <br />Taille
@@ -456,10 +462,11 @@
             Vous avez téléchargé un fichier volumineux. Pour améliorer la transmission, vous pouvez <strong>renseigner le lien Google Drive</strong> ci-dessous (optionnel).</p>
           </div>
           <div class="form-group full">
-            <label>Avez-vous d'autres informations ?</label>
+            <label for="description">Avez-vous d'autres informations ?</label>
             <textarea
               name="description"
               rows="6"
+              id="description"
               placeholder="Précisions techniques, finitions... Lien Google Drive si fichier volumineux (ex: https://drive.google.com/file/d/...)"
               maxlength="8192"
             ></textarea>

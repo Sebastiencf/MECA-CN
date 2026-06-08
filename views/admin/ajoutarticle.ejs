@@ -1,53 +1,53 @@
 <%- include("header") %>
+<main>
+  <div class="admin-container">
 
-<div class="admin-container">
-
-  <div class="admin-meta">
-    <input type="text" id="titre" placeholder="Titre de l'article" required>
-    <input class="baseline-input" type="text" id="baseline" placeholder="Baseline de l'article (courte description)" required>
-    <div class="admin-meta-file">
-      <label for="presentation">🖼 Choisir un fichier</label>
-      <input type="file" id="presentation" accept="image/*">
-      <span id="presentation-label">Aucun fichier sélectionné</span>
+    <div class="admin-meta">
+      <input type="text" id="titre" placeholder="Titre de l'article" required>
+      <input class="baseline-input" type="text" id="baseline" placeholder="Baseline de l'article (courte description)" required>
+      <div class="admin-meta-file">
+        <label for="presentation">🖼 Choisir un fichier</label>
+        <input type="file" id="presentation" accept="image/*">
+        <span id="presentation-label">Aucun fichier sélectionné</span>
+      </div>
     </div>
+
+    <div class="cms-toolbar">
+      <button class="cms-toolbar-btn" title="Titre 1" data-cmd="titre1">H1</button>
+      <button class="cms-toolbar-btn" title="Titre 2" data-cmd="titre2">H2</button>
+      <div class="cms-toolbar-sep"></div>
+      <button class="cms-toolbar-btn" title="Paragraphe" data-cmd="paragraphe">¶</button>
+      <button class="cms-toolbar-btn" title="Citation" data-cmd="citation">"</button>
+      <button class="cms-toolbar-btn" title="Auteur" data-cmd="auteur">✍</button>
+      <div class="cms-toolbar-sep"></div>
+      <button class="cms-toolbar-btn" title="Gras" data-cmd="gras"><b>G</b></button>
+      <button class="cms-toolbar-btn" title="Italique" data-cmd="italique"><i>I</i></button>
+      <button class="cms-toolbar-btn" title="Souligné" data-cmd="souligne" style="text-decoration:underline">S</button>
+      <button class="cms-toolbar-btn" title="Surligné" data-cmd="surligne" style="background:#fff3a0">▬</button>
+      <button class="cms-toolbar-btn" title="Normal" data-cmd="normal">N</button>
+      <div class="cms-toolbar-sep"></div>
+      <button class="cms-toolbar-btn" title="Image" data-cmd="image">🖼️</button>
+      <button class="cms-toolbar-btn" title="Séparateur" data-cmd="separateur">—</button>
+      <div class="cms-toolbar-sep"></div>
+      <button class="cms-toolbar-btn" title="Liste à puces" data-cmd="liste-puces">•</button>
+      <button class="cms-toolbar-btn" title="Liste numérotée" data-cmd="liste-numerotee">1.</button>
+    </div>
+
+    <div id="cms-editor" contenteditable="true" spellcheck="true"></div>
+
+    <div class="cms-actions">
+      <button class="cms-btn cms-btn-preview" id="preview-btn">Prévisualiser</button>
+      <button class="cms-btn cms-btn-publish" id="save-btn">Publier</button>
+    </div>
+
+    <div id="preview-section">
+      <h2>Prévisualisation :</h2>
+      <div id="preview"></div>
+    </div>
+
+    <input type="file" id="image-picker" accept="image/*">
   </div>
-
-  <div class="cms-toolbar">
-    <button class="cms-toolbar-btn" title="Titre 1" data-cmd="titre1">H1</button>
-    <button class="cms-toolbar-btn" title="Titre 2" data-cmd="titre2">H2</button>
-    <div class="cms-toolbar-sep"></div>
-    <button class="cms-toolbar-btn" title="Paragraphe" data-cmd="paragraphe">¶</button>
-    <button class="cms-toolbar-btn" title="Citation" data-cmd="citation">"</button>
-    <button class="cms-toolbar-btn" title="Auteur" data-cmd="auteur">✍</button>
-    <div class="cms-toolbar-sep"></div>
-    <button class="cms-toolbar-btn" title="Gras" data-cmd="gras"><b>G</b></button>
-    <button class="cms-toolbar-btn" title="Italique" data-cmd="italique"><i>I</i></button>
-    <button class="cms-toolbar-btn" title="Souligné" data-cmd="souligne" style="text-decoration:underline">S</button>
-    <button class="cms-toolbar-btn" title="Surligné" data-cmd="surligne" style="background:#fff3a0">▬</button>
-    <button class="cms-toolbar-btn" title="Normal" data-cmd="normal">N</button>
-    <div class="cms-toolbar-sep"></div>
-    <button class="cms-toolbar-btn" title="Image" data-cmd="image">🖼️</button>
-    <button class="cms-toolbar-btn" title="Séparateur" data-cmd="separateur">—</button>
-    <div class="cms-toolbar-sep"></div>
-    <button class="cms-toolbar-btn" title="Liste à puces" data-cmd="liste-puces">• —</button>
-    <button class="cms-toolbar-btn" title="Liste numérotée" data-cmd="liste-numerotee">1.</button>
-  </div>
-
-  <div id="cms-editor" contenteditable="true" spellcheck="true"></div>
-
-  <div class="cms-actions">
-    <button class="cms-btn cms-btn-preview" id="preview-btn">Prévisualiser</button>
-    <button class="cms-btn cms-btn-publish" id="save-btn">Publier</button>
-  </div>
-
-  <div id="preview-section">
-    <h2>Prévisualisation :</h2>
-    <div id="preview"></div>
-  </div>
-
-  <input type="file" id="image-picker" accept="image/*">
-</div>
-
+</main>
 <%- include("footer") %>
 
 <script>
@@ -61,7 +61,7 @@
     { label: 'Auteur (citation)', valeur: 'auteur', icone: '✍', placeholder: '— Nom de l\'auteur' },
     { label: 'Image', valeur: 'image', icone: '🖼', placeholder: null },
     { label: 'Séparateur', valeur: 'separateur', icone: '—', placeholder: null },
-    { label: 'Liste à puces', valeur: 'liste-puces', icone: '•—', placeholder: 'Élément de liste…' },
+    { label: 'Liste à puces', valeur: 'liste-puces', icone: '•', placeholder: 'Élément de liste…' },
   { label: 'Liste numérotée', valeur: 'liste-numerotee', icone: '1.', placeholder: 'Élément de liste…' },
   ];
 

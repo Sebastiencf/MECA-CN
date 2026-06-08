@@ -94,7 +94,6 @@ button[type="submit"]:hover {
 form p {
     max-width: 600px;
     font-size: 0.9rem;
-    color: #777;
     line-height: 1.4;
     font-style: italic;
 }

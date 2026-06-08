@@ -73,9 +73,9 @@
 
 /* Date */
 .une-container .left-side .date {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     font-weight:bold;
-    color: #a8a8a8;
+    color: #717171;
     margin: 4px 0 8px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -171,7 +171,7 @@
 .actu-presentation .date {
     font-size: 0.75rem;
     font-weight:bold;
-    color: #a8a8a8;
+    color: #626262;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     display: flex;

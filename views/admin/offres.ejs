@@ -1,158 +1,158 @@
 <%- include("header") %>
 
 <% indexOffre = 1 %>
+<main>
+    <section class="top-holder">
+        <div class="right-side">
+            <h1>Rejoignez notre équipe !</h1>
+            <p>
+                Vous souhaitez rejoindre une entreprise dynamique et participer à des projets concrets ? 
+                Découvrez nos opportunités de carrière et trouvez le poste qui correspond à vos compétences 
+                et à vos ambitions. Que vous soyez expérimenté ou en début de parcours, nous recherchons 
+                des personnes motivées, rigoureuses et prêtes à s'investir au sein de nos équipes. 
+                Consultez nos offres et construisez votre avenir professionnel à nos côtés.
+            </p>
+        </div>
 
-<section class="top-holder">
-    <div class="right-side">
-        <h1>Rejoignez notre équipe !</h1>
-        <p>
-            Vous souhaitez rejoindre une entreprise dynamique et participer à des projets concrets ? 
-            Découvrez nos opportunités de carrière et trouvez le poste qui correspond à vos compétences 
-            et à vos ambitions. Que vous soyez expérimenté ou en début de parcours, nous recherchons 
-            des personnes motivées, rigoureuses et prêtes à s'investir au sein de nos équipes. 
-            Consultez nos offres et construisez votre avenir professionnel à nos côtés.
-        </p>
-    </div>
+        <div class="right-part">
+            <img src="/img/placeholders/usinage1.webp" alt="Image d'usinage">
+        </div>
 
-    <div class="right-part">
-        <img src="/img/placeholders/usinage1.png" alt="Image d'usinage">
-    </div>
-
-</section>
+    </section>
 
 
-<% if (offres.length == 0){ %>
-    <p> Désolé, nous n'avons actuellement pas d'offres d'emplois</p>
-    <div class="ajouter-holder">
-        <a href="/ajoutoffre" class="ajouter">
-            Ajouter une offre
-        </a>
-    </div>
-<% } else{ %>
-    <div class="ajouter-holder">
-        <a href="/ajoutoffre" class="ajouter">
-            Ajouter une offre
-        </a>
-    </div>
-    
-    <section class="categorie">
+    <% if (offres.length == 0){ %>
+        <p> Désolé, nous n'avons actuellement pas d'offres d'emplois</p>
+        <div class="ajouter-holder">
+            <a href="/ajoutoffre" class="ajouter">
+                Ajouter une offre
+            </a>
+        </div>
+    <% } else{ %>
+        <div class="ajouter-holder">
+            <a href="/ajoutoffre" class="ajouter">
+                Ajouter une offre
+            </a>
+        </div>
         
-            <div class="categories">
-                <h2>Rechercher par catégorie</h2>
-                <p>Trouvez le job qui vous correspond le mieux</p>
+        <section class="categorie">
+            
+                <div class="categories">
+                    <h2>Rechercher par catégorie</h2>
+                    <p>Trouvez le job qui vous correspond le mieux</p>
 
-                <div class="categorie-holder">
-                    <a href="/admin/offres?categorie=all" class="tri-item all <%= (categorieChoisie === 'all') ? ' active' : '' %>">
-                        Tous
-                    </a>
-                    
-                    <% for (const element of categories){ %>
-                        <a href="/admin/offres?categorie=<%= element.categorie %>" 
-                        class="tri-item <%= (categorieChoisie === element.categorie) ? ' active' : '' %>">
-                            
-                            <h3><%= element.categorie %></h3>
-                            <% if (element.nombre_offres > 1){ %>
-                                <p><%= element.nombre_offres %> jobs trouvés</p>
-                            <% } else { %>
-                                <p><%= element.nombre_offres %> job trouvé</p>
-                            <% } %>
+                    <div class="categorie-holder">
+                        <a href="/admin/offres?categorie=all" class="tri-item all <%= (categorieChoisie === 'all') ? ' active' : '' %>">
+                            Tous
                         </a>
-                    <% } %>
-                </div>
-            </div>
-        
-    </section>
-
-
-
-
-    <section class="offres-holder">
-        <% for (const element of offres){ %>
-            <div class="offre reveal">
-                <div class="offre-id-holder">
-                    <p><span>
-                        <% if (indexOffre < 10){ %>
-                            <% const nouvel_index = "0" + indexOffre %>
-                            <%= nouvel_index %>
-                        <% } else {%>
-                            <%= indexOffre %>
-                        <% } %>
-                    </span></p>
-                </div>
-                <% indexOffre ++ %>
-
-                <div class="main-infos-holder">
-                    <%= element.intitule %>
-
-
-
-
-
-
-
-
-
-
-
-                    <div class="type-salary-holder">
-                        <% if (element.SalaireEnable == 1) { %>
-                            <div class="type-holder">
-                                <i class="fa-regular fa-newspaper" style="color: rgb(39, 34, 200);"></i>
-                                <p><%= element.type %></p>
-                            </div>
-                            <p class="salary"><%= element.salaire %></p>
-
-                        <% }  else { %>
-                            <div class="type-holder">
-                                <i class="fa-regular fa-newspaper" style="color: rgb(39, 34, 200);"></i>
-                                <p><%= element.type %></p>
-                            </div>
-                        <% } %>
                         
-                    </div>
-                    <div class="localisation-holder">
-                        <img src="/img/icons/localisation_gris.svg" alt="localisation">
-                        <p> <%= element.localisation %> </p>
-                    </div>
-                    <div class="time-holder">
-                        <p>
-                            <em>Offre publiée le <%= new Date(element.date_creation).toLocaleDateString('fr-FR') %> </em>
-                        </p>
+                        <% for (const element of categories){ %>
+                            <a href="/admin/offres?categorie=<%= element.categorie %>" 
+                            class="tri-item <%= (categorieChoisie === element.categorie) ? ' active' : '' %>">
+                                
+                                <h3><%= element.categorie %></h3>
+                                <% if (element.nombre_offres > 1){ %>
+                                    <p><%= element.nombre_offres %> jobs trouvés</p>
+                                <% } else { %>
+                                    <p><%= element.nombre_offres %> job trouvé</p>
+                                <% } %>
+                            </a>
+                        <% } %>
                     </div>
                 </div>
-                <div class="button-holder">
-                    <form method="POST" action="/admin/consulter_offre">
-                        <input name="offre_id" type="hidden" value="<%= element.offre_id %>"/>
-                        <button class="consulter" type="submit">
-                            Consulter l'offre
-                        </button>
-                    </form>
+            
+        </section>
 
 
-                    <form method="POST" action="/modifier_offre_access">
-                        <input name="offre_id" type="hidden" value="<%= element.offre_id %>"/>
-                        <button class="modifier" type="submit">
-                            Modifier l'offre
-                        </button>
-                    </form>
 
 
-                    <form method="POST" action="/supprimer_offre" onsubmit="return confirmSuppression(event)">
-                        <input name="offre_id" type="hidden" value="<%= element.offre_id %>"/>
-                        <button class="supprimer" type="submit">
-                            Supprimer l'offre
-                        </button>
-                    </form>
+        <section class="offres-holder">
+            <% for (const element of offres){ %>
+                <div class="offre reveal">
+                    <div class="offre-id-holder">
+                        <p><span>
+                            <% if (indexOffre < 10){ %>
+                                <% const nouvel_index = "0" + indexOffre %>
+                                <%= nouvel_index %>
+                            <% } else {%>
+                                <%= indexOffre %>
+                            <% } %>
+                        </span></p>
+                    </div>
+                    <% indexOffre ++ %>
+
+                    <div class="main-infos-holder">
+                        <%= element.intitule %>
+
+
+
+
+
+
+
+
+
+
+
+                        <div class="type-salary-holder">
+                            <% if (element.SalaireEnable == 1) { %>
+                                <div class="type-holder">
+                                    <i class="fa-regular fa-newspaper" style="color: rgb(39, 34, 200);"></i>
+                                    <p><%= element.type %></p>
+                                </div>
+                                <p class="salary"><%= element.salaire %></p>
+
+                            <% }  else { %>
+                                <div class="type-holder">
+                                    <i class="fa-regular fa-newspaper" style="color: rgb(39, 34, 200);"></i>
+                                    <p><%= element.type %></p>
+                                </div>
+                            <% } %>
+                            
+                        </div>
+                        <div class="localisation-holder">
+                            <img src="/img/icons/localisation_gris.svg" alt="localisation">
+                            <p> <%= element.localisation %> </p>
+                        </div>
+                        <div class="time-holder">
+                            <p>
+                                <em>Offre publiée le <%= new Date(element.date_creation).toLocaleDateString('fr-FR') %> </em>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="button-holder">
+                        <form method="POST" action="/admin/consulter_offre">
+                            <input name="offre_id" type="hidden" value="<%= element.offre_id %>"/>
+                            <button class="consulter" type="submit">
+                                Consulter l'offre
+                            </button>
+                        </form>
+
+
+                        <form method="POST" action="/modifier_offre_access">
+                            <input name="offre_id" type="hidden" value="<%= element.offre_id %>"/>
+                            <button class="modifier" type="submit">
+                                Modifier l'offre
+                            </button>
+                        </form>
+
+
+                        <form method="POST" action="/supprimer_offre" onsubmit="return confirmSuppression(event)">
+                            <input name="offre_id" type="hidden" value="<%= element.offre_id %>"/>
+                            <button class="supprimer" type="submit">
+                                Supprimer l'offre
+                            </button>
+                        </form>
+                    </div>
+                    
+                    
                 </div>
-                
-                
-            </div>
-        <% } %>
-    </section>
+            <% } %>
+        </section>
 
 
-<% } %>
-
+    <% } %>
+</main>
 
 
 

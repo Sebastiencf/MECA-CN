@@ -23,7 +23,7 @@ import { findSourceMap } from "module";
 import { generateHTML } from "@tiptap/html";
 import StarterKit from "@tiptap/starter-kit";
 import { fileURLToPath } from "url";
-import helmet from "helmet";
+import sharp from "sharp";
 
 
 
@@ -129,7 +129,6 @@ app.use(express.static("public"));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(helmet());
 app.use(
   session({
     secret: "keyboard cat",
@@ -1040,7 +1039,6 @@ app.get("/admin/offres", isAdmin, async function (req, res) {
     res.render("admin/offres", {
       page_css1: "offres.css",
       page_css2: "headeradmin.css",
-      page_css4: "revealsecondary.css",
       offres: offresResultat,
       categories: categories,
       categorieChoisie: categorieChoisie || "all",
