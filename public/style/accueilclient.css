@@ -1385,6 +1385,27 @@
         flex-wrap:wrap;
     }
 
+
+
+
+     .newsletter-pc-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .newsletter-text{
+        padding:0 30px;
+    }
+
+    .mail-input{
+        width:95%;
+    }
+    .separateur-vertical {
+        width: 80%;
+        height: 1px;
+        margin: 20px auto;
+    }
+
 }
 
 
@@ -1486,25 +1507,4 @@ form {
 
 .actualites-link:hover {
     text-decoration: underline;
-}
-
-/* Masquer sur mobile si besoin (à adapter selon tes media queries) */
-@media (max-width: 768px) {
-    .newsletter-pc-content {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .newsletter-text{
-        padding:0 30px;
-    }
-
-    .mail-input{
-        width:95%;
-    }
-    .separateur-vertical {
-        width: 80%;
-        height: 1px;
-        margin: 20px auto;
-    }
 }
