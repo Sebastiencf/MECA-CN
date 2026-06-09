@@ -50,8 +50,13 @@ MECA-CN/
 ├── views/
 ├── .env
 ├── db.js
+├── Dump BDD
+├── generate-nav.js
+├── navigation.md
 ├── package.json
+├── README.md
 └── server.js
+
 ```
 
 ---
@@ -59,20 +64,27 @@ MECA-CN/
 ## ✨ Fonctionnalités
 
 ### Partie client
-- Consultation des services
-- Consultation du parc machine
-- Consultation des réalisations
-- Consultation des offres d'emploi
-- Formulaire de contact
-- Demande de devis
+- **Consultation du catalogue :** Découverte des services et du parc machines (trié par typologie : tournage, fraisage, combiné).
+- **Portfolio dynamique :** Visualisation des réalisations avec système de filtrage par secteurs d'activité (médical, automobile, aéronautique, etc.).
+- **Espace Recrutement :** Consultation des offres d'emploi disponibles et dépôt de candidature (formulaire avec téléversement de CV).
+- **Formulaires sécurisés :** - Prise de contact directe.
+  - Demande de devis intelligent avec blocage automatique si les dimensions de la pièce dépassent les capacités maximales ($X, Y, Z$) des machines de l'entreprise.
+- **Sécurité Anti-Spam :** Intégration d'un CAPTCHA mathématique généré côté serveur (invisible dans le code source client) pour protéger les formulaires.
 
 ### Partie administrateur
-- Gestion des machines
-- Gestion des réalisations
-- Gestion des offres
-- Gestion des actualités
-- Upload d'images
-- Interface d'administration sécurisée
+- **Tableau de bord :** Interface d'administration sécurisée (accès restreint par rôle).
+- **Gestion du Parc Machine :** Ajout, modification et suppression des fiches machines et de leurs caractéristiques techniques.
+- **Gestion des Réalisations :** Administration du portfolio (CRUD sur les produits et gestion dynamique des catégories).
+- **Gestion RH :** Publication et édition des offres d'emploi.
+- **Module de Suppression Global :** Interface centralisée pour nettoyer et purger les anciennes données (machines, produits, catégories).
+
+### Partie interne & Optimisation
+- **Gestion des Sessions :** Authentification sécurisée par cookies (Express-session) avec gestion des rôles (`admin`, `client`).
+- **Performance Web (Sharp) :** - Compression automatique des images importées par l'administrateur.
+  - Conversion à la volée vers le format de nouvelle génération `.webp` (réduction du poids jusqu'à 90% pour un affichage instantané).
+  - Redimensionnement automatique des images pour éviter les surcharges serveurs.
+- **Sécurisation des données :** Isolation stricte des variables d'environnement (`.env`) et hachage des mots de passe.
+- **Architecture Éco-conçue :** Limitation de la charge réseau grâce à l'injection ciblée de fichiers CSS spécifiques par route (via le moteur de template EJS).
 
 ---
 

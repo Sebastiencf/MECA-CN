@@ -74,6 +74,7 @@ body {
     text-decoration: none;
     color: inherit;
     min-width: 180px;
+    max-width:181px;
     border: 1px solid #e5e7eb;
     transition: 0.25s ease;
     max-height:50px;

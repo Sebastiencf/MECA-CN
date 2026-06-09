@@ -520,11 +520,11 @@
       .then((response) => response.json())
       .then((data) => {
         maxDimensions = data;
-        console.log("Max dimensions:", maxDimensions);
+        // console.log("Max dimensions:", maxDimensions);
       })
       .catch((err) => console.error("Erreur chargement dimensions:", err));
 
-    console.log("Captcha question:", captchaQuestion);
+    // console.log("Captcha question:", captchaQuestion);
 
     // ── CONVERSION D'UNITÉS ──────────────────────────────────────────
     function convertToMm(value, unit) {

@@ -215,7 +215,7 @@ async function compressImage(req, res, next){
 
 
       //Afichage propre
-      console.log(`
+      /*console.log(`
       ╔════════════════════════════════════════╗
       ║         COMPRESSION D'IMAGE            ║
       ╠════════════════════════════════════════╣
@@ -227,7 +227,7 @@ async function compressImage(req, res, next){
       ║ RÉDUCTION: ${reductionPercent}%
       ╚════════════════════════════════════════╝
       `);
-
+      */
 
 
       fs.unlinkSync(file.path);
@@ -865,13 +865,13 @@ app.get("/modif_realisations/:id", isAdmin, async function (req, res) {
       produitId,
     ]);
     const categorieId = produit[0].categorie;
-    console.log(categorieId)
+    //console.log(categorieId)
     const [categories] = await pool.query(
       "SELECT nom FROM categories WHERE id_cat = ?",
       [categorieId],
     );
     const listeCategories = await pool.query("SELECT * FROM categories");
-    console.log(categories[0])
+    //console.log(categories[0])
     res.render("admin/modifrealisation", {
       page_css1: "headeradmin.css",
       page_css2: "modif_realisations.css",
@@ -1328,7 +1328,7 @@ app.get("/usinage", async function(req,res){
       `,
     })
   } catch(err){
-    console.log(err)
+    console.error(err)
     res.status(500).send("Erreur serveur");
   }
 });
@@ -1849,11 +1849,9 @@ app.post("/api/articles", isAdmin, uploadActu.single("presentation"), compressIm
 
                   <!-- Extrait de l'article avec effet fade -->
                   <div style="position: relative; margin: 20px 0 28px;">
-                    <p style="margin: 0; font-size: 15px; color: #334155; line-height: 1.75;">
+                    <p style="margin: 0; font-size: 15px; background: linear-gradient(180deg, #000000, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip:text; color:transparent; line-height: 1.75;">
                       ${extrait}
                     </p>
-                    <!-- Dégradé qui efface le texte vers le bas -->
-                    <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);"></div>
                   </div>
 
                   
@@ -3086,7 +3084,9 @@ app.post("/modifier_infos_machine", isAdmin, uploadMachines.single("image_machin
                   "Erreur lors de la suppression de l'ancienne image :",
                   err,
                 );
-              else console.log("Ancienne image supprimée :", nomFichierAncien);
+              else {
+                console.log("Ancienne image supprimée :", nomFichierAncien);
+              }
             });
           }
         }

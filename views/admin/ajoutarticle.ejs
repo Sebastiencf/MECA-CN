@@ -88,7 +88,7 @@
   const presLabel   = document.getElementById('presentation-label');
 
   presInput.addEventListener('change', () => {
-    console.log('fichier détecté :', presInput.files[0]);
+    // console.log('fichier détecté :', presInput.files[0]);
     presLabel.textContent = presInput.files[0]?.name ?? 'Aucun fichier sélectionné';
   });
 
@@ -860,15 +860,15 @@
     const baseline = document.getElementById('baseline').value.trim();
     const fichierImage = document.getElementById('presentation').files[0];
     const texte = serialiser();
-    console.log("📝 Texte sérialisé :", texte);  
+    // console.log("📝 Texte sérialisé :", texte);  
     const contenu = parseCMS(texte);
-    console.log("🔄 Contenu parsé (HTML) :", contenu);
+    // console.log("🔄 Contenu parsé (HTML) :", contenu);
 
     if (!titre) { alert('Le titre est obligatoire.'); document.getElementById('titre').focus(); return; }
     if (!baseline) { alert('La baseline est obligatoire.'); document.getElementById('baseline').focus(); return; }
     if (!fichierImage) { alert("L'image de présentation est obligatoire."); document.getElementById('presentation').focus(); return; }
     if (!contenu) { 
-      console.log("❌ Contenu vide.");
+      // console.log("❌ Contenu vide.");
       alert("Le contenu de l'article est vide."); 
       editor.focus(); 
       return; 

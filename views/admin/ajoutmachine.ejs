@@ -200,10 +200,8 @@
                     <button type="button" id="stat-add-btn" class="stat-add-btn">
                         <i class="ti ti-plus" aria-hidden="true"></i> Ajouter une statistique
                     </button>
+
                 <!-- ===== FIN STATISTIQUES ===== -->
-
-
-
                      <div class="form-group">
                         <label>Avantage - Titre</label>
                         <input type="text" name="avantage_titre" value="<%= machine.avantage_titre %>">
@@ -341,7 +339,6 @@
 
         // --- Gestion dynamique des statistiques ---
         const statAddBtn = document.getElementById('stat-add-btn');
-
         function getVisibleStatCount() {
             let count = 0;
             for (let i = 1; i <= 4; i++) {
