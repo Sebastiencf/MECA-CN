@@ -171,7 +171,39 @@ http://localhost:3000
 
 ## 📸 Aperçu
 
-Ajouter ici des captures d'écran du site.
+
+### Page d'accueil
+---
+<br>
+<img src="./readme_pics/accueil.jpeg" alt="Description de l'image" width="auto" height="1085"> 
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+<img src="./readme_pics/accueil-phone.jpeg" alt="Description de l'image" width="auto" height="1085">
+<br> <br><br><br><br><br><br>
+
+### Page de demande de devis
+---
+<br>
+<img src="./readme_pics/devis.jpeg" alt="Description de l'image" width="auto" height="1085"> 
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+<img src="./readme_pics/devis-phone.jpeg" alt="Description de l'image" width="auto" height="1085">
+<br> <br><br><br><br><br><br>
+
+### Page de visualisation des réalisations
+---
+<br>
+<img src="./readme_pics/realisations.jpeg" alt="Description de l'image" width="auto" height="1085"> 
+<br> <br><br><br><br><br><br>
+
+
+### Page d'offres d'emploi
+---
+<br>
+<img src="./readme_pics/offres.jpeg" alt="Description de l'image" width="auto" height="1085"> 
+<br> <br><br>
+
+De nombreuses autres pages sont présentes sur le site, mais reste dans le même style visuel et technique, et ne sont pas présentées ici
+
+<br><br><br>
 
 ---
 
