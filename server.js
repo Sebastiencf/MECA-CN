@@ -176,9 +176,71 @@ function isAdmin(req, res, next) {
   } else {
     res.status(403).redirect("/connexion");
   }
+};
+
+
+//ANCHOR: Compression de fichier unique
+/*
+Compresse une image envoyé depuis une route.
+Sauvegarde l'image dans le dossier de destination (géré par multer).
+*/
+async function compressImage(req, res, next){
+  // Gère AUSSI les multiples
+  const files = req.file ? [req.file] : req.files || [];
+  if (files.length === 0) return next();
+
+  try{
+    for (const file of files) {
+      const ext = path.extname(file.originalname);
+      const compressedPath = file.path.replace(ext, '.webp');
+
+      //Taille avant compression
+      const statsAvant = fs.statSync(file.path);
+      const sizeAvantKB = (statsAvant.size / 1024).toFixed(2);
+      const sizeAvantMB = (statsAvant.size / (1024 * 1024)).toFixed(2);
+
+
+      await sharp(file.path).resize(1200, 800, { fit: 'inside', withoutEnlargement: true }).toFormat("webp", { quality: 80 }).toFile(compressedPath);
+
+
+      // Taille après compression
+      const statsApres = fs.statSync(compressedPath);
+      const sizeApresKB = (statsApres.size / 1024).toFixed(2);
+      const sizeApresMB = (statsApres.size / (1024 * 1024)).toFixed(2);
+
+      // Ratio de compression
+      const reductionPercent = (
+        ((statsAvant.size - statsApres.size) / statsAvant.size) * 100
+      ).toFixed(1);
+
+
+      //Afichage propre
+      console.log(`
+      ╔════════════════════════════════════════╗
+      ║         COMPRESSION D'IMAGE            ║
+      ╠════════════════════════════════════════╣
+      ║ Fichier: ${file.originalname.padEnd(30)}║
+      ║ Format: ${file.mimetype.padEnd(30)}     ║
+      ╠════════════════════════════════════════ ╣
+      ║ AVANT: ${sizeAvantKB} KB (${sizeAvantMB} MB)
+      ║ APRÈS: ${sizeApresKB} KB (${sizeApresMB} MB)
+      ║ RÉDUCTION: ${reductionPercent}%
+      ╚════════════════════════════════════════╝
+      `);
+
+
+
+      fs.unlinkSync(file.path);
+      file.path = compressedPath;
+      file.filename = path.basename(compressedPath);
+      
+    }
+    next();
+  } catch(err){
+    console.error("Erreur compression :", err);
+    res.status(500).send("Erreur compression");
+  }
 }
-
-
 
 
 
@@ -1111,6 +1173,9 @@ app.get("/actualites", async function (req, res) {
   // console.log(une)
   const actu_une = une[0];
 
+  if (req.session.role === "admin") {
+    return res.redirect("/admin/actu");
+  };
   res.render("actualite_liste", {
     page_css1: "headerclient.css",
     page_css2: "actualite-liste.css",
@@ -1134,10 +1199,12 @@ app.get("/articles/:id", (req, res) => {
   const article = JSON.parse(file);
 
   const html = generateHTML(article.content, [StarterKit]);
+
   res.render("actualite", {
     article: article,
     content: html,
   });
+  
 });
 
 /*
@@ -1344,7 +1411,7 @@ Gère aussi la validation basique du formulaire (présence du nom et de l'email)
 Les fichiers sont stockés temporairement sur le serveur grâce à la configuration Multer (ligne 87) et sont joints à l'email envoyé à l'entreprise.
 Envoi d'un mail avec les informations de l'utilisateur à l'entreprsie, ainsi qu'un mail à l'utilsiateur pour lui confirmer sa candidature
  */
-app.post("/envoyer_cv", uploadCV.array("fichiers", 5), async function (req, res) {
+app.post("/envoyer_cv", uploadCV.array("fichiers", 5), compressImage, async function (req, res) {
     try {
       const { mail, name, message } = req.body;
 
@@ -1632,7 +1699,7 @@ Sert pour la réalisation d'article
 -> lorsue l'utilisateur insère une image dans le CMS d'article, cette dernière est stockée temporairement dans le dossier /uploads/ 
 (via une config multer à retrouver en haut du server.js)
 */
-app.post("/api/upload-temp", isAdmin, uploadTemp.single("image"), function (req, res) {
+app.post("/api/upload-temp", isAdmin, uploadTemp.single("image"), compressImage, function (req, res) {
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -1655,7 +1722,7 @@ Récupère le contenu
 Trouve les images associées à ce contenu dans le dossier /uploads/ et les transfère vers le dossiers actus/ (/public/img/actus/)
 insère les données (dont le contenu) dans la bdd
 */
-app.post("/api/articles", isAdmin, uploadActu.single("presentation"), async function (req, res) {
+app.post("/api/articles", isAdmin, uploadActu.single("presentation"), compressImage, async function (req, res) {
     const { titre, baseline, contenu } = req.body;
     const presentation = req.file ? "/img/actus/" + req.file.filename : null;
 
@@ -1744,6 +1811,10 @@ app.post("/api/articles", isAdmin, uploadActu.single("presentation"), async func
 
         // Écriture du mail
         for (const abonne of abonnes) {
+          if (!abonne.email || abonne.email.trim() === '') {
+              console.warn("⚠️ Abonné sans email valide, ignoré :", abonne);
+              continue;  // Saute cet abonné et continue la boucle
+            }
           await transporter.sendMail({
             from: `"MECA-CN" <${process.env.EMAIL_USER}>`,
             to: abonne.email,
@@ -2747,7 +2818,7 @@ app.post("/ajouter_categorie", isAdmin, async function (req, res) {
 /*
 Traite l'ajout d'une nouvelle réalisation (produit) depuis le back-office.
  */
-app.post("/ajouter_produit", isAdmin, uploadProduits.single("image_produit"), async function (req, res) {
+app.post("/ajouter_produit", isAdmin, uploadProduits.single("image_produit"), compressImage, async function (req, res) {
     try {
       const { nom_produit, description_produit, categorie } = req.body;
       const image = req.file ? "/img/produits/" + req.file.filename : null;
@@ -2778,11 +2849,7 @@ app.post("/ajouter_produit", isAdmin, uploadProduits.single("image_produit"), as
 Traite le formulaire d'ajout d'une nouvelle machine (admin).
 Gère l'upload d'image et insère la nouvelle ligne dans la table `machines`.
  */
-app.post(
-  "/ajouter_machine",
-  isAdmin,
-  uploadMachines.single("image_machine"),
-  async function (req, res) {
+app.post("/ajouter_machine", isAdmin, uploadMachines.single("image_machine"), compressImage, async function (req, res) {
     try {
       const {
         nom_machine,
@@ -2868,7 +2935,7 @@ app.post(
 Traite le formulaire d'édition d'une réalisation (admin), 
 Gère l'image
 */
-app.post("/modifier_infos_realisation", uploadProduits.array("fichiers", 1), async function (req, res) {
+app.post("/modifier_infos_realisation", uploadProduits.array("fichiers", 1), compressImage, async function (req, res) {
     try {
       const { id_produit, nom_produit, description, categorie } = req.body;
 
@@ -2935,7 +3002,7 @@ Si une nouvelle image est envoyée, l'ancienne est supprimée du serveur (si ell
 -> éviter d'avoir des fichiers orphelins
 -> Sauver de l'espace disque
  */
-app.post("/modifier_infos_machine", isAdmin, uploadMachines.single("image_machine"), async function (req, res) {
+app.post("/modifier_infos_machine", isAdmin, uploadMachines.single("image_machine"), compressImage, async function (req, res) {
     try {
       const {
         id_machine,
@@ -3050,7 +3117,7 @@ Traite le formulaire de demande de devis, envoie un email avec les pièces joint
 Style du mail géré par le serveur
 Limitation Multer à 10 fichiers (uploadProduits.array("fichiers", 10)) pour éviter les abus / le spam
  */
-app.post("/envoyer-devis", uploadProduits.array("fichiers", 10), async (req, res) => {
+app.post("/envoyer-devis", uploadProduits.array("fichiers", 10), compressImage, async (req, res) => {
     try {
       // Captcha
       const userAnswer = parseInt(req.body.captcha_answer, 10);
