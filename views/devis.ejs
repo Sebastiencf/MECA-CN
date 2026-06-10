@@ -118,6 +118,7 @@
                 placeholder="Ex: Acier, Alu..."
               />
               <input type="hidden" name="matiere_fourniture" id="matiere-fourniture-hidden" value="" />
+              <span id="matiere-fourniture-label" style="color: #64748b; font-size: 0.9rem; display: block; margin-top: 4px;">Fournisseur matière : <strong>À définir</strong></span>
             </div>
              <!-- Modale fourniture matière -->
               <div class="matiere-modal-overlay" id="matiere-modal" aria-hidden="true">
@@ -915,12 +916,14 @@
 
     document.getElementById("matiere-client").addEventListener("click", function () {
       matiereFournitureHidden.value = "client";
+      document.getElementById("matiere-fourniture-label").textContent = "Fournisseur matière : Fourni par le client";
       matiereModal.classList.remove("visible");
       matiereModal.setAttribute("aria-hidden", "true");
     });
 
     document.getElementById("matiere-entreprise").addEventListener("click", function () {
       matiereFournitureHidden.value = "entreprise";
+      document.getElementById("matiere-fourniture-label").textContent = "Fournisseur matière : Fourni par MECA-CN";
       matiereModal.classList.remove("visible");
       matiereModal.setAttribute("aria-hidden", "true");
     });
