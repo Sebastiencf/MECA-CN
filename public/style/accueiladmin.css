@@ -638,6 +638,7 @@
         color:#ffffff;
         align-items:center;
         justify-content:center;
+        
         border-radius:10px;
         border:none;
         padding:16px 32px;
@@ -977,7 +978,7 @@
         justify-content:flex-start;
         gap:10px;
         width:auto;
-        max-width:100%;
+        max-width:50%;
         border-radius:10px;
         background: linear-gradient(157deg,rgba(0, 63, 135, 1) 0%, rgba(0, 86, 179, 1) 100%);
         border:none;
@@ -1064,6 +1065,7 @@
         color:#ffffff;
         align-items:center;
         justify-content:center;
+        text-align:center;
         border-radius:10px;
         border:none;
         padding:16px 32px;
@@ -1450,4 +1452,14 @@ form {
         height: 1px;
         margin: 20px auto;
     }
+}
+
+
+
+.work-link{
+    color:black !important;
+}
+.work-link span{
+    color:blue;
+    text-decoration:none
 }

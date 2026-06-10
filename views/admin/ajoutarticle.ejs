@@ -1,5 +1,17 @@
 <%- include("header") %>
 <main>
+  <div style="height:20px"></div>
+  <a href="/admin/actu" 
+    style="
+      margin-left:25px; 
+      color:black; 
+      text-decoration:none 
+    "
+    onmouseover="this.style.textDecoration='underline';"
+    onmouseout="this.style.textDecoration='none';">
+        ← Voir toutes les actualités
+    </a>
+
   <div class="admin-container">
 
     <div class="admin-meta">
@@ -81,11 +93,11 @@
 
 
   //  ÉLÉMENTS DOM
-  const editor      = document.getElementById('cms-editor');
-  const preview     = document.getElementById('preview');
+  const editor = document.getElementById('cms-editor');
+  const preview = document.getElementById('preview');
   const imagePicker = document.getElementById('image-picker');
-  const presInput   = document.getElementById('presentation');
-  const presLabel   = document.getElementById('presentation-label');
+  const presInput = document.getElementById('presentation');
+  const presLabel = document.getElementById('presentation-label');
 
   presInput.addEventListener('change', () => {
     // console.log('fichier détecté :', presInput.files[0]);
@@ -285,7 +297,7 @@
       ? (rect.top + window.scrollY - mH - 4)
       : (rect.bottom + window.scrollY + 4);
 
-    slashMenu.style.top  = top + 'px';
+    slashMenu.style.top = top + 'px';
     slashMenu.style.left = Math.min(rect.left, window.innerWidth - 240) + 'px';
   }
 
@@ -366,10 +378,10 @@
   //  INLINE FORMATTING
   function appliquerInline(valeur) {
     const cmds = {
-      gras:     () => document.execCommand('bold'),
-      italique: () => document.execCommand('italic'),
-      souligne: () => document.execCommand('underline'),
-      surligne: () => {
+      gras : () => document.execCommand('bold'),
+      italique : () => document.execCommand('italic'),
+      souligne : () => document.execCommand('underline'),
+      surligne : () => {
         const sel = window.getSelection();
         if (!sel.rangeCount || sel.isCollapsed) return;
         const range = sel.getRangeAt(0);
@@ -441,10 +453,10 @@
     });
   }
 
-  editor.addEventListener('input',   majPlaceholders);
-  editor.addEventListener('focus',   majPlaceholders, true); // capture pour attraper les focus enfants
-  editor.addEventListener('blur',    majPlaceholders, true);
-  editor.addEventListener('keyup',   majPlaceholders);
+  editor.addEventListener('input', majPlaceholders);
+  editor.addEventListener('focus', majPlaceholders, true); // capture pour attraper les focus enfants
+  editor.addEventListener('blur', majPlaceholders, true);
+  editor.addEventListener('keyup', majPlaceholders);
 
 
   editor.addEventListener('click', (e) => {
@@ -651,9 +663,9 @@
       const cmd = {
         titre1:'/titre1',
         titre2: '/titre2',
-        paragraphe:'/paragraphe',
-        citation:  '/citation',
-        auteur: '/auteur',
+        paragraphe :'/paragraphe',
+        citation : '/citation',
+        auteur : '/auteur',
         'liste-puces':'/liste-puces',
         'liste-numerotee': '/liste-numerotee',
       }[type] ?? '/paragraphe';
@@ -699,9 +711,9 @@
 
   //  PARSING (identique à l'original) → HTML
   function parseCMS(text) {
-    const BLOCS   = ['/titre1', '/titre2', '/paragraphe', '/citation', '/auteur', '/separateur', '/image', '/liste-puces', '/liste-numerotee'];
+    const BLOCS = ['/titre1', '/titre2', '/paragraphe', '/citation', '/auteur', '/separateur', '/image', '/liste-puces', '/liste-numerotee'];
     const INLINES = ['/gras', '/italique', '/souligne', '/surligne', '/normal'];
-    const toutes  = [...BLOCS, ...INLINES];
+    const toutes = [...BLOCS, ...INLINES];
     
     /*
     const seule = [...BLOCS, '/titre1', '/titre2', '/paragraphe'];
@@ -723,7 +735,7 @@
       '/titre2':{ open: '<h2 class="article-titre2">', close: '</h2>' },
       '/paragraphe': { open: '<p class="article-paragraphe">', close: '</p>' },
       '/citation':{ open: '<blockquote class="article-citation">', close: '</blockquote>' },
-      '/image': { open: '<img class="article-image" src="',  close: '" alt="">' },
+      '/image': { open: '<img class="article-image" src="', close: '" alt="">' },
       '/separateur':{ open: '<div class="article-separateur">', close: '</div>' },
       '/liste-puces':{ open: '<li class="article-liste-puces">', close: '</li>' },
       '/liste-numerotee':{ open: '<li class="article-liste-numerotee">', close: '</li>' },
@@ -768,7 +780,7 @@
 
       } else if (blocCourant === '/liste-puces' || blocCourant === '/liste-numerotee') {
         const tag = blocCourant === '/liste-puces' ? 'ul' : 'ol';
-        const lastOpen  = html.lastIndexOf(`<${tag} class="article-liste-wrapper">`);
+        const lastOpen = html.lastIndexOf(`<${tag} class="article-liste-wrapper">`);
         const lastClose = html.lastIndexOf(`</${tag}>`);
         if (lastOpen !== -1 && lastOpen > lastClose) {
           // Liste du même type déjà ouverte -> on ajoute juste le <li>
@@ -860,7 +872,7 @@
     const baseline = document.getElementById('baseline').value.trim();
     const fichierImage = document.getElementById('presentation').files[0];
     const texte = serialiser();
-    // console.log("📝 Texte sérialisé :", texte);  
+    // console.log("📝 Texte sérialisé :", texte);
     const contenu = parseCMS(texte);
     // console.log("🔄 Contenu parsé (HTML) :", contenu);
 

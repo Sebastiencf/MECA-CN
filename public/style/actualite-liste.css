@@ -371,7 +371,7 @@
 
     .actu-holder > h1 {
         font-size: 1.7rem;
-        margin-bottom: 28px;
+        margin-bottom: 112px;
     }
 
     /* Grille : 1 colonne */
@@ -498,4 +498,47 @@ mark{
     background-color:#9bcdff;
     color:rgb(0, 0, 0);
     font-weight:bold;
+}
+
+
+
+.admin-actions{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+    height:50px
+}
+
+.ajoutarticle-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 14px 24px;
+    height:40%;
+
+    background: #0B4A97;
+    color: white;
+    text-decoration: none;
+
+    border-radius: 12px;
+
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    transition: all .2s ease;
+
+    box-shadow: 0 4px 12px rgba(11, 74, 151, .15);
+}
+
+.ajoutarticle-link:hover{
+    transform: translateY(-2px);
+
+    background: #0d58b5;
+
+    box-shadow: 0 8px 20px rgba(11, 74, 151, .25);
+}
+
+.ajoutarticle-link:active{
+    transform: translateY(0);
 }

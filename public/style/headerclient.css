@@ -130,6 +130,24 @@ header{
         border-radius:5px;
     }
 
+    .logo_header{
+        width:90%;
+    }
+
+    .header_btn {
+        position: relative;
+        padding: 12px 12px;
+        font-size:0.7rem;
+        background-color: #ffffff;
+        font-weight: 600;
+        border-radius: 5px;
+        border: 2px solid transparent; /* On réserve l'espace pour la bordure */
+        transition: all 0.3s ease;
+        cursor: pointer;
+        z-index: 1;
+        display: inline-block; /* Si tu as enlevé la balise <button> */
+    }
+
     .header_btn::before {
         content: "";
         position: absolute;

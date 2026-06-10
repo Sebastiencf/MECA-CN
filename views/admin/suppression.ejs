@@ -2,7 +2,15 @@
 
 <main class="suppression-page">
     <div class="content-wrapper-admin">
-        <a href="/admin/realisations" class="back-link">← Retour à l'accueil</a>
+
+        <% const pPageList = previous_page.split("/");
+           const pPage = pPageList[pPageList.length - 1];
+           // console.log(pPage) 
+        %>
+        <a href="<%- pPage %>" class="back-dyna-link">← Retourner en arrière</a>
+
+
+
 
         <section class="admin-section">
             <h1>Vous souhaitez <span>supprimer</span> une <span>Catégorie ?</span></h1>

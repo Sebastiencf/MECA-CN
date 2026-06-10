@@ -268,3 +268,44 @@ input:checked + .slider:before {
 .smaller-label{
     font-size:0.75rem !important;
 }
+
+
+
+
+.admin-actions{
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 40px;
+    height:50px
+}
+
+.ajoutarticle-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 14px 24px;
+    height:100%;
+
+    color: black;
+    text-decoration: none;
+
+    border-radius: 12px;
+
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    transition: all .2s ease;
+
+}
+
+.ajoutarticle-link:hover{
+    transform: translateY(-2px);
+
+    text-decoration:underline;
+
+}
+
+.ajoutarticle-link:active{
+    transform: translateY(0);
+}

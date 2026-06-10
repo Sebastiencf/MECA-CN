@@ -369,14 +369,14 @@
           <h2>Plans et <span>fichiers</span></h2>
           <div class="upload-box">
             <div class="upload-icon">⇪</div>
-            <label for="fichiers">
+            <label for="fichiers-input">
               <p>Glissez-déposez vos plans</p>
             </label>
             <span>Fichiers 3D, PDF, images...</span>
             <button type="button" class="upload-button">
               Chercher un/des fichiers
             </button>
-            <input type="file" name="fichiers" id="fichiers" multiple id="fichiers-input" />
+            <input type="file" name="fichiers" multiple id="fichiers-input" />
           </div>
           <p class="upload-restrictions">
             Les fichiers compressés (ZIP) ne sont pas acceptés. <br />Taille
@@ -897,7 +897,7 @@
           return '<li><span class="file-name">' + file.name + '</span><span class="file-size">' + formatBytes(file.size) +
             '</span><button type="button" class="file-remove" data-index="' + index + '">Supprimer</button></li>';
         }).join("") +
-        "</ul><div class='upload-files-total'>Total : " + formatBytes(totalSize) + " / 250 Mo</div>";
+        "</ul><div class='upload-files-total'>Total : " + formatBytes(totalSize) + " / 30 Mo</div>";
     }
 
     // ── MODALE FOURNITURE MATIÈRE ────────────────────────────────────
@@ -985,22 +985,24 @@
     updateFilePreview();
 
     // ── STEPPER (NAVIGATION MOBILE) ──────────────────────────────────
+    // ── STEPPER (NAVIGATION MOBILE) ──────────────────────────────────
     window.nextStep = function (step) {
-      if (window.innerWidth <= 768) {
-        if (step === 4 && !validateDimensions()) return;
+      if (step === 4 && !validateDimensions()) return;
 
-        document.querySelectorAll(".form-step").forEach((s) => s.classList.remove("active"));
-        document.getElementById("step-" + step).classList.add("active");
+      document.querySelectorAll(".form-step").forEach((s) => s.classList.remove("active"));
+      document.getElementById("step-" + step).classList.add("active");
 
-        var progressFill = document.getElementById("progress-fill");
-        var stepNumDisplay = document.getElementById("current-step-num");
-        if (progressFill) progressFill.style.width = (step / 6 * 100) + "%";
-        if (stepNumDisplay) stepNumDisplay.innerText = step;
+      var progressFill = document.getElementById("progress-fill");
+      var stepNumDisplay = document.getElementById("current-step-num");
+      if (progressFill) progressFill.style.width = (step / 6 * 100) + "%";
+      if (stepNumDisplay) stepNumDisplay.innerText = step;
 
-        window.scrollTo(0, 0);
-      }
+      window.scrollTo(0, 0);
+      
       if (step === 6) generateRecap();
     };
+
+
 
     // ── RÉCAPITULATIF ────────────────────────────────────────────────
     function generateRecap() {

@@ -24,6 +24,8 @@ import { generateHTML } from "@tiptap/html";
 import StarterKit from "@tiptap/starter-kit";
 import { fileURLToPath } from "url";
 import sharp from "sharp";
+import { asyncWrapProviders } from "async_hooks";
+import { timeStamp } from "console";
 
 
 
@@ -187,7 +189,9 @@ Sauvegarde l'image dans le dossier de destination (géré par multer).
 async function compressImage(req, res, next){
   // Gère AUSSI les multiples
   const files = req.file ? [req.file] : req.files || [];
-  if (files.length === 0) return next();
+  if (files.length === 0) {
+    return next();
+  }
 
   try{
     for (const file of files) {
@@ -215,7 +219,7 @@ async function compressImage(req, res, next){
 
 
       //Afichage propre
-      /*console.log(`
+      console.log(`
       ╔════════════════════════════════════════╗
       ║         COMPRESSION D'IMAGE            ║
       ╠════════════════════════════════════════╣
@@ -227,7 +231,7 @@ async function compressImage(req, res, next){
       ║ RÉDUCTION: ${reductionPercent}%
       ╚════════════════════════════════════════╝
       `);
-      */
+      
 
 
       fs.unlinkSync(file.path);
@@ -895,7 +899,10 @@ app.get("/admin/suppression", isAdmin, async function (req, res) {
     const liste_categories = await pool.query("SELECT * FROM categories");
     const liste_realisations = await pool.query("SELECT * FROM produits");
     const liste_machines = await pool.query("SELECT * FROM machines");
+    const url = req.rawHeaders[25];
+    // console.log(url.rawHeaders[25]);
     res.render("admin/suppression", {
+      previous_page: url,
       page_css1: "headeradmin.css",
       page_css2: "suppression.css",
       liste_categories: liste_categories[0],
@@ -1012,7 +1019,7 @@ app.get("/admin/ajoutproduit", isAdmin, async function (req, res) {
  * Ramène vers la page d'ajout de catégorie. 
  * Récupère aussi les produits sans catégorie pour les afficher dans la page et permettre à l'administrateur de les catégoriser.
  */
-app.get("/ajout_categorie", isAdmin, async function (req, res) {
+app.get("/admin/ajout_categorie", isAdmin, async function (req, res) {
   try {
     const [produit_sans_categorie] = await pool.query(
       "SELECT * FROM produits WHERE categorie NOT IN (SELECT id_cat FROM categories)",
