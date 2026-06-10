@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mar. 09 juin 2026 à 10:22
+-- Généré le : mer. 10 juin 2026 à 10:59
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `actualite` (
   `baseline` varchar(255) DEFAULT NULL,
   `img_presentation` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `actualite`
@@ -210,19 +210,19 @@ CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
   `used` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `password_reset_tokens`
 --
 
 INSERT INTO `password_reset_tokens` (`id`, `mail`, `token`, `code`, `expires_at`, `used`, `created_at`) VALUES
-(3, 'confreresebastien6@gmail.com', '90f6aa2813717bb31f7929fcc81e4a4f754ef2d20284993ee71a32808965f9c2', '493433', '2026-05-13 09:48:42', 1, '2026-05-13 11:33:42'),
-(2, 'confreresebastien6@gmail.com', 'cf96300cd10d8598bfdb86600c8a0347ed2368e8fef6fe1ea0b97ae117d12d74', '953826', '2026-05-13 09:48:00', 1, '2026-05-13 11:33:00'),
-(1, 'confreresebastien6@gmail.com', '5b68790931d0f5ba2336a79b7f7d678e68543bd56b8ad200e75baa2c7bef4a8c', '121513', '2026-05-13 09:46:56', 1, '2026-05-13 11:31:56'),
-(4, 'confreresebastien6@gmail.com', 'eae207cde9919860254c00e18b9620e74f20d76b9c6bc639372964849aadb482', '433340', '2026-05-20 09:22:06', 1, '2026-05-20 11:07:06'),
-(15, 'confreresebastien6@gmail.com', 'e54b4850b9e30713fa80ce9bb5f0d53330baea85ea6ffba8e6530ddebfebbc5d', '139216', '2026-06-01 13:04:16', 1, '2026-06-01 14:49:16'),
-(16, 'confreresebastien6@gmail.com', '0c5a999e705cdc694061fac7d89376bbe7dfef95f9b63a4e6d06362ada109e24', '584473', '2026-06-02 06:50:42', 1, '2026-06-02 08:35:42');
+(23, 'confreresebastien6@gmail.com', '412a78e7d2f50be48a0eb2d4f08b54a73d626844e81da281bdc5f29c677b7754', '726867', '2026-06-10 11:25:03', 1, '2026-06-10 10:55:03'),
+(22, 'sebastienconfrere6@gmail.com', 'c7f4bc9cc583cbac1a070f0ba647b7c55067f628a6d0b8a473495937902b0d8e', '735494', '2026-06-10 11:24:18', 1, '2026-06-10 10:54:18'),
+(21, 'confreresebastien6@gmail.com', '0bdfaf2111ad300c8dd04923ba3e729387b3bdc3449581c85081c139dc3e9129', '612296', '2026-06-10 11:24:10', 1, '2026-06-10 10:54:10'),
+(20, 'confreresebastien6@gmail.com', '9420e40e3ec4fc0e0d421341567031ce9b163641008ec7949e4a17341637db6b', '240251', '2026-06-10 11:20:55', 1, '2026-06-10 10:50:55'),
+(19, 'confreresebastien6@gmail.com', 'c7b549e64df6a218cb698fffabdf5fda115d737f9964d453bca7d58bda008498', '787261', '2026-06-10 11:20:35', 1, '2026-06-10 10:50:35'),
+(18, 'confreresebastien6@gmail.com', 'c812155ffe2ca1203407ffe1f64c6a69edc662fbf667fc8e39edc8d90f256ed1', '533557', '2026-06-10 11:12:03', 1, '2026-06-10 10:42:03');
 
 -- --------------------------------------------------------
 
@@ -247,7 +247,6 @@ CREATE TABLE IF NOT EXISTS `produits` (
 INSERT INTO `produits` (`id`, `nom`, `description`, `categorie`, `image`) VALUES
 (1, 'Engrenage Hélicoïcal de Transmission 2', 'Usinage haute précision de pignons pour boîtes de vitesses. Une finition de surface optimisée pour réduire les frottements et les bruits de roulement.', 2, '/img/produits/Prdt1779793275649.png'),
 (2, 'Pignon de Précision à Droit', 'Fabrication de composants de transmission mécanique standard. Un contrôle rigoureux des tolérances pour assurer une longévité maximale en milieu industriel.', 3, '/img/produits/produit3.png'),
-(8, 'Test compression image', 'oiyhvqmelrj oaiuhf pairuhfap oruhpaurhpa orha ouh pauquh p qojrh gpmaoqeru hg a pmqoruh gpoaerjh ', 3, '/img/produits/Prdt1780990139048.webp'),
 (9, 'Roue motrice', 'Roue motrice en aluminium (bon courage pour la conduire celle-là', 1, '/img/produits/Prdt1780990289339.webp');
 
 -- --------------------------------------------------------
@@ -267,14 +266,25 @@ CREATE TABLE IF NOT EXISTS `utilisateurs` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `identifiant` (`identifiant`),
   UNIQUE KEY `mail` (`mail`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `utilisateurs`
 --
 
 INSERT INTO `utilisateurs` (`id`, `identifiant`, `mail`, `password`, `telephone`, `role`) VALUES
-(1, 'adminTest', 'confreresebastien6@gmail.com', '6b35d7ac0fc8f9d9d11344091645f33949b781224976045b9934c357c7594749', '0782950362', 'admin');
+(1, 'adminTest', 'confreresebastien6@gmail.com', 'ac8e46087a3ef0bd143ae246f5952743f52fa73b79a86ab02ca0742165b78e83', '0782950362', 'admin'),
+(2, 'Clevew', 'sebastienconfrere6@gmail.com', 'ac8e46087a3ef0bd143ae246f5952743f52fa73b79a86ab02ca0742165b78e83', '0782950362', 'admin');
+
+DELIMITER $$
+--
+-- Évènements
+--
+DROP EVENT IF EXISTS `purge_tokens`$$
+CREATE DEFINER=`root`@`localhost` EVENT `purge_tokens` ON SCHEDULE EVERY 1 DAY STARTS '2026-06-10 10:44:11' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM password_reset_tokens
+WHERE expires_at < NOW() - INTERVAL 30 DAY$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

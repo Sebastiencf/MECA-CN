@@ -39,7 +39,9 @@ main::before {
     margin-bottom: 50px;
 }
 
-.left-part h1 span { color: #0b63b6; }
+.left-part h1 span { 
+    color: #0b63b6; 
+}
 
 .preview-title {
     font-size: 1.5rem;
@@ -120,7 +122,9 @@ main::before {
 }
 
 /* Champs de saisie */
-.form-group { margin-bottom: 20px; }
+.form-group { 
+    margin-bottom: 20px; 
+}
 
 .form-group label {
     display: block;
@@ -137,7 +141,10 @@ main::before {
     background: #fdfdfd;
 }
 
-.form-group textarea { height: 100px; resize: none; }
+.form-group textarea { 
+    height: 100px; 
+    resize: none; 
+}
 
 /* Boutons */
 .btn-validate {
@@ -152,7 +159,9 @@ main::before {
     transition: background 0.3s;
 }
 
-.btn-validate:hover { background: #0b63b6; }
+.btn-validate:hover { 
+    background: #0b63b6; 
+}
 
 .footer-form {
     margin-top: 20px;
@@ -166,13 +175,20 @@ main::before {
 }
 
 /* --- Responsive --- */
-@media (max-width: 1024px) {
-    .content-wrapper { grid-template-columns: 1fr; gap: 40px; }
-    .left-part h1 { font-size: 2.5rem; }
+@media screen and (max-width: 1024px) {
+    .content-wrapper { 
+        grid-template-columns: 1fr; 
+        gap: 40px; 
+    }
+    .left-part h1 { 
+        font-size: 2.5rem; 
+    }
 }
 
-@media (max-width: 600px) {
-    .form-body { grid-template-columns: 1fr; }
+@media screen and (max-width: 600px) {
+    .form-body { 
+        grid-template-columns: 1fr; 
+    }
 }
 
 
@@ -251,7 +267,6 @@ main::before {
     align-items: stretch; /* Pour que les deux colonnes aient la même hauteur visuelle */
 }
 
-
 .note{
     font-size:0.8rem;
     color:#555;
@@ -288,5 +303,5 @@ main::before {
 
 .back-link{
     position:absolute;
-    
+
 }

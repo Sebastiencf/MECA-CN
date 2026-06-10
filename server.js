@@ -219,19 +219,19 @@ async function compressImage(req, res, next){
 
 
       //Afichage propre
-      console.log(`
+      /*console.log(`
       ╔════════════════════════════════════════╗
       ║         COMPRESSION D'IMAGE            ║
       ╠════════════════════════════════════════╣
       ║ Fichier: ${file.originalname.padEnd(30)}║
       ║ Format: ${file.mimetype.padEnd(30)}     ║
       ╠════════════════════════════════════════ ╣
-      ║ AVANT: ${sizeAvantKB} KB (${sizeAvantMB} MB)
-      ║ APRÈS: ${sizeApresKB} KB (${sizeApresMB} MB)
-      ║ RÉDUCTION: ${reductionPercent}%
+      ║ AVANT: ${sizeAvantKB} KB (${sizeAvantMB} MB) ╣
+      ║ APRÈS: ${sizeApresKB} KB (${sizeApresMB} MB) ╣
+      ║ RÉDUCTION: ${reductionPercent}%        ╣
       ╚════════════════════════════════════════╝
       `);
-      
+      */
 
 
       fs.unlinkSync(file.path);
@@ -3611,11 +3611,7 @@ app.post("/recup_mdp/envoi_code", async (req, res) => {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       const token = crypto.randomBytes(32).toString("hex");
 
-      // Expiration dans 15 minutes
-      const expiresAt = new Date(Date.now() + 15 * 60 * 1000)
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
+
 
       // 3. Invalider les anciens tokens pour ce mail
       await pool.query(
@@ -3625,9 +3621,10 @@ app.post("/recup_mdp/envoi_code", async (req, res) => {
 
       // 4. Insérer le nouveau token
       await pool.query(
-        `INSERT INTO password_reset_tokens (mail, token, code, expires_at)
-                 VALUES (?, ?, ?, ?)`,
-        [mail, token, code, expiresAt],
+        `INSERT INTO password_reset_tokens
+        (mail, token, code, expires_at)
+        VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 30 MINUTE))`,
+        [mail, token, code]
       );
 
       // 5. Envoyer le mail stylisé
@@ -3762,8 +3759,13 @@ app.post("/recup_mdp/nouveau_mdp", async (req, res) => {
     // 4. Invalider le token (et tous les autres tokens de ce mail)
     await pool.query(
       "UPDATE password_reset_tokens SET used = 1 WHERE mail = ?",[mail]);
+    
+    // 5. On update tout les codes expirés pour les mettres en "used" afin de ne pas accumuler les codes expirés non utilisés
+    await pool.query(
+      "UPDATE password_reset_tokens SET used = 1 WHERE expires_at < NOW() AND used = 0;"
+    );
 
-    // 5. Rediriger vers la connexion avec un message de succès
+    // 6. Rediriger vers la connexion avec un message de succès
     res.redirect("/connexion?mdp_reset=1");
   } catch (err) {
     console.error("[recup_mdp] nouveau_mdp :", err);
