@@ -197,26 +197,19 @@ async function compressImage(req, res, next){
     for (const file of files) {
       const ext = path.extname(file.originalname);
       const compressedPath = file.path.replace(ext, '.webp');
-
       //Taille avant compression
       const statsAvant = fs.statSync(file.path);
       const sizeAvantKB = (statsAvant.size / 1024).toFixed(2);
       const sizeAvantMB = (statsAvant.size / (1024 * 1024)).toFixed(2);
-
-
       await sharp(file.path).resize(1200, 800, { fit: 'inside', withoutEnlargement: true }).toFormat("webp", { quality: 80 }).toFile(compressedPath);
-
-
       // Taille après compression
       const statsApres = fs.statSync(compressedPath);
       const sizeApresKB = (statsApres.size / 1024).toFixed(2);
       const sizeApresMB = (statsApres.size / (1024 * 1024)).toFixed(2);
-
       // Ratio de compression
       const reductionPercent = (
         ((statsAvant.size - statsApres.size) / statsAvant.size) * 100
       ).toFixed(1);
-
 
       //Afichage propre
       /*console.log(`
@@ -237,15 +230,13 @@ async function compressImage(req, res, next){
       fs.unlinkSync(file.path);
       file.path = compressedPath;
       file.filename = path.basename(compressedPath);
-      
     }
     next();
   } catch(err){
     console.error("Erreur compression :", err);
     res.status(500).send("Erreur compression");
   }
-}
-
+};
 
 
 
@@ -3783,10 +3774,30 @@ app.post("/recup_mdp/nouveau_mdp", async (req, res) => {
 
 
 
-
 //SECTION - Fonctions annexes
 
 
+
+
+
+
+//ANCHOR: Génération d'un token 
+// (non utilisé dans le projet pour le moment, mais peut servir plus tard)
+// Ne prend rien en paramètre : renvoie un token complètement aléatoire
+function generateToken(){
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789&é(-_çà)=}]@^`|[{#~?./§%£¨$^ù!:;,"
+  let j = 0
+  result = ""
+  while (j < 10000){
+    for (let i = 0; i < length; i++){
+      const randomIndex = Math.floor(Math.random() * chars.length);
+      result += chars[randomIndex];
+      const token = sha256(result);
+    }
+    result = ""
+    j+=1
+  }
+}
 
 //ANCHOR: Formatage du mail d'oubli de mot de passe
 // Formate le mail pour reset le password
