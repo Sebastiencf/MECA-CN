@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "nom": "Client test",
+    "actif": true
+  },
+  {
+    "ref": "CLI-2026-0001",
+    "nom": "Client A"
+  },
+  {
+    "ref": "CLI-2026-0002",
+    "nom": "Client B"
+  },
+  {
+    "ref": "CLI-2026-0003",
+    "nom": "Client C"
+  },
+  {
+    "totalClients": 152,
+    "derniereRef": "CLI-2026-0152",
+    "tauxConversion": 0.87
+  }
+]
