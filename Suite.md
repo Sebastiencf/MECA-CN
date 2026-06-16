@@ -6,3 +6,4 @@
 3. Gestion des stocks internes de l'entreprise (continuer le code)
 4. Système de listing des devis demandés, avec donc stylisation des devis, possibilité de les voir sur le site, mais aussi de les télécharger en pdf
     - On peut utiliser la fonction pagination dans annexe.js pour l'affichage limité par page
+5. Accès aux logs en tant qu'administrateur au cas où un problème survient.

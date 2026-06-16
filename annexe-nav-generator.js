@@ -4,7 +4,7 @@ import fs from "fs";
 const INPUT_FILE = "annexe.js";
 const OUTPUT_FILE = "navigation-annexe.md";
 
-// ===== LECTURE DU FICHIER =====
+// ===== LECTURE =====
 const content = fs.readFileSync(INPUT_FILE, "utf-8");
 const lines = content.split("\n");
 
@@ -12,33 +12,39 @@ const lines = content.split("\n");
 let sections = {};
 let currentSection = "GENERAL";
 
+function ensureSection(name) {
+  if (!sections[name]) {
+    sections[name] = [];
+  }
+}
+
+// initialise GENERAL
+ensureSection(currentSection);
+
 // ===== PARSING =====
 lines.forEach((line, index) => {
   const lineNumber = index + 1;
 
-  // SECTION
-  const sectionMatch = line.match(/\/\/\s*SECTION\s*-\s*(.+)/);
+  // =========================
+  // SECTION DETECTION (robuste)
+  // =========================
+  const sectionMatch = line.match(/\/\/\s*SECTION\s*[-:]\s*(.+)/i);
 
   if (sectionMatch) {
     currentSection = sectionMatch[1].trim();
-
-    if (!sections[currentSection]) {
-      sections[currentSection] = [];
-    }
+    ensureSection(currentSection);
     return;
   }
 
-  // ANCHOR
+  // =========================
+  // ANCHOR DETECTION
+  // =========================
   const anchorMatch = line.match(/\/\/\s*ANCHOR:\s*(.+)/);
 
   if (anchorMatch) {
-    const raw = anchorMatch[1].trim();
+    const title = anchorMatch[1].trim();
 
-    const title = raw;
-
-    if (!sections[currentSection]) {
-      sections[currentSection] = [];
-    }
+    ensureSection(currentSection);
 
     sections[currentSection].push({
       title,
@@ -47,28 +53,29 @@ lines.forEach((line, index) => {
   }
 });
 
+// ===== CLEAN EMPTY SECTIONS =====
+Object.keys(sections).forEach((key) => {
+  if (sections[key].length === 0) {
+    delete sections[key];
+  }
+});
 
-// ===== GENERATION MARKDOWN =====
+// ===== MARKDOWN GENERATION =====
 let md = `# Navigation du projet\n\n`;
-md += `<br><br><br><br><br>\n\n`
+md += `<br><br><br><br><br>\n\n`;
+
 Object.entries(sections).forEach(([section, items]) => {
   md += `## ${section}\n\n`;
-
-  if (items.length === 0) {
-    md += `_Aucun élément_\n\n`;
-    return;
-  }
 
   items.forEach((item) => {
     md += `### ${item.title}\n`;
     md += `- [Ouvrir dans le code](./${INPUT_FILE}#L${item.line}) (ligne ${item.line})\n\n`;
   });
 
-  md += `<br><br><br>\n\n`
-  
+  md += `<br><br><br>\n\n`;
 });
 
-// ===== ÉCRITURE DU FICHIER =====
+// ===== OUTPUT =====
 fs.writeFileSync(OUTPUT_FILE, md, "utf-8");
 
 console.log(`${OUTPUT_FILE} généré avec succès`);

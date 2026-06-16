@@ -11,38 +11,7 @@ L'exercice consistera donc à refaire ces exos, mais de manière optimisée et m
 
 
 
-
-//ANCHOR: Génération de token aléatoire
-// Cette fonction sert à générer un token aléatoire
-/* PARAMETRES
-size = taille finale souhaitée. Si ce paramètre n'est pas remplit, generateToken fait appel à une fonction aléatoire pour le générer
-*/
-function generateToken(size = 0){
-    const char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = []
-    if (size === 0){
-        while (size < 8){
-            size = Math.round(Math.random() * 24);
-        } 
-    };
-    for (let i = 0; i < size; i++){
-        const alea = Math.floor(Math.random() * 62) // quantité de caractères dans "char"
-        result.push(char[alea]);
-    }
-    const res = result.join("");
-    return res
-}
-
-//TESTS
-/*
-console.log("Sans size donnée ↓");
-console.log(generateToken());
-
-console.log("Avec size donnée ↓");
-console.log(generateToken(6));
-*/
-
-
+//SECTION: String utilities
 
 
 //ANCHOR: Conversion d'une string en list
@@ -55,10 +24,8 @@ function stringToList(text){
 
 
 
-
-
-
-//ANCHOR: Fonction de capitalisation de la première lettre de chaque mots d'une phrase, et, accessoirement, nettoie la chaine de caractère de tout autre type de carcatere
+//ANCHOR: Fonction de capitalisation de la première lettre de chaque mots.
+// (D'une phrase, et, accessoirement, nettoie la chaine de caractère de tout autre type de carcatere)
 // Capitalisation automatique, sans utiliser de fonction préfaite
 // Entrée : "bonjour je suis là"
 // Sortie : "Bonjour Je Suis Là"
@@ -103,31 +70,6 @@ function capitalize(text){
 
 
 
-
-
-
-
-
-//ANCHOR: Fonction de formatage de date. Peut importe le format de base, va renvoyer un truc cohérent au format XX/XX/XXXX
-// Formatage d'une date
-// Entrée : "12:05-2005"
-// Sortie : "12/05/2005"
-function dateformat(date){
-    return date.split(/[-:/._ ]/).join("/")
-}
-
-/*
-// TESTS
-console.log(dateformat("12:15:2006"))
-console.log(dateformat("12/15-2006"))
-console.log(dateformat("12/15/2006"))
-console.log(dateformat("12_15_2006"))
-console.log(dateformat("12.15.2006"))
-*/
-
-
-
-
 //ANCHOR: Suppression des accents dans une chaine de caractère
 // Suppression des accents
 // Entrée : "Éléphant très âgé"
@@ -167,7 +109,6 @@ console.log(noAccent("Ça fart le djeuns ? Ç'était pas trop compliqué ?"))
 
 
 
-
 //ANCHOR: Génération d'un slug URL
 // Entrée : "Machine CNC 5 axes"
 // Sortie : "machine-cnc-5-axes"
@@ -197,105 +138,24 @@ console.log(slugGenerator("C'est moi héhé  !  ! ?"));
 
 
 
-
-
-
-
-//ANCHOR: Génération d'un mot de passe aléatoire
-// Génération d'un mot de passe aléatoire
-// Entrée : longueur = 12
-// Sortie : "aK7!zQ9#mLp2"
-function generateMdp(len){
-
-    const tabRes = [];
-
-    if (len <= 0){
-        return "Longueur inférieure ou égale à 0"
-    } else if (len < 5){
-        console.log("Attention, votre mot de passe est faible : ")
+//ANCHOR: tronquage de texte
+// Tronquer un texte
+// Entrée : texte de 500 caractères, limite 100
+// Sortie : texte coupé + "..."
+function tronc(text, size){
+    let res = ""
+    let i = 0;
+    while (i !== size){
+        res = res + text[i];
+        i++
     }
-    const caractere = {
-        0 : "abcdefghijklmnopqrstuvwxyzçéè",
-        1 : "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-        2 : "0123456789",
-        3 : "!.#&$",
-    }
-
-    for (let i = 0; i < len; i++){
-        const type = Math.round(Math.random() * 3);
-        const charLen = caractere[type].length;
-        const charFull = caractere[type]; 
-        const aleaCharIndex = Math.round(Math.random() * charLen);
-        const aleachar = charFull[aleaCharIndex];
-        
-        tabRes.push(aleachar);
-    }
-
-    const resultat = tabRes.join("");
-
-    return resultat
-}
-
-
-/*
-
-//TESTS
-console.log(generateMdp(15));
-console.log(generateMdp(2));
-console.log(generateMdp(0));
-console.log(generateMdp(-1))
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-//ANCHOR: Génération d'une référence client
-// Génération d'une référence client
-// Sortie : "CLI-2026-0001"
-// ATTENTION : l'import de fs est nécessaire !
-import fs from "fs";
-const data = JSON.parse(
-    fs.readFileSync("./annexe.json", "utf8")
-)
-function clientRefGenerator(list){
-    // Numéro de client
-    let numClient = data.lastClientNumber + 1;
-    let dernierClient = numClient
-    numClient = numClient.toString().padStart(4, "0")
-    
-    // Année de client
-    let date = new Date;
-    let formated = date.toDateString();
-    let fullList = formated.split(" ")
-    let annee = fullList[fullList.length - 1]
-
-    // Concaténation
-    let idClient = "CLI-" + annee + "-" + numClient
-    
-    // Update JSON
-    data.lastClientNumber = dernierClient;
-    fs.writeFileSync("./annexe.json", JSON.stringify(
-            data,
-            null, 
-            4), 
-        'utf8'
-    );
-    
-    return idClient
+    return res + "..."
 }
 
 /*
 //TEST
-console.log(clientRefGenerator([]));
+console.log(tronc(`L’innovation industrielle ne se résume pas aux machines ; elle repose sur l'harmonie entre l’humain et la technologie. Chez MECA-CN, l'arrivée de nouveaux outils numériques transforme notre quotidien. Chaque opérateur monte en compétences, guidé par des formations pointues. Cette transition modernise nos lignes de production et renforce notre précision mécanique. Ensemble, nous façons l’avenir de la manufacture avec audace, durabilité et un savoir-faire d'excellence partagé."`
+, 100));
 */
 
 
@@ -303,55 +163,17 @@ console.log(clientRefGenerator([]));
 
 
 
-
-
-
-
-
-
-
-
-
-
-//ANCHOR: Génération numéro de devis
-// Génération d'un numéro de devis
-// Sortie : "DEV-202606-421"
-// ATTENTION : il est nécessaire d'importer fs pour cette fonction
-const dataDevis = JSON.parse(
-    fs.readFileSync("./annexe.json", "utf8")
-)
-function generateDevisNumber(){
-    // Numéro Identifiant du devis
-    let numDevis = dataDevis.lastDevisNumber + 1;
-    let dernierDevis = numDevis;
-    numDevis = numDevis.toString().padStart(4, "0");
-
-
-    // Date Identification du devis
-    let date = new Date();
-    let formated = date.toDateString();
-    let splited = formated.split(" ");
-    let goodDate = splited[3] + splited[2];
-    
-
-    // Concaténation
-    const resultat = "DEV-" + goodDate + "-" + numDevis;
-    
-    //UPDATE JSON
-    dataDevis.lastDevisNumber = dernierDevis;
-    fs.writeFileSync("./annexe.json", JSON.stringify(
-        dataDevis,
-        null,
-        4),
-        "utf8"
-    )
-
-    return resultat
+//ANCHOR: compter le nombre de mots d'une chaine de caractère
+// Compter le nombre de mots
+// Entrée : "Bonjour je suis Sébastien"
+// Sortie : 4
+function compteMots(text){
+    return text.split(/[ ]/).length;
 }
 
 /*
 //TEST
-console.log(generateDevisNumber())
+console.log(compteMots("Bonjour, je suis Sébastien. Sit"));
 */
 
 
@@ -360,45 +182,24 @@ console.log(generateDevisNumber())
 
 
 
-
-
-
-
-
-
-//ANCHOR: vérification d'adresse mail
-// Vérification d'adresse email
-// Entrée : "contact@meca-cn.fr"
-// Sortie : true
-function verifMail(mail){
-    // Vérifs "." en début
-    if (mail[0] === "." || mail[0] === "@"){
-        return false
-    }
-    //Vérif @ et .
-    let resultat = false
-    let tab = mail.split("@");
-    if (tab.length === 2){
-        //Vérif caractères interdits
-        const hasForbiddenChars = /[()<>]/.test(tab[0]);
-        const hasDoubleDot = /\.\./.test(mail);
-        if (hasForbiddenChars || hasDoubleDot){
-            return false
-        }
-        // Continuation des vérifs
-        let tab2 = tab[tab.length - 1].split(".");
-        if (tab2.length >= 2){
-            resultat = true
-        }
+//ANCHOR: Extraire initiales
+// Extraire les initiales
+// Entrée : "Sébastien Confrère"
+// Sortie : "SC"
+function initial(text){
+    let resultat = ""
+    let tab = text.split(" ");
+    for (const element of tab){
+        resultat = resultat + element[0];
     }
     return resultat
 }
 
 /*
 //TESTS
-console.log(verifMail("sebastienconfrere6@gmail.com"))
-console.log(verifMail("mailsansarobasegmail.com"))
-console.log(verifMail("mailsanspoint@gmailcom"))
+console.log(initial("Keynah Legay"));
+console.log(initial("Sébastien Confrère"));
+console.log(initial("Coucou Les Amis"))
 */
 
 
@@ -407,38 +208,61 @@ console.log(verifMail("mailsanspoint@gmailcom"))
 
 
 
-
-
-
-//ANCHOR: Vérification si extension de fichier
-// Vérification d'extension de fichier
-// Entrée : "piece.step"
+//ANCHOR:  palindrome
+// Vérifier si une chaîne est un palindrome
+// Entrée : "kayak"
 // Sortie : true
-function verifExt(file){
-    let resultat = true
-    let tab = file.split(".");
-    if (tab.length > 1){
-        // Vérif s'il y a un trou (= il y a deux points d'affilés)
-        for (let element of tab){
-            if (tab.length > 2 && element === ""){
-                resultat = false
+function palindrome(text){
+    let tab = text.split("");
+    let tab2  = [];
+    for (let i = tab.length - 1; i >= 0; i--){
+        tab2.push(tab[i]);
+    }
+    const newText = tab2.join("");
+    return(newText === text);
+}
+/*
+//TESTS
+console.log(palindrome("kayak"));
+console.log(palindrome("nigger"));
+*/
+
+
+
+
+
+
+
+//ANCHOR: Recherche d'un terme dans une chaine de caractère
+// Recherche dans un tableau d'objets
+// Entrée : liste de pièces + "axe"
+// Sortie : toutes les pièces contenant "axe"
+function search(text, par) {
+    for (const element in text) {
+        let indexActuel = Number(element);
+
+        if (text[indexActuel] === par[0]) {
+            let j = 0;
+            let good = true;
+
+            while (j < par.length) {
+                if (text[indexActuel + j] !== par[j]) {
+                    good = false;
+                    break;
+                }
+                j++;
+            }
+            if (good) {
+                return indexActuel;
             }
         }
-        if (tab[tab.length - 1] === ""){
-            resultat = false
-        }
-    } else{
-        resultat = false
     }
-    return resultat
+    return -1;
 }
+
 /*
 //TESTS
-console.log(verifExt("image.jpeg"));
-console.log(verifExt("image..jpeg"));
-console.log(verifExt(".env"));
-console.log(verifExt("imagejpeg"));
-console.log(verifExt("imagejpeg."));
+console.log(search("Bonjour, ici Sébastien, comment allez-vous ?", "ici"));
 */
 
 
@@ -446,6 +270,30 @@ console.log(verifExt("imagejpeg."));
 
 
 
+//ANCHOR: Normalisation de chaine
+// Normalisation de chaîne (nettoyage global)
+// Entrée : "   HéLLo--wOrLD!!  "
+// Sortie : "hello-world"
+
+
+
+
+
+
+//ANCHOR: Génération dictionnaire SEO
+// Génération de mot-clé SEO à partir d'un texte
+// Entrée : "Usinage CNC de haute précision"
+// Sortie : ["usinage", "cnc", "haute", "precision"]
+
+
+
+
+
+
+//ANCHOR: Extraction de domaine mail
+// Extraction de domaine email
+// Entrée : "test@gmail.com"
+// Sortie : "gmail.com"
 
 
 
@@ -454,6 +302,40 @@ console.log(verifExt("imagejpeg."));
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//SECTION: Numbers / Maths / Calculs
 
 
 
@@ -498,9 +380,186 @@ console.log(convertSize(6555846513560000000));
 
 
 
+//ANCHOR: Conversion secondes lisibles
+// Conversion secondes vers format lisible
+// Entrée : 3671
+// Sortie : "1h 1min 11s"
+function convertSeconde(sec){
+    if (sec < 0 || typeof(sec) !== "number"){
+        return ("Temps invalide");
+    }
+    let min;
+    let heure;
+    let jour;
+    let mois;
+    let annee;
+
+    // Conversion
+    min = Math.floor(sec / 60);
+    heure = Math.floor(min / 60);
+    jour = Math.floor(heure / 24);
+    mois = Math.floor(jour / 30);
+    annee = Math.floor(mois / 12);
+
+
+    // Retour aux bases
+    min = min % 60;
+    heure = heure % 24;
+    jour = jour % 30;
+    mois = mois % 12;
+    sec = sec % 60
+    
+
+    // Return
+    if (annee === 0 ){
+        if (mois === 0 ){
+            if (jour === 0){
+                if (heure === 0){
+                    if (min === 0){
+                        return(sec + "s")
+                    }
+                    return(min + "min " + sec + "s")
+                }
+                return(heure + "h " + min + "min " + sec + "s")
+            }
+            return(jour + "jours " + heure + "h " + min + "min " + sec + "s")
+        }
+        return(mois + "mois " + jour + "jours " + heure + "h " + min + "min " + sec + "s")
+    }
+    return(annee + "ans " + mois + "mois " + jour + "jours " + heure + "h " + min + "min " + sec + "s")
+}
+
+/*
+//TESTS
+console.log(convertSeconde(3671));
+console.log(convertSeconde(0));
+console.log(convertSeconde(-1));
+console.log(convertSeconde("its TIIIIIIIIIIiiiiiiimeeee"));
+console.log(convertSeconde(3600));
+console.log(convertSeconde(364687635));
+*/
 
 
 
+
+//ANCHOR: Converions durée lisible vers secondes
+// Conversion durée lisible vers secondes
+// Entrée : "1h 30min"
+// Sortie : 5400
+function GoodtoBad(time){
+    let list = time.match(/\d+/g);
+    let resultat = 0
+    let quotient = 1;
+    for (let i = list.length - 1; i >= 0; i--) {
+        resultat = resultat + list[i] * quotient
+        quotient = quotient * 60
+    }
+
+    return resultat
+}
+
+/*
+//TESTS
+console.log(GoodtoBad("1h 1min 11s"))
+console.log(GoodtoBad("0s"));
+console.log(GoodtoBad("10min 0s"));
+console.log(GoodtoBad("1h 0min 0s"))
+*/
+
+
+
+
+
+
+
+//ANCHOR: Calcul de valorisation du stock
+// Calcul de valorisation du stock
+// Entrée : quantité = 10, prix = 15
+// Sortie : 150
+function valeurStock(qte, prix){
+    return(qte * prix);
+}
+
+/*
+//TEST
+console.log(valeurStock(10, 15));
+console.log(valeurStock(25,150));
+*/
+
+
+
+//ANCHOR: Pourcentage d'avancement
+// Calcul de pourcentage d'avancement
+// Entrée : 45 / 120
+// Sortie : 37.5 (%)
+
+
+
+
+
+//ANCHOR: Limitation d'un nombre
+// Limitation d'un nombre à un intervalle
+// Entrée : valeur = 150, min = 0, max = 100
+// Sortie : 100
+
+
+
+
+
+//ANCHOR: Calcul marge commerciale
+// Calcul de marge commerciale
+// Entrée : prix_vente = 120, prix_achat = 80
+// Sortie : 33.33 (%)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//SECTION: Dates / Temps
+
+
+//ANCHOR: Fonction de formatage de date. 
+// Peut importe le format de base, va renvoyer un truc cohérent au format XX/XX/XXXX
+// Formatage d'une date
+// Entrée : "12:05-2005"
+// Sortie : "12/05/2005"
+function dateformat(date){
+    return date.split(/[-:/._ ]/).join("/")
+}
+
+/*
+// TESTS
+console.log(dateformat("12:15:2006"))
+console.log(dateformat("12/15-2006"))
+console.log(dateformat("12/15/2006"))
+console.log(dateformat("12_15_2006"))
+console.log(dateformat("12.15.2006"))
+*/
 
 
 
@@ -583,190 +642,349 @@ console.log(timePassed("5/13/2026"))
 
 
 
+//ANCHOR: Logger
+// ATTENTION : Néecessite l'import du modul fs, ainsi que la création d'un fichier log.json
+// Journalisation (Logger)
+// Entrée : type + message
+// Sortie : "[11/06/2026 14:32] INFO : Utilisateur connecté"
+function logger(content){
+    const date = new Date()
+    const annee = String(date.getFullYear());
+    const mois = String(date.getMonth());
+    const jour = String(date.getDate());
+    const hour = String(date.getHours());
+    const minute = String(date.getMinutes());
+    const secondes = String(date.getSeconds());
+    const milli = date.getMilliseconds();
+
+    const day = jour + "/" + mois + "/" + annee
+
+    const time = hour + ":" + minute + ":" + secondes
+
+    const log = "[" + day + " " + time + "] " + content
+
+    JSONexport("log.json", log)
+
+    //console.log(log);
+    //console.log(date);
+}
+
+
+// console.log(logger("INFO : Utilisateur connecté"))
 
 
 
 
 
-//ANCHOR: Conversion secondes lisibles
-// Conversion secondes vers format lisible
-// Entrée : 3671
-// Sortie : "1h 1min 11s"
-function convertSeconde(sec){
-    if (sec < 0 || typeof(sec) !== "number"){
-        return ("Temps invalide");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//SECTION: Identifiants / génération de données
+
+
+
+//ANCHOR: Génération de token aléatoire
+// Cette fonction sert à générer un token aléatoire
+/* PARAMETRES
+size = taille finale souhaitée. Si ce paramètre n'est pas remplit, generateToken fait appel à une fonction aléatoire pour le générer
+*/
+function generateToken(size = 0){
+    const char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = []
+    if (size === 0){
+        while (size < 8){
+            size = Math.round(Math.random() * 24);
+        } 
+    };
+    for (let i = 0; i < size; i++){
+        const alea = Math.floor(Math.random() * 62) // quantité de caractères dans "char"
+        result.push(char[alea]);
     }
-    let min;
-    let heure;
-    let jour;
-    let mois;
-    let annee;
+    const res = result.join("");
+    return res
+}
 
-    // Conversion
-    min = Math.floor(sec / 60);
-    heure = Math.floor(min / 60);
-    jour = Math.floor(heure / 24);
-    mois = Math.floor(jour / 30);
-    annee = Math.floor(mois / 12);
+//TESTS
+/*
+console.log("Sans size donnée ↓");
+console.log(generateToken());
+
+console.log("Avec size donnée ↓");
+console.log(generateToken(6));
+*/
 
 
-    // Retour aux bases
-    min = min % 60;
-    heure = heure % 24;
-    jour = jour % 30;
-    mois = mois % 12;
-    sec = sec % 60
+
+//ANCHOR: Génération d'un mot de passe aléatoire
+// Génération d'un mot de passe aléatoire
+// Entrée : longueur = 12
+// Sortie : "aK7!zQ9#mLp2"
+function generateMdp(len){
+
+    const tabRes = [];
+
+    if (len <= 0){
+        return "Longueur inférieure ou égale à 0"
+    } else if (len < 5){
+        console.log("Attention, votre mot de passe est faible : ")
+    }
+    const caractere = {
+        0 : "abcdefghijklmnopqrstuvwxyzçéè",
+        1 : "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        2 : "0123456789",
+        3 : "!.#&$",
+    }
+
+    for (let i = 0; i < len; i++){
+        const type = Math.round(Math.random() * 3);
+        const charLen = caractere[type].length;
+        const charFull = caractere[type]; 
+        const aleaCharIndex = Math.round(Math.random() * charLen);
+        const aleachar = charFull[aleaCharIndex];
+        
+        tabRes.push(aleachar);
+    }
+
+    const resultat = tabRes.join("");
+
+    return resultat
+}
+
+
+/*
+
+//TESTS
+console.log(generateMdp(15));
+console.log(generateMdp(2));
+console.log(generateMdp(0));
+console.log(generateMdp(-1))
+
+*/
+
+
+
+
+
+
+//ANCHOR: Génération d'une référence client
+// Génération d'une référence client
+// Sortie : "CLI-2026-0001"
+// ATTENTION : l'import de fs est nécessaire !
+import fs from "fs";
+const data = JSON.parse(
+    fs.readFileSync("./annexe.json", "utf8")
+)
+function clientRefGenerator(list){
+    // Numéro de client
+    let numClient = data.lastClientNumber + 1;
+    let dernierClient = numClient
+    numClient = numClient.toString().padStart(4, "0")
+    
+    // Année de client
+    let date = new Date;
+    let formated = date.toDateString();
+    let fullList = formated.split(" ")
+    let annee = fullList[fullList.length - 1]
+
+    // Concaténation
+    let idClient = "CLI-" + annee + "-" + numClient
+    
+    // Update JSON
+    data.lastClientNumber = dernierClient;
+    fs.writeFileSync("./annexe.json", JSON.stringify(
+            data,
+            null, 
+            4), 
+        'utf8'
+    );
+    
+    return idClient
+}
+
+/*
+//TEST
+console.log(clientRefGenerator([]));
+*/
+
+
+
+
+
+//ANCHOR: Génération numéro de devis
+// Génération d'un numéro de devis
+// Sortie : "DEV-202606-421"
+// ATTENTION : il est nécessaire d'importer fs pour cette fonction
+const dataDevis = JSON.parse(
+    fs.readFileSync("./annexe.json", "utf8")
+)
+function generateDevisNumber(){
+    // Numéro Identifiant du devis
+    let numDevis = dataDevis.lastDevisNumber + 1;
+    let dernierDevis = numDevis;
+    numDevis = numDevis.toString().padStart(4, "0");
+
+
+    // Date Identification du devis
+    let date = new Date();
+    let formated = date.toDateString();
+    let splited = formated.split(" ");
+    let goodDate = splited[3] + splited[2];
     
 
-    // Return
-    if (annee === 0 ){
-        if (mois === 0 ){
-            if (jour === 0){
-                if (heure === 0){
-                    if (min === 0){
-                        return(sec + "s")
-                    }
-                    return(min + "min " + sec + "s")
-                }
-                return(heure + "h " + min + "min " + sec + "s")
+    // Concaténation
+    const resultat = "DEV-" + goodDate + "-" + numDevis;
+    
+    //UPDATE JSON
+    dataDevis.lastDevisNumber = dernierDevis;
+    fs.writeFileSync("./annexe.json", JSON.stringify(
+        dataDevis,
+        null,
+        4),
+        "utf8"
+    )
+
+    return resultat
+}
+
+/*
+//TEST
+console.log(generateDevisNumber())
+*/
+
+
+
+//ANCHOR: générateur d'UUID
+// Génération d'UUID simple (version maison)
+// Entrée : rien
+// Sortie : "550e8400-e29b-41d4-a716-446655440000"
+
+
+
+
+
+
+//ANCHOR: code produit interne
+// Générateur de code produit interne
+// Entrée : catégorie = "VIS", diamètre = 8
+// Sortie : "VIS-M8-2026-0001"
+
+
+
+
+
+//ANCHOR: générateru de seed
+// Génération de seed aléatoire reproductible
+// Entrée : seed = 12345
+// Sortie : suite pseudo-aléatoire stable
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//SECTION: Fichiers / JSON / Persistence
+
+
+
+
+
+
+
+
+
+
+//ANCHOR: Export en JSON
+// Export JSON
+// Entrée : objet JavaScript
+// Sortie : chaîne JSON
+function JSONexport(fileName, js) {
+    let existingData = [];
+
+    if (fs.existsSync(fileName)) {
+        try {
+            const fileContent = fs.readFileSync(fileName, "utf-8");
+            if (fileContent.trim() !== "") {
+                existingData = JSON.parse(fileContent);
             }
-            return(jour + "jours " + heure + "h " + min + "min " + sec + "s")
+        } catch (error) {
+            existingData = [];
         }
-        return(mois + "mois " + jour + "jours " + heure + "h " + min + "min " + sec + "s")
-    }
-    return(annee + "ans " + mois + "mois " + jour + "jours " + heure + "h " + min + "min " + sec + "s")
-}
-
-/*
-//TESTS
-console.log(convertSeconde(3671));
-console.log(convertSeconde(0));
-console.log(convertSeconde(-1));
-console.log(convertSeconde("its TIIIIIIIIIIiiiiiiimeeee"));
-console.log(convertSeconde(3600));
-console.log(convertSeconde(364687635));
-*/
-
-
-
-
-
-
-
-
-
-
-
-//ANCHOR: Converions durée lisible vers secondes
-// Conversion durée lisible vers secondes
-// Entrée : "1h 30min"
-// Sortie : 5400
-function GoodtoBad(time){
-    let list = time.match(/\d+/g);
-    let resultat = 0
-    let quotient = 1;
-    for (let i = list.length - 1; i >= 0; i--) {
-        resultat = resultat + list[i] * quotient
-        quotient = quotient * 60
     }
 
-    return resultat
-}
-
-/*
-//TESTS
-console.log(GoodtoBad("1h 1min 11s"))
-console.log(GoodtoBad("0s"));
-console.log(GoodtoBad("10min 0s"));
-console.log(GoodtoBad("1h 0min 0s"))
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-//ANCHOR: tronquage de texte
-// Tronquer un texte
-// Entrée : texte de 500 caractères, limite 100
-// Sortie : texte coupé + "..."
-function tronc(text, size){
-    let res = ""
-    let i = 0;
-    while (i !== size){
-        res = res + text[i];
-        i++
+    if (!Array.isArray(existingData)) {
+        existingData = [existingData];
     }
-    return res + "..."
-}
 
-/*
-//TEST
-console.log(tronc(`L’innovation industrielle ne se résume pas aux machines ; elle repose sur l'harmonie entre l’humain et la technologie. Chez MECA-CN, l'arrivée de nouveaux outils numériques transforme notre quotidien. Chaque opérateur monte en compétences, guidé par des formations pointues. Cette transition modernise nos lignes de production et renforce notre précision mécanique. Ensemble, nous façons l’avenir de la manufacture avec audace, durabilité et un savoir-faire d'excellence partagé."`
-, 100));
-*/
-
-
-
-
-
-
-
-
-//ANCHOR: compter le nombre de mots d'une chaine de caractère
-// Compter le nombre de mots
-// Entrée : "Bonjour je suis Sébastien"
-// Sortie : 4
-function compteMots(text){
-    return text.split(/[ ]/).length;
-}
-
-/*
-//TEST
-console.log(compteMots("Bonjour, je suis Sébastien. Sit"));
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-//ANCHOR: Extraire initiales
-// Extraire les initiales
-// Entrée : "Sébastien Confrère"
-// Sortie : "SC"
-function initial(text){
-    let resultat = ""
-    let tab = text.split(" ");
-    for (const element of tab){
-        resultat = resultat + element[0];
+    if (Array.isArray(js)) {
+        existingData = existingData.concat(js);
+    } else {
+        existingData.push(js);
     }
-    return resultat
+
+    fs.writeFileSync(fileName, JSON.stringify(existingData, null, 2), "utf-8");
+    
+    return JSON.stringify(existingData, null, 2);
 }
 
 /*
-//TESTS
-console.log(initial("Keynah Legay"));
-console.log(initial("Sébastien Confrère"));
-console.log(initial("Coucou Les Amis"))
+// TESTS
+console.log(JSONexport("clients.json", {
+    id: 1,
+    nom: "Client test",
+    actif: true
+}));
+
+console.log(JSONexport("clients.json", [
+    { ref: "CLI-2026-0001", nom: "Client A" },
+    { ref: "CLI-2026-0002", nom: "Client B" },
+    { ref: "CLI-2026-0003", nom: "Client C" }
+]));
+
+console.log(JSONexport("clients.json", {
+    totalClients: 152,
+    derniereRef: "CLI-2026-0152",
+    tauxConversion: 0.87
+}));
 */
 
 
 
 
 
+//ANCHOR: Import JSON
+// Import JSON
+// Entrée : chaîne JSON
+// Sortie : objet JavaScript
 
 
 
@@ -778,27 +996,18 @@ console.log(initial("Coucou Les Amis"))
 
 
 
-//ANCHOR:  palindrome
-// Vérifier si une chaîne est un palindrome
-// Entrée : "kayak"
-// Sortie : true
-function palindrome(text){
-    let tab = text.split("");
-    let tab2  = [];
-    for (let i = tab.length - 1; i >= 0; i--){
-        tab2.push(tab[i]);
-    }
-    const newText = tab2.join("");
-    return(newText === text);
-}
-/*
-//TESTS
-console.log(palindrome("kayak"));
-console.log(palindrome("nigger"));
-*/
 
 
 
+
+
+
+
+
+
+
+
+//SECTION: Tableaux / Data Structure
 
 
 
@@ -831,8 +1040,6 @@ function generateRandTab(len, max){
 //TEST
 console.log(generateRandTab(100, 100));
 */
-
-
 
 
 
@@ -936,44 +1143,6 @@ console.log(deleteDouble([
 
 
 
-//ANCHOR: Recherche d'un terme dans une chaine de caractère
-// Recherche dans un tableau d'objets
-// Entrée : liste de pièces + "axe"
-// Sortie : toutes les pièces contenant "axe"
-function search(text, par) {
-    for (const element in text) {
-        let indexActuel = Number(element);
-
-        if (text[indexActuel] === par[0]) {
-            let j = 0;
-            let good = true;
-
-            while (j < par.length) {
-                if (text[indexActuel + j] !== par[j]) {
-                    good = false;
-                    break;
-                }
-                j++;
-            }
-            if (good) {
-                return indexActuel;
-            }
-        }
-    }
-    return -1;
-}
-
-/*
-//TESTS
-console.log(search("Bonjour, ici Sébastien, comment allez-vous ?", "ici"));
-*/
-
-
-
-
-
-
-
 
 
 
@@ -1039,63 +1208,6 @@ const produitsTest = [
 ];
 console.log(regroup(produitsTest))
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//ANCHOR: Calcul stock faible
-// Calcul du stock faible
-// Entrée : quantité = 3, seuil = 5
-// Sortie : true
-function stockFaible(qte, seuil){
-    return (qte <= seuil)
-}
-
-/*
-//TESTS
-console.log(stockFaible(500,300));
-console.log(stockFaible(100,300))
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//ANCHOR: Calcul de valorisation du stock
-// Calcul de valorisation du stock
-// Entrée : quantité = 10, prix = 15
-// Sortie : 150
-function valeurStock(qte, prix){
-    return(qte * prix);
-}
-
-/*
-//TEST
-console.log(valeurStock(10, 15));
-console.log(valeurStock(25,150));
-*/
-
-
-
 
 
 
@@ -1184,63 +1296,86 @@ console.log(detecRef([
 
 
 
+//ANCHOR: Deep compare objets
+// Deep compare de deux objets
+// Entrée : {a:1, b:{c:2}}, {a:1, b:{c:2}}
+// Sortie : true
 
 
 
 
 
-//ANCHOR: Export en JSON
-// Export JSON
-// Entrée : objet JavaScript
-// Sortie : chaîne JSON
-function JSONexport(fileName, js) {
-    let existingData = [];
 
-    if (fs.existsSync(fileName)) {
-        try {
-            const fileContent = fs.readFileSync(fileName, "utf-8");
-            if (fileContent.trim() !== "") {
-                existingData = JSON.parse(fileContent);
-            }
-        } catch (error) {
-            existingData = [];
+
+//ANCHOR: Tri référence client
+// Tri intelligent de références client
+// Entrée : ["CLI-2026-0003", "CLI-2026-0001"]
+// Sortie : tri numérique propre
+
+
+
+//ANCHOR: BreadCrumb Generator
+// Génération de breadcrumb (fil d'Ariane)
+// Entrée : "/produits/cnc/fraiseuse"
+// Sortie : ["produits", "cnc", "fraiseuse"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//SECTION: Validation / Vérification
+
+
+
+
+
+
+
+
+//ANCHOR: vérification d'adresse mail
+// Vérification d'adresse email
+// Entrée : "contact@meca-cn.fr"
+// Sortie : true
+function verifMail(mail){
+    // Vérifs "." en début
+    if (mail[0] === "." || mail[0] === "@"){
+        return false
+    }
+    //Vérif @ et .
+    let resultat = false
+    let tab = mail.split("@");
+    if (tab.length === 2){
+        //Vérif caractères interdits
+        const hasForbiddenChars = /[()<>]/.test(tab[0]);
+        const hasDoubleDot = /\.\./.test(mail);
+        if (hasForbiddenChars || hasDoubleDot){
+            return false
+        }
+        // Continuation des vérifs
+        let tab2 = tab[tab.length - 1].split(".");
+        if (tab2.length >= 2){
+            resultat = true
         }
     }
-
-    if (!Array.isArray(existingData)) {
-        existingData = [existingData];
-    }
-
-    if (Array.isArray(js)) {
-        existingData = existingData.concat(js);
-    } else {
-        existingData.push(js);
-    }
-
-    fs.writeFileSync(fileName, JSON.stringify(existingData, null, 2), "utf-8");
-    
-    return JSON.stringify(existingData, null, 2);
+    return resultat
 }
 
 /*
-// TESTS
-console.log(JSONexport("clients.json", {
-    id: 1,
-    nom: "Client test",
-    actif: true
-}));
-
-console.log(JSONexport("clients.json", [
-    { ref: "CLI-2026-0001", nom: "Client A" },
-    { ref: "CLI-2026-0002", nom: "Client B" },
-    { ref: "CLI-2026-0003", nom: "Client C" }
-]));
-
-console.log(JSONexport("clients.json", {
-    totalClients: 152,
-    derniereRef: "CLI-2026-0152",
-    tauxConversion: 0.87
-}));
+//TESTS
+console.log(verifMail("sebastienconfrere6@gmail.com"))
+console.log(verifMail("mailsansarobasegmail.com"))
+console.log(verifMail("mailsanspoint@gmailcom"))
 */
 
 
@@ -1251,11 +1386,37 @@ console.log(JSONexport("clients.json", {
 
 
 
-//ANCHOR: Import JSON
-// Import JSON
-// Entrée : chaîne JSON
-// Sortie : objet JavaScript
 
+//ANCHOR: Vérification si extension de fichier
+// Vérification d'extension de fichier
+// Entrée : "piece.step"
+// Sortie : true
+function verifExt(file){
+    let resultat = true
+    let tab = file.split(".");
+    if (tab.length > 1){
+        // Vérif s'il y a un trou (= il y a deux points d'affilés)
+        for (let element of tab){
+            if (tab.length > 2 && element === ""){
+                resultat = false
+            }
+        }
+        if (tab[tab.length - 1] === ""){
+            resultat = false
+        }
+    } else{
+        resultat = false
+    }
+    return resultat
+}
+/*
+//TESTS
+console.log(verifExt("image.jpeg"));
+console.log(verifExt("image..jpeg"));
+console.log(verifExt(".env"));
+console.log(verifExt("imagejpeg"));
+console.log(verifExt("imagejpeg."));
+*/
 
 
 
@@ -1264,7 +1425,19 @@ console.log(JSONexport("clients.json", {
 
 
 
+//ANCHOR: Calcul stock faible
+// Calcul du stock faible
+// Entrée : quantité = 3, seuil = 5
+// Sortie : true
+function stockFaible(qte, seuil){
+    return (qte <= seuil)
+}
 
+/*
+//TESTS
+console.log(stockFaible(500,300));
+console.log(stockFaible(100,300))
+*/
 
 
 
@@ -1272,14 +1445,14 @@ console.log(JSONexport("clients.json", {
 
 
 
+//ANCHOR: Validation numéro de téléphone FR
+// Validation d'un numéro de téléphone FR
+// Entrée : "06 12 34 56 78"
+// Sortie : true / false
 
 
 
 
-//ANCHOR: Deep clone
-// Deep Clone
-// Description : créer une copie totalement indépendante d'un objet imbriqué.
-// Modification de la copie ne doit jamais modifier l'original.
 
 
 
@@ -1294,114 +1467,7 @@ console.log(JSONexport("clients.json", {
 
 
 
-
-
-
-//ANCHOR: Debounce
-// Debounce
-// Description : empêche une fonction d'être exécutée trop souvent.
-// Exemple : l'utilisateur tape dans une barre de recherche.
-// Tant qu'il continue de taper, la recherche n'est pas lancée.
-// Elle ne s'exécute qu'après 500 ms d'inactivité.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//ANCHOR: Limite une fonction à l'éxecution toutes les x secondes
-// Throttle
-// Description : limite une fonction à une exécution toutes les X secondes.
-// Exemple : mise à jour de la position de la souris.
-// Même si l'évènement se produit 100 fois/seconde,
-// la fonction ne s'exécute qu'une fois toutes les 200 ms.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//ANCHOR: Limiter le nombre d'action autorisées
-// Rate Limiter
-// Description : limite le nombre d'actions autorisées.
-// Exemple : maximum 5 tentatives de connexion en 10 minutes.
-// Au-delà : refus automatique.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//ANCHOR: Cache mémoire
-// Cache mémoire
-// Description : mémorise les résultats déjà calculés.
-// Si la même donnée est demandée une deuxième fois,
-// retourner directement le résultat enregistré.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//ANCHOR: Historique Annuler / rétablir
-// Historique Annuler / Rétablir
-// Description : stocke les états successifs d'un objet.
-// Permet de faire Undo / Redo comme dans un logiciel de bureautique.
-
-
-
-
-
-
-
-
+//SECTION: Génération / systèmes avancés (architecture)
 
 
 
@@ -1449,8 +1515,13 @@ function logger(content){
 
 
 
+
 //ANCHOR: Génération de contenu aléatoire pour log
 function randomLogGenerator(amount) {
+    if (amount < 0){
+        console.log("Veuillez rentrer un nombre positif ou égal à 0")
+        return "Veuillez rentrer un nombre positif ou égal à 0"
+    }
     const log_types = [
         "INFO : Serveur démarré avec succès",
         "WARNING : Mémoire disponible faible",
@@ -1520,16 +1591,6 @@ function randomLogGenerator(amount) {
     nextLog();
 }
 
-randomLogGenerator(150)
-
-
-
-
-
-//ANCHOR: Générateur de notification
-// Générateur de notifications
-// Entrée : type = succès
-// Sortie : objet notification prêt à afficher
 
 
 
@@ -1538,6 +1599,53 @@ randomLogGenerator(150)
 
 
 
+//ANCHOR: Cache mémoire
+// Cache mémoire
+// Description : mémorise les résultats déjà calculés.
+// Si la même donnée est demandée une deuxième fois,
+// retourner directement le résultat enregistré.
+
+
+
+
+
+
+//ANCHOR: Debounce
+// Debounce
+// Description : empêche une fonction d'être exécutée trop souvent.
+// Exemple : l'utilisateur tape dans une barre de recherche.
+// Tant qu'il continue de taper, la recherche n'est pas lancée.
+// Elle ne s'exécute qu'après 500 ms d'inactivité.
+
+
+
+
+//ANCHOR: Limite une fonction à l'éxecution toutes les x secondes
+// Throttle
+// Description : limite une fonction à une exécution toutes les X secondes.
+// Exemple : mise à jour de la position de la souris.
+// Même si l'évènement se produit 100 fois/seconde,
+// la fonction ne s'exécute qu'une fois toutes les 200 ms.
+
+
+
+
+
+
+//ANCHOR: Limiter le nombre d'action autorisées
+// Rate Limiter
+// Description : limite le nombre d'actions autorisées.
+// Exemple : maximum 5 tentatives de connexion en 10 minutes.
+// Au-delà : refus automatique.
+
+
+
+
+
+//ANCHOR: Historique Annuler / rétablir
+// Historique Annuler / Rétablir
+// Description : stocke les états successifs d'un objet.
+// Permet de faire Undo / Redo comme dans un logiciel de bureautique.
 
 
 
@@ -1549,10 +1657,91 @@ randomLogGenerator(150)
 
 
 
-//ANCHOR: Gestionnaire de permission
-// Gestionnaire de permissions
-// Entrée : rôle = admin
-// Sortie : liste des actions autorisées
+
+
+
+
+
+
+
+
+
+//SECTION: Deep / Objects / Structures
+
+
+
+//ANCHOR: Deep clone
+// Deep Clone
+// Description : créer une copie totalement indépendante d'un objet imbriqué.
+// Modification de la copie ne doit jamais modifier l'original.
+
+
+
+//ANCHOR: Fusion de deux objets
+// Fusion de deux objets avec priorité
+// Entrée : {a:1, b:2}, {b:5, c:3}
+// Sortie : {a:1, b:5, c:3}
+
+
+
+
+//ANCHOR: Détection de changement
+// Détection de changements entre deux objets
+// Entrée : oldObj, newObj
+// Sortie : {modifiés: [...], ajoutés: [...], supprimés: [...]}
+
+
+
+
+
+
+
+
+
+
+
+//SECTION: Sécurité / Hash / génération "tech"
+
+
+
+//ANCHOR: Hash simple
+// Simulation de hash simple (non cryptographique)
+// Entrée : "motDePasse"
+// Sortie : "a94f2c1d"
+
+
+
+
+
+
+
+
+
+//SECTION: Recherche / Matching / intelligence des données
+
+
+
+//ANCHOR: Recherche "fuzzy" (approximation)
+// Simulation de recherche fuzzy (approximation)
+// Entrée : "ax", ["axe", "axial", "max", "taxe"]
+// Sortie : ["axe", "axial"]
+
+
+
+
+
+
+
+
+
+
+//SECTION: Normalisation de fichiers / filesystem Utils
+
+
+//ANCHOR: Secured File Name Generator
+// Génération de nom de fichier sécurisé
+// Entrée : "Rapport CNC final !! 2026"
+// Sortie : "rapport-cnc-final-2026.pdf-safe"
 
 
 
@@ -1569,10 +1758,9 @@ randomLogGenerator(150)
 
 
 
-//ANCHOR: Gestionnaire de sessions
-// Gestionnaire de sessions
-// Entrée : utilisateur connecté
-// Sortie : date d'expiration, token, durée restante
+
+
+
 
 
 
