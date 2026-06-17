@@ -872,11 +872,25 @@ console.log(generateDevisNumber())
 // Génération d'UUID simple (version maison)
 // Entrée : rien
 // Sortie : "550e8400-e29b-41d4-a716-446655440000"
+function UUIDGenerator(){
+    const char = "0123456789abc3456defghij0123456789klmn345678opqrs56789tuvwxyz0123456789";
+    let UUID = ""
+    let j = 0;
+    for (let i = 0; i < 18; i++){
+        let random = Math.floor(Math.random() * 71);
+        if (j === 8 || j === 13 || j === 18){
+            UUID += "-"
+        }
+        UUID += char[random];
+        j++
+    }
+    let date = String(Math.floor(Date.now() / 1000)).padEnd(12, '0');
+    // console.log(date)
+    UUID += "-" + date;
+    return UUID
+}
 
-
-
-
-
+//console.log(UUIDGenerator())
 
 //ANCHOR: code produit interne
 // Générateur de code produit interne
@@ -1300,7 +1314,9 @@ console.log(detecRef([
 // Deep compare de deux objets
 // Entrée : {a:1, b:{c:2}}, {a:1, b:{c:2}}
 // Sortie : true
-
+function deepCompare(a, b){
+    return (a === b)
+}
 
 
 
@@ -1311,6 +1327,293 @@ console.log(detecRef([
 // Tri intelligent de références client
 // Entrée : ["CLI-2026-0003", "CLI-2026-0001"]
 // Sortie : tri numérique propre
+function triClient(list, type="croissant"){
+    if (list.length <= 0){
+        return "Le tableau que vous essayez de trier est vide"
+    }
+    let tab = [];
+    for (let element of list){
+        tab.push(element.split("-"));
+    }
+
+    if (type === "croissant"){
+        // Tri sur la date
+        function triDateCroissant(tableau){
+            for (let i = 1; i < tableau.length; i++){
+                if (tableau[i][1] < tableau[i - 1][1]){
+                    [tableau[i], tableau[i-1]] = [tableau[i-1], tableau[i]];
+                    return triDateCroissant(tableau)
+                }
+            }
+            return tableau
+        }
+        let trieDate = triDateCroissant(tab);
+
+
+        // Tri par valeur
+        function triValeurCroissant(tableau){
+            for (let i = 1; i < tableau.length; i++){
+                if (tableau[i][2] < tableau[i-1][2] && tableau[i][1] === tableau[i-1][1]){
+                    [tableau[i], tableau[i-1]] = [tableau[i-1], tableau[i]];
+                    return triValeurCroissant(tableau)
+                }
+            }
+            return tableau
+        }    
+        return triValeurCroissant(trieDate)
+
+
+
+
+    } else if (type === "decroissant"){
+        // Tri sur la date
+        function triDateDecroissant(tableau){
+            for (let i = 1; i < tableau.length; i++){
+                if (tableau[i][1] > tableau[i - 1][1]){
+                    [tableau[i], tableau[i-1]] = [tableau[i-1], tableau[i]];
+                    return triDateDecroissant(tableau)
+                }
+            }
+            return tableau
+        }
+        let trieDate = triDateDecroissant(tab);
+
+
+        // Tri par valeur
+        function triValeurDecroissant(tableau){
+            for (let i = 1; i < tableau.length; i++){
+                if (tableau[i][2] > tableau[i-1][2] && tableau[i][1] === tableau[i-1][1]){
+                    [tableau[i], tableau[i-1]] = [tableau[i-1], tableau[i]];
+                    return triValeurDecroissant(tableau)
+                }
+            }
+            return tableau
+        }    
+        return triValeurDecroissant(trieDate)
+
+
+
+
+    } else{
+        return "Nous n'arrivons pas à trier le tableau selon votre demande"
+    }
+    
+
+}
+
+function triClientAvecSort(list, type="croissant") {
+    const copie = [...list];
+    
+    return copie.sort((a, b) => {
+        // On découpe comme dans votre fonction
+        const partA = a.split("-");
+        const partB = b.split("-");
+        
+        // 1. Comparaison par année
+        if (partA[1] !== partB[1]) {
+            return type === "croissant" 
+                ? partA[1].localeCompare(partB[1]) 
+                : partB[1].localeCompare(partA[1]);
+        }
+        
+        // 2. Si les années sont égales, comparaison par numéro (convertis en nombres)
+        const numA = parseInt(partA[2], 10);
+        const numB = parseInt(partB[2], 10);
+        
+        return type === "croissant" ? numA - numB : numB - numA;
+    });
+}
+
+
+//TESTS
+/*
+console.log(triClient(["CLI-2026-0003", "CLI-2026-0001"]));
+console.log(triClient([
+    "CLI-2026-0003", "CLI-2026-0001", "CLI-2025-0001", "CLI-2025-003", "CLI-2026-1083"
+], "decroissant"));
+*/
+let table = [
+  "CLI-2025-0042", "CLI-2026-1102", "CLI-2024-0001", "CLI-2025-0891", "CLI-2023-0012",
+  "CLI-2026-0003", "CLI-2025-1540", "CLI-2022-0310", "CLI-2026-0001", "CLI-2024-1984",
+  "CLI-2025-0001", "CLI-2021-0055", "CLI-2026-1083", "CLI-2025-003",  "CLI-2023-0741",
+  "CLI-2024-0015", "CLI-2026-0923", "CLI-2022-1115", "CLI-2025-0009", "CLI-2020-0001",
+  "CLI-2026-2145", "CLI-2024-0562", "CLI-2025-1277", "CLI-2023-0001", "CLI-2026-0054",
+  "CLI-2021-1890", "CLI-2025-0423", "CLI-2024-0003", "CLI-2022-0001", "CLI-2026-1500",
+  "CLI-2025-2210", "CLI-2023-1045", "CLI-2026-0122", "CLI-2024-0875", "CLI-2025-0011",
+  "CLI-2021-0932", "CLI-2026-1002", "CLI-2022-0045", "CLI-2025-1999", "CLI-2023-0321",
+  "CLI-2024-1200", "CLI-2026-0007", "CLI-2020-1542", "CLI-2025-0555", "CLI-2022-0981",
+  "CLI-2026-1874", "CLI-2024-0099", "CLI-2025-0002", "CLI-2021-0001", "CLI-2023-2412",
+  "CLI-2026-0345", "CLI-2025-1122", "CLI-2024-2101", "CLI-2022-1432", "CLI-2026-0090",
+  "CLI-2023-0056", "CLI-2025-0789", "CLI-2021-1243", "CLI-2026-1321", "CLI-2024-0412",
+  "CLI-2025-0007", "CLI-2022-0002", "CLI-2020-0512", "CLI-2026-0765", "CLI-2023-1892",
+  "CLI-2025-1654", "CLI-2024-0002", "CLI-2021-0431", "CLI-2026-2231", "CLI-2022-0711",
+  "CLI-2025-0024", "CLI-2023-0003", "CLI-2026-0012", "CLI-2024-1563", "CLI-2025-0943",
+  "CLI-2021-2110", "CLI-2026-1188", "CLI-2022-0014", "CLI-2025-1842", "CLI-2020-0095",
+  "CLI-2024-0320", "CLI-2026-0002", "CLI-2023-1254", "CLI-2025-0156", "CLI-2022-2341",
+  "CLI-2026-1642", "CLI-2021-0004", "CLI-2024-1182", "CLI-2025-0088", "CLI-2023-0912",
+  "CLI-2026-0511", "CLI-2022-0192", "CLI-2025-1411", "CLI-2020-2201", "CLI-2024-0005",
+  "CLI-2026-2499", "CLI-2021-0812", "CLI-2025-0004", "CLI-2023-0015", "CLI-2026-0083"
+]
+// console.log(triClient([]));
+
+/*
+// Comparaison de temps entre ma fonction et le .sort
+
+// ==========================================
+// TEST DE RAPIDITÉ (BENCHMARK)
+// ==========================================
+
+console.log("--- Début du Benchmark ---");
+
+// Test 1 : Votre fonction récursive triClient
+// On fait une copie superficielle pour votre fonction
+const copiePourMoi = [...table]; 
+
+console.time("Chrono - Ma fonction triClient");
+const resultatMoi = triClient(copiePourMoi, "croissant");
+console.timeEnd("Chrono - Ma fonction triClient");
+
+
+// Test 2 : La fonction avec le .sort() natif
+console.time("Chrono - Fonction native .sort()");
+const resultatSort = triClientAvecSort(table, "croissant");
+console.timeEnd("Chrono - Fonction native .sort()");
+
+
+
+
+// ============================================
+// TEST AVEC GRAND TABLEAU
+// ============================================
+
+// ==========================================
+// 1. GÉNÉRATEUR ALÉATOIRE DE RÉFÉRENCES
+// ==========================================
+function genererTableauClients(taille) {
+    const annees = ["2020", "2021", "2022", "2023", "2024", "2025", "2026"];
+    let tableauGenere = [];
+    
+    for (let i = 0; i < taille; i++) {
+        // Choix d'une année aléatoire
+        const anneeAleatoire = annees[Math.floor(Math.random() * annees.length)];
+        
+        // Génération d'un numéro aléatoire (ex: entre 1 et 2500)
+        const numeroAleatoire = Math.floor(Math.random() * 2500) + 1;
+        
+        // Formatage avec des zéros à gauche (ex: 42 devient "0042")
+        // Pour tester le comportement avec des formats courts (ex: "003"), 
+        // 1 fois sur 10 on génère un format plus court sans zéros de complétion.
+        let numStr = "";
+        if (Math.random() < 0.1) {
+            numStr = String(numeroAleatoire); // Ex: "3" ou "54"
+        } else {
+            numStr = String(numeroAleatoire).padStart(4, '0'); // Ex: "0003"
+        }
+        
+        tableauGenere.push(`CLI-${anneeAleatoire}-${numStr}`);
+    }
+    
+    return tableauGenere;
+}
+
+// ==========================================
+// 2. FONCTION DE BENCHMARK GLOBAL
+// ==========================================
+function executerGrandBenchmark(tailleTableau) {
+    console.log(`\n==========================================`);
+    console.log(`DÉBUT DU TEST POUR UN TABLEAU DE : ${tailleTableau} ÉLÉMENTS`);
+    console.log(`==========================================\n`);
+
+    // Génération du jeu de données unique
+    const sourceData = genererTableauClients(tailleTableau);
+
+    // Duplications strictes pour ne pas fausser les tris
+    const copiePourMoi = [...sourceData];
+    const copiePourLeSort = [...sourceData];
+    const copiePourVersionRobuste = [...sourceData];
+
+    // --- TEST 1 : VOTRE FONCTION RÉCURSIVE ---
+    // On met un try/catch car au-delà de 150-200 éléments, elle va crasher.
+    try {
+        console.time("Chrono - Votre fonction triClient (Récursive)");
+        triClient(copiePourMoi, "croissant");
+        console.timeEnd("Chrono - Votre fonction triClient (Récursive)");
+    } catch (error) {
+        console.log("❌ Chrono - Votre fonction triClient (Récursive) : CRASHED (Maximum call stack size exceeded)");
+    }
+
+    // --- TEST 2 : LA FONCTION AVEC LE .SORT() OPTIMISÉ (SPLIT) ---
+    console.time("Chrono - Fonction native .sort() (avec split)");
+    triClientAvecSort(copiePourLeSort, "croissant");
+    console.timeEnd("Chrono - Fonction native .sort() (avec split)");
+
+    // --- TEST 3 : VOTRE LOGIQUE MAIS SANS RÉCURSION (BOUCLE WHILE) ---
+    console.time("Chrono - Votre logique version Robuste (Boucle)");
+    triClientRobuste(copiePourVersionRobuste, "croissant");
+    console.timeEnd("Chrono - Votre logique version Robuste (Boucle)");
+}
+
+
+// ==========================================
+// 3. ADAPTATION ROBUSTE DE VOTRE LOGIQUE (SANS CRASH)
+// ==========================================
+function triClientRobuste(list, type="croissant") {
+    if (list.length <= 0) return [];
+    
+    let tab = list.map(element => element.split("-"));
+
+    if (type === "croissant") {
+        // Tri sur l'année en boucle while
+        let permuteDate = true;
+        while (permuteDate) {
+            permuteDate = false;
+            for (let i = 1; i < tab.length; i++) {
+                if (tab[i][1] < tab[i - 1][1]) {
+                    [tab[i], tab[i - 1]] = [tab[i - 1], tab[i]];
+                    permuteDate = true;
+                }
+            }
+        }
+
+        // Tri sur le numéro
+        let permuteValeur = true;
+        while (permuteValeur) {
+            permuteValeur = false;
+            for (let i = 1; i < tab.length; i++) {
+                // Conversion en entier pour comparer correctement "003" et "0042"
+                let numActuel = parseInt(tab[i][2], 10);
+                let numPrecedent = parseInt(tab[i - 1][2], 10);
+                
+                if (numActuel < numPrecedent && tab[i][1] === tab[i - 1][1]) {
+                    [tab[i], tab[i - 1]] = [tab[i - 1], tab[i]];
+                    permuteValeur = true;
+                }
+            }
+        }
+    }
+    return tab.map(el => el.join("-"));
+}
+
+
+// ==========================================
+// LANCEZ LES TESTS ICI
+// ==========================================
+
+// Test à petite échelle (Tout le monde répond présent)
+// executerGrandBenchmark(100);
+
+// Test à moyenne échelle (Votre fonction d'origine va sûrement saturer la mémoire)
+//executerGrandBenchmark(500);
+
+// Test à grande échelle (Le .sort() va montrer sa vraie nature d'algorithme lourd mais stable)
+// executerGrandBenchmark(25000);
+
+
+*/
+
+
+
+
 
 
 
@@ -1318,9 +1621,20 @@ console.log(detecRef([
 // Génération de breadcrumb (fil d'Ariane)
 // Entrée : "/produits/cnc/fraiseuse"
 // Sortie : ["produits", "cnc", "fraiseuse"]
+function breadCrumb(t){
+    let tab = t.split("/");
+    for (let i = 0; i < tab.length; i++){
+        if (tab[i] === ""){
+            tab.splice(i, 1)
+        }
+    }
+    return tab
+}
 
-
-
+/*
+//TESTS
+console.log(breadCrumb("/produits/cnc/fraiseuses"))
+*/
 
 
 
@@ -1484,6 +1798,7 @@ console.log(stockFaible(100,300))
 // Journalisation (Logger)
 // Entrée : type + message
 // Sortie : "[11/06/2026 14:32] INFO : Utilisateur connecté"
+/*
 function logger(content){
     const date = new Date()
     const annee = String(date.getFullYear());
@@ -1505,7 +1820,7 @@ function logger(content){
     //console.log(log);
     //console.log(date);
 }
-
+*/
 
 // console.log(logger("INFO : Utilisateur connecté"))
 
@@ -1681,6 +1996,54 @@ function randomLogGenerator(amount) {
 // Fusion de deux objets avec priorité
 // Entrée : {a:1, b:2}, {b:5, c:3}
 // Sortie : {a:1, b:5, c:3}
+function mergeMaxValue(o1, o2){
+    // On parcours le deuxième et, pour chaque élément, on parcours le premier. Si la clé est identique, on regarde la valeur associé, et on met dans un nouveau dico. Sinon, on ajoute juste au dico. Ensuite, on tri le dico en fonction des clés
+
+    // Étape 1 : fusionner les deux tableaux
+    let tab = o1
+    for (let element in o2){
+        let valeur = o2[element];
+        let cle = element;
+        let isTrue = false
+        for (let moreElement in o1){
+            let moreValeur = o1[moreElement]
+            if (moreElement === cle){
+                if (valeur > moreValeur){
+                    tab[cle] = valeur
+                } else{
+                    tab[moreElement] = moreValeur
+                }
+                isTrue = true
+            }
+        }
+        if (!isTrue){
+            tab[element] = valeur
+        }
+    }
+
+    // Étape 2 : Remettre en ordre lesdeux tableaux en fonction de l'ordre alphabétique de leur valeur
+    let newTab = {};
+    let keys = Object.keys(tab);
+    for (let i = 0; i < keys.length - 1; i++) {
+        for (let j = 0; j < keys.length - 1 - i; j++) {
+            if (keys[j] > keys[j + 1]) {
+                let temp = keys[j];
+                keys[j] = keys[j + 1];
+                keys[j + 1] = temp;
+            }
+        }
+        for (let i = 0; i <keys.length; i++){
+            let cle = keys[i];
+            newTab[cle] = tab[cle]
+        }
+        return newTab
+    }
+        
+
+        
+    }
+
+console.log(mergeMaxValue({a:1, e:1, b:5, c:3}, {c: 6, b:1, e:2}))
 
 
 
@@ -1708,10 +2071,179 @@ function randomLogGenerator(amount) {
 // Simulation de hash simple (non cryptographique)
 // Entrée : "motDePasse"
 // Sortie : "a94f2c1d"
+function hashSimple(mdp){
+    let hashed = "";
+    function hash(l){
+        const char = "a1b2c3d4e5f6g7h8i9j0klmnopqrstuvwxyz";
+        const big = "VKZBEQ6H0JDO3NLAX7STUPWFYCI18M45GR29";
+        let indexOfChar = char.indexOf(l) - 2;
+        if (indexOfChar < 0){
+            indexOfChar *= -1;
+        }
+        return char[indexOfChar] + big[indexOfChar];
+    }
+    for (let i = 0; i < mdp.length; i++){
+        let car = hash(mdp[i]);
+        hashed += car;
+    };
+
+    function alt(motDePasse) {
+        const numbers = "9135682470";
+        const length = motDePasse.length;
+        let positions = [];
+        let indexNumber = 0;
+        if (length <= 5) {
+            positions = [3];
+        }
+        else if (length <= 8) {
+            positions = [2, 6];
+        }
+        else if (length <= 13) {
+            positions = [1, 2, 8];
+        }
+        else if (length <= 20) {
+            positions = [5, 19];
+        }
+        else {
+            positions = [3, 20];
+        }
+        if (length > 10) {
+            indexNumber = numbers.length - positions.length;
+        }
+        let resultat = motDePasse;
+        positions.forEach((pos, i) => {
+            const chiffre = numbers[indexNumber + i];
+            const positionReelle = pos - 1 + i;
+            resultat = resultat.slice(0, positionReelle) + chiffre + resultat.slice(positionReelle);
+        });
+        return resultat;
+    }
+
+    let secondStep = alt(hashed)
+
+    function third(mdp) {
+        const lettres = "QWERTYUIOPASDFGHJKLZXCVBNM";
+        const length = mdp.length;
+        let positions = [];
+        let indexLettre = 0;
+        if (length <= 5) {
+            positions = [2];
+        }
+        else if (length <= 8) {
+            positions = [3, 7];
+        }
+        else if (length <= 13) {
+            positions = [2, 5, 10];
+        }
+        else if (length <= 20) {
+            positions = [4, 12, 18];
+        }
+        else {
+            positions = [3, 9, 17, 25];
+        }
+        if (length > 10) {
+            indexLettre = lettres.length - positions.length;
+        }
+
+        let resultat = mdp;
+
+        positions.forEach((pos, i) => {
+            const lettre = lettres[indexLettre + i];
+            const positionReelle = pos - 1 + i;
+            resultat = resultat.slice(0, positionReelle) + lettre + resultat.slice(positionReelle);
+        });
+        return resultat;
+    }
 
 
 
+    let thirdStep = third(secondStep)
 
+
+
+    function fourth(mdp){
+        let resultat = "";
+        for(let i = 0; i < mdp.length; i += 2){
+            resultat += mdp[i];
+        }
+        for(let i = 1; i < mdp.length; i += 2){
+            resultat += mdp[i];
+        }
+
+        return resultat;
+    }
+
+    let fourthStep = fourth(thirdStep)
+
+
+    function fifth(mdp){
+        const alpha = "abcdefghijklmnopqrstuvwxyz";
+        let resultat = "";
+
+        for(let c of mdp){
+            const idx = alpha.indexOf(c);
+
+            if(idx !== -1){
+                resultat += alpha[(idx + 7) % 26];
+            } else {
+                resultat += c;
+            }
+        }
+
+        return resultat;
+    }
+
+    let fifthStep = fifth(fourthStep)
+
+
+    function sixth(mdp){
+        const milieu = Math.floor(mdp.length / 2);
+
+        return (
+            mdp.slice(0, milieu)
+            .split("")
+            .reverse()
+            .join("")
+            +
+            mdp.slice(milieu)
+        );
+    };
+
+    let sixthStep = sixth(fifthStep);
+
+
+    function checksum(mdp){
+        let somme = 0;
+        for(let c of mdp){
+            somme += c.charCodeAt(0);
+        }
+        return mdp + (somme % 97);
+    }
+
+    let seventhStep = checksum(sixthStep)
+
+    function shuffle(mdp){
+        let tab = mdp.split("");
+        for(let i = 0; i < tab.length; i++){
+            let j = (tab[i].charCodeAt(0) + i) % tab.length;
+
+            [tab[i], tab[j]] = [tab[j], tab[i]];
+        }
+
+        return tab.join("");
+    };
+
+    let eigthStep = shuffle(seventhStep);
+
+    let whileNumber = "8604897301256718456095387980659210"
+    while (eigthStep.length < 26){
+        eigthStep += Math.floor(whileNumber[eigthStep.length] * 11 + 5 / 6 + 3 * Math.log(whileNumber[eigthStep.length])) % 10
+    }
+    let finalStep = eigthStep
+    return finalStep
+}
+// console.log(hashSimple("bonjour"))
+//console.log(hashSimple("Salutation jeune entrepreneur, je suis un mot de passe, et je ne pense pas pouvoir te laisser passer au travers ed cette sécurité mémorable qu'a installé l'administrateur!"))
 
 
 
@@ -1742,7 +2274,13 @@ function randomLogGenerator(amount) {
 // Génération de nom de fichier sécurisé
 // Entrée : "Rapport CNC final !! 2026"
 // Sortie : "rapport-cnc-final-2026.pdf-safe"
+function securedFileName(fileName){
+    let charsToRemove = "|/#.?!§;:,%^¨$()[]" 
+    let result = fileName.split(" ").join("-").toLowerCase().replace(new RegExp(`[${charsToRemove.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}]`, "g"), "").split("-").filter(item => item != "").join("-") + ".pdf-safe";
+    return result
+};
 
+// console.log(securedFileName("Rapport CNC final || 2026"));
 
 
 
