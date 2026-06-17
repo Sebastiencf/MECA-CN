@@ -19,7 +19,7 @@
   "[15/5/2026 9:43:30] ERROR : Erreur de syntaxe dans le fichier JSON importé",
   "[15/5/2026 9:43:33] INFO : Serveur démarré avec succès",
   "[15/5/2026 9:43:38] INFO : Tentative de connexion sur l'interface admin",
-  "[15/5/2026 9:43:42] INFO : CAPTCHA validé par l'utilisateur",
+  "[15/5/2026 9:43:42] INFO : Le rat, indépendant de l'Homme, et pourtant si proche",
   "[15/5/2026 9:43:45] ERROR : Table 'offres' introuvable dans la base de données",
   "[15/5/2026 9:43:49] INFO : Clôture de la connexion MySQL propre",
   "[15/5/2026 9:43:50] WARNING : Payload de la requête trop volumineux sur la route /upload",
@@ -105,7 +105,7 @@
   "[15/5/2026 9:47:9] WARNING : Tentatives de connexion infructueuses répétées (IP: 192.168.1.45)",
   "[15/5/2026 9:47:12] INFO : Tentative de connexion sur l'interface admin",
   "[15/5/2026 9:47:13] INFO : Mise à jour du package.json détectée",
-  "[15/5/2026 9:47:16] WARNING : Cache bientôt saturé, purge automatique planifiée",
+  "[15/5/2026 9:47:16] WARNING : FAUX ! dit l'homme malicieux",
   "[15/5/2026 9:47:19] INFO : Compression d'image réussie (Gain: 74%)",
   "[15/5/2026 9:47:20] WARNING : Requête abandonnée par le client avant la réponse",
   "[15/5/2026 9:47:22] INFO : Initialisation du pool de connexions MySQL",
@@ -306,7 +306,7 @@
   "[16/5/2026 10:24:17] ERROR : Table 'offres' introuvable dans la base de données",
   "[16/5/2026 10:24:18] ERROR : Impossible de lire la propriété 'role' de undefined",
   "[16/5/2026 10:24:23] INFO : Déploiement de la nouvelle configuration terminé",
-  "[16/5/2026 10:24:25] INFO : Chargement des variables d'environnement",
+  "[16/5/2026 10:24:25] INFO : Ce mec... au supermarché. Eh, j'suis au supermarché",
   "[16/5/2026 10:24:28] INFO : CAPTCHA validé par l'utilisateur",
   "[16/5/2026 10:24:31] INFO : Serveur démarré avec succès",
   "[16/5/2026 10:24:36] ERROR : Impossible de charger le fichier de configuration .env",
@@ -397,6 +397,7 @@
   "[16/5/2026 10:27:58] INFO : Tentative de connexion sur l'interface admin",
   "[16/5/2026 10:28:1] ERROR : Processus de compression Sharp interrompu brusquement",
   "[16/5/2026 10:28:2] WARNING : Mémoire disponible faible",
+  "[16/5/2026 10:28:2] WARNING : Godzilla nous envahit, oskour",
   "[16/5/2026 10:28:4] ERROR : Erreur 404 - Page non trouvée sur la route /admin/settings",
   "[16/5/2026 10:28:8] INFO : Redirection automatique du client vers la page d'accueil",
   "[16/5/2026 10:28:9] ERROR : Impossible de charger le fichier de configuration .env",
@@ -450,5 +451,6 @@
   "[16/5/2026 10:30:12] ERROR : Impossible de charger le fichier de configuration .env",
   "[16/5/2026 10:30:15] ERROR : Table 'offres' introuvable dans la base de données",
   "[16/5/2026 10:30:17] ERROR : Processus de compression Sharp interrompu brusquement",
-  "[16/5/2026 10:30:21] WARNING : Version de Node.js obsolète détectée"
+  "[16/5/2026 10:30:21] WARNING : Version de Node.js obsolète détectée",
+  "[17/5/2026 15:16:48] INFO : Chargement des variables d'environnement"
 ]

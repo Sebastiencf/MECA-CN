@@ -1763,9 +1763,19 @@ console.log(stockFaible(100,300))
 // Validation d'un numéro de téléphone FR
 // Entrée : "06 12 34 56 78"
 // Sortie : true / false
+function verifPhone(number){
+    let txt = number.split(/[/. -]+/).filter(Boolean).join("");
 
+    if (/^\+33/.test(txt) && (txt.length === 10 ||txt.length === 11) && (txt[3] <= 9 && txt[3] >= 1)){
+        return true
+    } else if (txt[0] == "0" && (txt.length === 10 ||txt.length === 11) && (txt[1] <= 9 && txt[1] >= 1)){
+        return true
+    } else{
+        return false
+    }
+}
 
-
+console.log(verifPhone("+33.7.82/95 03-62"));
 
 
 
@@ -2012,14 +2022,14 @@ function mergeMaxValue(o1, o2){
                     tab[cle] = valeur
                 } else{
                     tab[moreElement] = moreValeur
-                }
-                isTrue = true
+                };
+                isTrue = true;
             }
         }
         if (!isTrue){
-            tab[element] = valeur
-        }
-    }
+            tab[element] = valeur;
+        };
+    };
 
     // Étape 2 : Remettre en ordre lesdeux tableaux en fonction de l'ordre alphabétique de leur valeur
     let newTab = {};
@@ -2030,20 +2040,18 @@ function mergeMaxValue(o1, o2){
                 let temp = keys[j];
                 keys[j] = keys[j + 1];
                 keys[j + 1] = temp;
-            }
-        }
+            };
+        };
         for (let i = 0; i <keys.length; i++){
             let cle = keys[i];
-            newTab[cle] = tab[cle]
+            newTab[cle] = tab[cle];
         }
-        return newTab
-    }
+        return newTab;
+    };
         
+};
 
-        
-    }
-
-console.log(mergeMaxValue({a:1, e:1, b:5, c:3}, {c: 6, b:1, e:2}))
+console.log(mergeMaxValue({a:1, e:1, b:5, c:3}, {c: 6, b:1, e:2}));
 
 
 
