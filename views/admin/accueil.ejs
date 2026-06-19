@@ -192,27 +192,22 @@
                 <a href="/admin/machines" class="machine-carousel-link">Voir plus →</a>
             </div>
             <div class="machine-carousel-track">
-                <article class="machine-carousel-card">
-                    <img src="/img/machines/Mazak1.png" alt="Machine Mazak">
-                    <div class="machine-carousel-card-content">
-                        <h3>Centre d'usinage 5 axes</h3>
-                        <p>Puissance et précision pour les pièces les plus complexes.</p>
-                    </div>
-                </article>
-                <article class="machine-carousel-card">
-                    <img src="/img/machines/Mazak1.png" alt="Machine Mazak">
-                    <div class="machine-carousel-card-content">
-                        <h3>Tour automatique</h3>
-                        <p>Haute cadence et répétabilité optimisée pour séries longues.</p>
-                    </div>
-                </article>
-                <article class="machine-carousel-card">
-                    <img src="/img/machines/Mazak1.png" alt="Machine Mazak">
-                    <div class="machine-carousel-card-content">
-                        <h3>Centre d'usinage robotisé</h3>
-                        <p>Flexibilité maximale pour prototypes et petites série.</p>
-                    </div>
-                </article>
+
+
+                <%for (let element of machines){ %>
+                    <article class="machine-carousel-card">
+                        <img src="<%= element.image_machine %>" alt="Machine Mazak">
+                        <div class="machine-carousel-card-content">
+                            <h3>
+                                <%= element.nom_machine %>
+                            </h3>
+                            <p>
+                                <%= element.description_courte %>
+                            </p>
+                    </article>
+
+
+                <% } %>
             </div>
         </div>
     </section>
@@ -246,36 +241,21 @@
                 <a href="/admin/realisations" class="product-carousel-link">Voir plus →</a>
             </div>
         </div>
+        
         <div class="product-carousel-track pc-hidden">
-            <article class="product-card">
-                <img src="/img/produits/produit1.png" alt="Produit centre d'usinage">
-                <div class="product-card-body">
-                    <h3>Centre d'usinage 5 axes</h3>
-                    <p>Grande précision pour pièces complexes, avec une rigidité et une répétabilité optimales.</p>
+                        <%for (let element of produits){ %>
+                            <article class="product-card">
+                                <img src="<%= element.image %>" alt="Machine Mazak">
+                                <div class="product-card-body">
+                                    <h3>
+                                        <%= element.nom %>
+                                    </h3>
+                                    <p>
+                                        <%= element.description %>
+                                    </p>
+                            </article>
+                        <% } %>
                 </div>
-            </article>
-            <article class="product-card">
-                <img src="/img/produits/produit4.png" alt="Produit tour automatique">
-                <div class="product-card-body">
-                    <h3>Tour automatique</h3>
-                    <p>Production rapide et régulière pour séries longues et pièces acier haut de gamme.</p>
-                </div>
-            </article>
-            <article class="product-card">
-                <img src="/img/produits/produit3.png" alt="Produit fraiseuse">
-                <div class="product-card-body">
-                    <h3>Fraiseuse haute cadence</h3>
-                    <p>Usinage dynamique avec une finition de surface parfaite sur alliages techniques.</p>
-                </div>
-            </article>
-            <article class="product-card">
-                <img src="/img/produits/produit4.png" alt="Produit centre robotisé">
-                <div class="product-card-body">
-                    <h3>Centre robotisé</h3>
-                    <p>Automatisation fluide pour prototypes, petites séries et préparation multi-axes.</p>
-                </div>
-            </article>
-        </div>
 
 
 

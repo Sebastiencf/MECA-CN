@@ -257,12 +257,16 @@ app.get("/", async function (req, res) {
   try {
     // regarde s'il y a des offres et affiche le bandeau dans le cas positif
     const [offres] = await pool.query("SELECT * FROM offres");
+    const [machines] = await pool.query("SELECT * FROM machines LIMIT 5");
+    const [produits] = await pool.query("SELECT * FROM produits LIMIT 5");
     const taille_liste_offre = offres.length;
     // console.log(offres.length)
     if (req.session.role === "admin") {
       return res.redirect("/admin/accueil");
     } else {
       res.render("accueil", {
+        machines: machines,
+        produits:produits,
         page_css1: "headerclient.css",
         page_css2: "accueilclient.css",
         nbOffres: taille_liste_offre,
@@ -713,8 +717,12 @@ app.get("/postuler/:id", async function (req, res) {
 Tableau de bord administrateur (page d'accueil admin).
  */
 app.get("/admin/accueil", isAdmin, async function (req, res) {
+  const [machines] = await pool.query("SELECT * FROM machines LIMIT 5");
+  const [produits] = await pool.query("SELECT * FROM produits LIMIT 5");
   try {
     res.render("admin/accueil", {
+      produits: produits,
+      machines: machines,
       page_css1: "accueiladmin.css",
       page_css2: "headeradmin.css",
     });
