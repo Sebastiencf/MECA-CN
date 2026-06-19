@@ -274,9 +274,12 @@ console.log(search("Bonjour, ici Sébastien, comment allez-vous ?", "ici"));
 // Normalisation de chaîne (nettoyage global)
 // Entrée : "   HéLLo--wOrLD!!  "
 // Sortie : "hello-world"
+function normalization(txt){
+    const regex = new RegExp(`[/! ]`, "g");
+    return txt.replace(regex, "").replace(`é`, "e").replace("è", "e").toLowerCase();
+}
 
-
-
+// console.log(normalization("   HéLLo--wOrLD!!  "))
 
 
 
@@ -284,9 +287,19 @@ console.log(search("Bonjour, ici Sébastien, comment allez-vous ?", "ici"));
 // Génération de mot-clé SEO à partir d'un texte
 // Entrée : "Usinage CNC de haute précision"
 // Sortie : ["usinage", "cnc", "haute", "precision"]
+function SEOKeywords(txt){
+    let res = txt.split(" ");
+    let answer = []
+    for (let element of res){
+        if (element.length > 2){
+            answer.push(element);
+        }
+    }
 
+    return answer
+}
 
-
+// console.log(SEOKeywords("Usinage CNC de haute précision"));
 
 
 
@@ -294,41 +307,115 @@ console.log(search("Bonjour, ici Sébastien, comment allez-vous ?", "ici"));
 // Extraction de domaine email
 // Entrée : "test@gmail.com"
 // Sortie : "gmail.com"
+function domaineExtraction(mail){
+    let dom = mail.split("@");
+    return dom[dom.length - 1]
+}
+
+
+
+// console.log(domaineExtraction("confreresebastien6@gmail.com"))
+
+
+
+
+//ANCHOR: inversion de chaine de caractere
+function reverseString(txt){
+    let tab = txt.split("");
+    let secondTab = []
+    for (let i = tab.length - 1; i >= 0; i--){
+        secondTab.push(tab[i]);
+    }
+
+    let res = secondTab.join("");
+    return res
+}
+
+/*
+//TESTS
+console.log(reverseString("salut, moi c'est mickey"))
+console.log(reverseString("yekcim tse'c iom ,tulas"))
+*/
+
+
+
+//ANCHOR: compte les occurences d'un caractère dans un texte
+function countOccurence(txt, char){
+    let count = 0;
+    let tab = txt.split("");
+    for (let element of tab){
+        if (element === char){
+            count += 1;
+        };
+    };
+
+    return count;
+}
+
+// console.log(countOccurence("Salut, c'est moi, Mickey !", "i"))
 
 
 
 
 
+//ANCHOR: extraire les # d'un texte
+function extractHashtag(txt){
+    let tab = txt.split(" ");
+    let res = []
+    for (let element of tab){
+        if (element[0] === "#"){
+            res.push(element)
+        }
+    }
+    return res
+}
+
+// console.log(extractHashtag("Salut C'est Moi #Mickey les #amis !"))
+
+
+//ANCHOR: Retirer les espaces en trop
+function removeExtraSpace(txt){
+    let tab = txt.split(" ");
+
+    for (let i = tab.length - 1; i >= 0; i--){
+        if (tab[i] === ""){
+            tab.splice(i, 1);
+        }
+    }
+
+    return tab.join(" ");
+}
+
+// console.log(removeExtraSpace("Salut  c'est moi   Mickey        !"));
 
 
 
 
 
+//ANCHOR: transformer une chaine de caractere en KebabCase
+function toKebabCase(txt){
+    let tab = txt.split(" ");
+    let tabres = [];
+    let res = ""
+    for (let element of tab){
+        let premiereLettre = element[0].toUpperCase();
+        let motSuite = element.slice(1);
+
+        let mot = premiereLettre + motSuite
+        tabres.push(mot);
+
+    }
+    res = tabres.join("")
+
+    return res
+}
+
+// console.log(toKebabCase("hello world its me Mario"))
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//ANCHOR: 
 
 
 
@@ -488,10 +575,23 @@ console.log(valeurStock(25,150));
 
 
 
+
+
+
 //ANCHOR: Pourcentage d'avancement
 // Calcul de pourcentage d'avancement
 // Entrée : 45 / 120
 // Sortie : 37.5 (%)
+function pourcentageAvencement(a,b){
+    return ((a / b) * 100 + "%")
+}
+
+/*
+//TEST
+console.log(pourcentageAvencement(45,120))
+*/
+
+
 
 
 
@@ -501,6 +601,22 @@ console.log(valeurStock(25,150));
 // Limitation d'un nombre à un intervalle
 // Entrée : valeur = 150, min = 0, max = 100
 // Sortie : 100
+function limitNumber(val, min, max){
+    if (val > max){
+        return max;
+    } else if (val < min){
+        return min
+    }
+    return val
+}
+/*
+//TESTS
+console.log(limitNumber(150, 0, 100));
+console.log(limitNumber(25, 30, 150));
+console.log(limitNumber(0, 0, 100));
+console.log(limitNumber(0, 0, 0));
+*/
+
 
 
 
@@ -510,25 +626,76 @@ console.log(valeurStock(25,150));
 // Calcul de marge commerciale
 // Entrée : prix_vente = 120, prix_achat = 80
 // Sortie : 33.33 (%)
+function marge(vente, achat){
+    return (((vente - achat) / vente * 100).toFixed(4) + "%")
+}
+
+
+console.log(marge(120,80));
 
 
 
+//ANCHOR: Factoriel
+function factorial(n){
+    let res = n;
+    for (let i=n - 1; i > 0; i--){
+        res *= i
+    }
+
+    return res
+}
+
+/*
+//TEST
+console.log(factorial(5))
+*/
 
 
 
+//ANCHOR: isEven
+function isEven(n){
+    return (n%2 === 0);
+}
+
+
+//ANCHOR: isOdd
+function isOdd(n){
+    return (n%2 === 1);
+}
+
+/*
+//TEST
+console.log(isEven(5))
+console.log(isOdd(5))
+console.log(isOdd(4))
+console.log(isEven(4))
+*/
 
 
 
+//ANCHOR: Plus grand diviseur commun
+function gcd(a,b){
+    let lowest;
+    if (a > b){
+        lowest = b;
+    } else{
+        lowest = a;
+    }
 
+    let highestGCD
+    let i = 1;
 
+    while (i <= lowest){
+        if (a % i === 0 && b % i === 0){
+            highestGCD = i
+        }
+        i++
+    }
 
+    return highestGCD
+}
 
-
-
-
-
-
-
+console.log(gcd(150,250))
 
 
 
@@ -766,6 +933,7 @@ function generateMdp(len){
 }
 
 
+import { reverse } from "dns";
 /*
 
 //TESTS
@@ -892,10 +1060,321 @@ function UUIDGenerator(){
 
 //console.log(UUIDGenerator())
 
+
+
+
+
+const dataProduit = JSON.parse(
+    fs.readFileSync("./annexe.json", "utf8")
+);
+
 //ANCHOR: code produit interne
 // Générateur de code produit interne
 // Entrée : catégorie = "VIS", diamètre = 8
 // Sortie : "VIS-M8-2026-0001"
+
+function codeProduit(cat, d){
+    if (dataProduit.dataProduit[cat] === undefined){
+        dataProduit.dataProduit[cat] = {};
+    }
+    if (dataProduit.dataProduit[cat][d] === undefined){
+        dataProduit.dataProduit[cat][d] = {
+            lastProduit: 0
+        };
+    }
+
+    // Incrémentation compteur
+    dataProduit.dataProduit[cat][d].lastProduit += 1;
+
+    const numero = dataProduit.dataProduit[cat][d].lastProduit.toString().padStart(4, "0");
+    // Année
+    const annee = new Date().getFullYear();
+    // Construction du code
+    const resultat = cat.toUpperCase() + "-M" + d + "-" + annee + "-" + numero;
+    // Sauvegarde JSON
+    fs.writeFileSync(
+        "./annexe.json",
+        JSON.stringify(dataProduit, null, 4),
+        "utf8"
+    );
+
+    return resultat;
+}
+
+/*
+// TESTS
+console.log(codeProduit("VIS", 8));
+console.log(codeProduit("VIS", 2));
+console.log(codeProduit("VIS", 3));
+console.log(codeProduit("VIS", 4));
+console.log(codeProduit("VIS", 5));
+console.log(codeProduit("VIS", 6));
+console.log(codeProduit("VIS", 8));
+console.log(codeProduit("VIS", 10));
+console.log(codeProduit("VIS", 12));
+console.log(codeProduit("VIS", 12));
+console.log(codeProduit("VIS", 12));
+
+console.log(codeProduit("ECROU", 2));
+console.log(codeProduit("ECROU", 4));
+console.log(codeProduit("ECROU", 4));
+console.log(codeProduit("ECROU", 4));
+console.log(codeProduit("ECROU", 4));
+console.log(codeProduit("ECROU", 6));
+console.log(codeProduit("ECROU", 6));
+console.log(codeProduit("ECROU", 8));
+console.log(codeProduit("ECROU", 10));
+console.log(codeProduit("ECROU", 10));
+console.log(codeProduit("ECROU", 10));
+console.log(codeProduit("ECROU", 12));
+
+console.log(codeProduit("RONDELLE", 3));
+console.log(codeProduit("RONDELLE", 4));
+console.log(codeProduit("RONDELLE", 5));
+console.log(codeProduit("RONDELLE", 5));
+console.log(codeProduit("RONDELLE", 5));
+console.log(codeProduit("RONDELLE", 6));
+console.log(codeProduit("RONDELLE", 6));
+console.log(codeProduit("RONDELLE", 8));
+console.log(codeProduit("RONDELLE", 10));
+console.log(codeProduit("RONDELLE", 8));
+
+console.log(codeProduit("AXE", 5));
+console.log(codeProduit("AXE", 8));
+console.log(codeProduit("AXE", 5));
+console.log(codeProduit("AXE", 8));
+console.log(codeProduit("AXE", 5));
+console.log(codeProduit("AXE", 8));
+console.log(codeProduit("AXE", 5));
+console.log(codeProduit("AXE", 8));
+console.log(codeProduit("AXE", 5));
+console.log(codeProduit("AXE", 8));
+console.log(codeProduit("AXE", 5));
+console.log(codeProduit("AXE", 8));
+console.log(codeProduit("AXE", 5));
+console.log(codeProduit("AXE", 5));
+console.log(codeProduit("AXE", 5));
+console.log(codeProduit("AXE", 5));
+console.log(codeProduit("AXE", 10));
+console.log(codeProduit("AXE", 12));
+console.log(codeProduit("AXE", 10));
+console.log(codeProduit("AXE", 12));
+console.log(codeProduit("AXE", 16));
+console.log(codeProduit("AXE", 10));
+console.log(codeProduit("AXE", 10));
+console.log(codeProduit("AXE", 10));
+console.log(codeProduit("AXE", 20));
+console.log(codeProduit("AXE", 20));
+
+console.log(codeProduit("ENTRETOISE", 4));
+console.log(codeProduit("ENTRETOISE", 6));
+console.log(codeProduit("ENTRETOISE", 4));
+console.log(codeProduit("ENTRETOISE", 6));
+console.log(codeProduit("ENTRETOISE", 4));
+console.log(codeProduit("ENTRETOISE", 6));
+console.log(codeProduit("ENTRETOISE", 8));
+console.log(codeProduit("ENTRETOISE", 8));
+console.log(codeProduit("ENTRETOISE", 8));
+console.log(codeProduit("ENTRETOISE", 8));
+console.log(codeProduit("ENTRETOISE", 8));
+console.log(codeProduit("ENTRETOISE", 8));
+console.log(codeProduit("ENTRETOISE", 8));
+console.log(codeProduit("ENTRETOISE", 12));
+console.log(codeProduit("ENTRETOISE", 12));
+console.log(codeProduit("ENTRETOISE", 16));
+
+console.log(codeProduit("POULIE", 20));
+console.log(codeProduit("POULIE", 25));
+console.log(codeProduit("POULIE", 30));
+console.log(codeProduit("POULIE", 25));
+console.log(codeProduit("POULIE", 25));
+console.log(codeProduit("POULIE", 25));
+console.log(codeProduit("POULIE", 30));
+console.log(codeProduit("POULIE", 25));
+console.log(codeProduit("POULIE", 30));
+console.log(codeProduit("POULIE", 40));
+
+console.log(codeProduit("BAGUE", 6));
+console.log(codeProduit("BAGUE", 6));
+console.log(codeProduit("BAGUE", 8));
+console.log(codeProduit("BAGUE", 10));
+console.log(codeProduit("BAGUE", 8));
+console.log(codeProduit("BAGUE", 10));
+console.log(codeProduit("BAGUE", 8));
+console.log(codeProduit("BAGUE", 10));
+console.log(codeProduit("BAGUE", 8));
+console.log(codeProduit("BAGUE", 10));
+console.log(codeProduit("BAGUE", 15));
+console.log(codeProduit("BAGUE", 15));
+console.log(codeProduit("BAGUE", 15));
+console.log(codeProduit("BAGUE", 15));
+console.log(codeProduit("BAGUE", 15));
+console.log(codeProduit("BAGUE", 15));
+console.log(codeProduit("BAGUE", 15));
+console.log(codeProduit("BAGUE", 15));
+console.log(codeProduit("BAGUE", 20));
+
+console.log(codeProduit("FLASQUE", 30));
+console.log(codeProduit("FLASQUE", 30));
+console.log(codeProduit("FLASQUE", 40));
+console.log(codeProduit("FLASQUE", 50));
+console.log(codeProduit("FLASQUE", 40));
+console.log(codeProduit("FLASQUE", 50));
+console.log(codeProduit("FLASQUE", 50));
+console.log(codeProduit("FLASQUE", 50));
+console.log(codeProduit("FLASQUE", 50));
+console.log(codeProduit("FLASQUE", 50));
+console.log(codeProduit("FLASQUE", 40));
+console.log(codeProduit("FLASQUE", 50));
+console.log(codeProduit("FLASQUE", 60));
+
+console.log(codeProduit("SUPPORT", 8));
+console.log(codeProduit("SUPPORT", 8));
+console.log(codeProduit("SUPPORT", 8));
+console.log(codeProduit("SUPPORT", 8));
+console.log(codeProduit("SUPPORT", 8));
+console.log(codeProduit("SUPPORT", 10));
+console.log(codeProduit("SUPPORT", 12));
+console.log(codeProduit("SUPPORT", 10));
+console.log(codeProduit("SUPPORT", 12));
+console.log(codeProduit("SUPPORT", 16));
+console.log(codeProduit("SUPPORT", 16));
+console.log(codeProduit("SUPPORT", 16));
+console.log(codeProduit("SUPPORT", 16));
+
+console.log(codeProduit("PLATINE", 50));
+console.log(codeProduit("PLATINE", 50));
+console.log(codeProduit("PLATINE", 50));
+console.log(codeProduit("PLATINE", 50));
+console.log(codeProduit("PLATINE", 80));
+console.log(codeProduit("PLATINE", 80));
+console.log(codeProduit("PLATINE", 100));
+
+console.log(codeProduit("BRIDE", 10));
+console.log(codeProduit("BRIDE", 10));
+console.log(codeProduit("BRIDE", 12));
+console.log(codeProduit("BRIDE", 16));
+console.log(codeProduit("BRIDE", 16));
+console.log(codeProduit("BRIDE", 16));
+console.log(codeProduit("BRIDE", 20));
+
+console.log(codeProduit("DOUILLE", 6));
+console.log(codeProduit("DOUILLE", 6));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 6));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 8));
+console.log(codeProduit("DOUILLE", 10));
+console.log(codeProduit("DOUILLE", 10));
+console.log(codeProduit("DOUILLE", 10));
+console.log(codeProduit("DOUILLE", 12));
+console.log(codeProduit("DOUILLE", 16));
+console.log(codeProduit("DOUILLE", 16));
+console.log(codeProduit("DOUILLE", 16));
+console.log(codeProduit("DOUILLE", 16));
+
+console.log(codeProduit("PIGNON", 20));
+console.log(codeProduit("PIGNON", 25));
+console.log(codeProduit("PIGNON", 30));
+console.log(codeProduit("PIGNON", 20));
+console.log(codeProduit("PIGNON", 25));
+console.log(codeProduit("PIGNON", 30));
+console.log(codeProduit("PIGNON", 20));
+console.log(codeProduit("PIGNON", 25));
+console.log(codeProduit("PIGNON", 30));
+console.log(codeProduit("PIGNON", 20));
+console.log(codeProduit("PIGNON", 25));
+console.log(codeProduit("PIGNON", 30));
+console.log(codeProduit("PIGNON", 20));
+console.log(codeProduit("PIGNON", 20));
+console.log(codeProduit("PIGNON", 30));
+console.log(codeProduit("PIGNON", 20));
+console.log(codeProduit("PIGNON", 30));
+console.log(codeProduit("PIGNON", 40));
+
+console.log(codeProduit("ENGRENAGE", 40));
+console.log(codeProduit("ENGRENAGE", 40));
+console.log(codeProduit("ENGRENAGE", 40));
+console.log(codeProduit("ENGRENAGE", 40));
+console.log(codeProduit("ENGRENAGE", 40));
+console.log(codeProduit("ENGRENAGE", 50));
+console.log(codeProduit("ENGRENAGE", 60));
+console.log(codeProduit("ENGRENAGE", 60));
+
+console.log(codeProduit("ARBRE", 10));
+console.log(codeProduit("ARBRE", 10));
+console.log(codeProduit("ARBRE", 10));
+console.log(codeProduit("ARBRE", 10));
+console.log(codeProduit("ARBRE", 15));
+console.log(codeProduit("ARBRE", 20));
+console.log(codeProduit("ARBRE", 25));
+console.log(codeProduit("ARBRE", 15));
+console.log(codeProduit("ARBRE", 20));
+console.log(codeProduit("ARBRE", 25));
+console.log(codeProduit("ARBRE", 20));
+console.log(codeProduit("ARBRE", 25));
+console.log(codeProduit("ARBRE", 30));
+console.log(codeProduit("ARBRE", 30));
+
+console.log(codeProduit("MANCHON", 8));
+console.log(codeProduit("MANCHON", 12));
+console.log(codeProduit("MANCHON", 16));
+console.log(codeProduit("MANCHON", 20));
+console.log(codeProduit("MANCHON", 20));
+
+console.log(codeProduit("COLLIER", 15));
+console.log(codeProduit("COLLIER", 20));
+console.log(codeProduit("COLLIER", 20));
+console.log(codeProduit("COLLIER", 20));
+console.log(codeProduit("COLLIER", 25));
+
+console.log(codeProduit("TIGE", 4));
+console.log(codeProduit("TIGE", 6));
+console.log(codeProduit("TIGE", 4));
+console.log(codeProduit("TIGE", 6));
+console.log(codeProduit("TIGE", 8));
+console.log(codeProduit("TIGE", 8));
+console.log(codeProduit("TIGE", 8));
+console.log(codeProduit("TIGE", 8));
+console.log(codeProduit("TIGE", 8));
+console.log(codeProduit("TIGE", 8));
+console.log(codeProduit("TIGE", 10));
+console.log(codeProduit("TIGE", 12));
+
+console.log(codeProduit("VIS", 8));
+console.log(codeProduit("VIS", 8));
+console.log(codeProduit("VIS", 8));
+console.log(codeProduit("VIS", 8));
+
+console.log(codeProduit("AXE", 12));
+console.log(codeProduit("AXE", 12));
+console.log(codeProduit("AXE", 12));
+console.log(codeProduit("AXE", 12));
+
+console.log(codeProduit("DOUILLE", 10));
+console.log(codeProduit("DOUILLE", 10));
+
+console.log(codeProduit("PLATINE", 100));
+console.log(codeProduit("PLATINE", 100));
+console.log(codeProduit("PLATINE", 100));
+
+console.log(codeProduit("ENGRENAGE", 50));
+console.log(codeProduit("ENGRENAGE", 50));
+console.log(codeProduit("ENGRENAGE", 50));
+console.log(codeProduit("ENGRENAGE", 50));
+
+console.log(codeProduit("PIGNON", 30));
+*/
 
 
 
@@ -905,15 +1384,35 @@ function UUIDGenerator(){
 // Génération de seed aléatoire reproductible
 // Entrée : seed = 12345
 // Sortie : suite pseudo-aléatoire stable
+function seedGenerator(seed){
+    const a = 1664525;
+    const c = 1013904223;
+    const m = 4294967296;
+    let seeed = (a * seed + c) % m;
+    let random = seeed / m;
+
+    let res = String(random).split(".")[1];
+    return res
+}
+
+// console.log(seedGenerator(generateNumber()))
 
 
 
+function generateNumber(){
+    let len = Math.floor(Math.random() * 7 + 4);
+    let i = 0;
+    let number = ""
+    while (i < len){
+        let random = Math.floor(Math.random() * 9)
+        number += random
+        i++
+    }
+    return number
+}
 
 
-
-
-
-
+// console.log(generateNumber())
 
 
 
@@ -1023,6 +1522,80 @@ console.log(JSONexport("clients.json", {
 
 //SECTION: Tableaux / Data Structure
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//ANCHOR: Je sais pas trop ce que ça fait
+function chunkarray(arr, size){
+    let tab = [];
+    let newTab = [];
+    for (let j = 0; j < arr.length; j = j + size){
+        for (let i = 0; i < size; i++){
+            newTab.push(arr[i]);
+            arr.splice(i, 1);
+        }
+
+        tab.push(newTab);
+        newTab = []
+    }
+
+    return tab
+    
+}
+
+/*
+//TESTS
+console.log(chunkarray([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30], 4))
+/*
+Résultat : 
+[
+  [ 1, 3, 5, 7 ],
+  [ 2, 6, 9, 11 ],
+  [ 4, 10, 13, 15 ],
+  [ 8, 14, 17, 19 ]
+]
+
+Comment c'est possible ? Je sais pas. J'aurais pas réussit si je l'avais voulu
+*/
+
+
+
+
+
+
+
+//ANCHOR: Bon ChunkArray
+function chunkArray(arr, size){
+    let tab = [];
+
+    for (let j = 0; j < arr.length; j += size){
+        let newTab = [];
+
+        for (let i = 0; i < size && j + i < arr.length; i++){
+            newTab.push(arr[j + i]);
+        }
+
+        tab.push(newTab);
+    }
+
+    return tab;
+}
+
+console.log(chunkArray([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30], 4))
 
 
 
@@ -1765,17 +2338,16 @@ console.log(stockFaible(100,300))
 // Sortie : true / false
 function verifPhone(number){
     let txt = number.split(/[/. -]+/).filter(Boolean).join("");
-
-    if (/^\+33/.test(txt) && (txt.length === 10 ||txt.length === 11) && (txt[3] <= 9 && txt[3] >= 1)){
+    if (/^\+33/.test(txt) && (txt.length === 12 ||txt.length === 13) && (txt[3] <= 9 && txt[3] >= 1)){
         return true
-    } else if (txt[0] == "0" && (txt.length === 10 ||txt.length === 11) && (txt[1] <= 9 && txt[1] >= 1)){
+    } else if (txt[0] == "0" && (txt.length === 10 ||txt.length === 11) && (txt[1] <= 9 && txt[1] >= 1) && typeof(txt[1] >= 1)){
         return true
     } else{
         return false
     }
 }
 
-console.log(verifPhone("+33.7.82/95 03-62"));
+// console.log(verifPhone("+33.7.82/95 03-62"));
 
 
 
@@ -1844,7 +2416,6 @@ function logger(content){
 //ANCHOR: Génération de contenu aléatoire pour log
 function randomLogGenerator(amount) {
     if (amount < 0){
-        console.log("Veuillez rentrer un nombre positif ou égal à 0")
         return "Veuillez rentrer un nombre positif ou égal à 0"
     }
     const log_types = [
@@ -2051,7 +2622,7 @@ function mergeMaxValue(o1, o2){
         
 };
 
-console.log(mergeMaxValue({a:1, e:1, b:5, c:3}, {c: 6, b:1, e:2}));
+// console.log(mergeMaxValue({a:1, e:1, b:5, c:3}, {c: 6, b:1, e:2}));
 
 
 

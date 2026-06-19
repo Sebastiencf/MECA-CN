@@ -1123,25 +1123,22 @@ app.get("/admin/offres", isAdmin, async function (req, res) {
  */
 app.get("/ajoutoffre", isAdmin, async function (req, res) {
   const [offres] = await pool.query("SELECT * FROM offres");
-  // console.log(offres)
   const user_id = req.session.userID;
-  // console.log("ID utilisateur : ", user_id)
   const [username] = await pool.query(
     "SELECT identifiant FROM utilisateurs WHERE id = ?",
     [user_id],
   );
   const [types] = await pool.query("SELECT DISTINCT type FROM offres");
-  // console.log(types[1].type)
+  
+  // ✅ Vérification : si pres est vide, utiliser une chaîne par défaut
   const [pres] = await pool.query("SELECT DISTINCT presentation FROM offres");
-  const presentation = pres[0].presentation;
-  //console.log(presentation[0].presentation)
+  const presentation = pres && pres.length > 0 ? pres[0].presentation : "";
 
   const [categoriesData] = await pool.query(
     "SELECT DISTINCT categorie FROM offres",
   );
   const categories = categoriesData.map((cat) => cat.categorie);
 
-  //console.log(username[0].identifiant)
   res.render("admin/ajoutoffre", {
     offres: offres,
     page_css1: "headeradmin.css",
@@ -1151,7 +1148,6 @@ app.get("/ajoutoffre", isAdmin, async function (req, res) {
     presentation: presentation,
     categories: categories,
   });
-  
 });
 
 
@@ -3001,67 +2997,76 @@ Si une nouvelle image est envoyée, l'ancienne est supprimée du serveur (si ell
 app.post("/modifier_infos_machine", isAdmin, uploadMachines.single("image_machine"), compressImage, async function (req, res) {
     try {
       const {
-        id_machine,
-        nom_machine,
-        description_courte,
-        description_longue,
-        statistique1_nom,
-        statistique1_donnee,
-        statistique2_nom,
-        statistique2_donnee,
-        statistique3_nom,
-        statistique3_donnee,
-        statistique4_nom,
-        statistique4_donnee,
-        avantage_titre,
-        avantage_description,
-        d_x,
-        d_y,
-        d_z,
-        type,
-        annee_entree,
-      } = req.body;
+          id_machine,
+          nom_machine,
+          description_courte,
+          description_longue,
+          statistique1_nom,
+          statistique1_donnee,
+          statistique2_nom,
+          statistique2_donnee,
+          statistique3_nom,
+          statistique3_donnee,
+          statistique4_nom,
+          statistique4_donnee,
+          avantage_titre,
+          avantage_description,
+          d_x,
+          d_y,
+          d_z,
+          type,
+          annee_entree,
+          diametre_max,
+          longueur_max,
+          alesage,
+        } = req.body;
 
-      let query = `UPDATE machines SET 
-      nom_machine = ?, 
-      description_courte = ?, 
-      description_longue = ?, 
-      statistique1_nom = ?, 
-      statistique1_donnee = ?, 
-      statistique2_nom = ?, 
-      statistique2_donnee = ?, 
-      statistique3_nom = ?, 
-      statistique3_donnee = ?, 
-      statistique4_nom = ?, 
-      statistique4_donnee = ?, 
-      avantage_titre = ?, 
-      avantage_description = ?, 
-      d_x = ?, 
-      d_y = ?, 
-      d_z = ?, 
-      type = ?, 
-      annee_entree = ?`;
+        let query = `UPDATE machines SET 
+          nom_machine = ?, 
+          description_courte = ?, 
+          description_longue = ?, 
+          statistique1_nom = ?, 
+          statistique1_donnee = ?, 
+          statistique2_nom = ?, 
+          statistique2_donnee = ?, 
+          statistique3_nom = ?, 
+          statistique3_donnee = ?, 
+          statistique4_nom = ?, 
+          statistique4_donnee = ?, 
+          avantage_titre = ?, 
+          avantage_description = ?, 
+          d_x = ?, 
+          d_y = ?, 
+          d_z = ?, 
+          type = ?, 
+          annee_entree = ?,
+          diametre_max = ?,
+          longueur_max = ?,
+          alesage = ?`;
 
-      const values = [
-        nom_machine,
-        description_courte,
-        description_longue,
-        statistique1_nom,
-        statistique1_donnee,
-        statistique2_nom,
-        statistique2_donnee,
-        statistique3_nom,
-        statistique3_donnee,
-        statistique4_nom,
-        statistique4_donnee,
-        avantage_titre,
-        avantage_description,
-        d_x || null,
-        d_y || null,
-        d_z || null,
-        type,
-        annee_entree || null,
-      ];
+        const values = [
+          nom_machine,
+          description_courte,
+          description_longue,
+          statistique1_nom,
+          statistique1_donnee,
+          statistique2_nom,
+          statistique2_donnee,
+          statistique3_nom,
+          statistique3_donnee,
+          statistique4_nom,
+          statistique4_donnee,
+          avantage_titre,
+          avantage_description,
+          d_x || null,
+          d_y || null,
+          d_z || null,
+          type,
+          annee_entree || null,
+          diametre_max || null,  // ✅ AJOUTÉ
+          longueur_max || null,  // ✅ AJOUTÉ
+          alesage || null,       // ✅ AJOUTÉ
+        ];
 
       // Si une nouvelle image a été envoyée, supprimer l'ancienne (si existe) et ajouter le champ
       if (req.file) {
@@ -3115,7 +3120,7 @@ Traite le formulaire de demande de devis, envoie un email avec les pièces joint
 Style du mail géré par le serveur
 Limitation Multer à 10 fichiers (uploadProduits.array("fichiers", 10)) pour éviter les abus / le spam
  */
-app.post("/envoyer-devis", uploadProduits.array("fichiers", 10), compressImage, async (req, res) => {
+app.post("/envoyer-devis", uploadProduits.array("fichiers", 10) , async (req, res) => {
     try {
       // Captcha
       const userAnswer = parseInt(req.body.captcha_answer, 10);

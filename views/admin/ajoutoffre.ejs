@@ -24,11 +24,7 @@
             </div>
             <div class="type">
                 <label>Type d'offre</label>
-                <select name="type-offre" id="type">
-                    <% for (const element of types){ %>
-                        <option value="<%= element.type %>"><%= element.type %></option>
-                    <% } %>
-                </select>
+                <input type="text" value="CDI" id="type", name="type-offre">
             </div>
         </div>
 
@@ -59,12 +55,12 @@
 
         <div class="presentation">
             <label>Présentation de l'entreprise</label>
-            <input type="text" value="<%= presentation %>" name="presentation" id="presentation"/>
+            <textarea type="text" value="<%= presentation %>" name="presentation" id="presentation"> </textarea>
         </div>
 
         <div class="missions">
             <label>Missions proposées</label>
-            <input type="text" placeholder="Au sein de l'entreprise, vous devrez..." name="missions" id="missions"/>
+            <textarea type="text" placeholder="Au sein de l'entreprise, vous devrez..." name="missions" id="missions"> </textarea>
         </div>
 
 
@@ -72,7 +68,7 @@
 
         <div class="methode">
             <label>Méthode de travail</label>
-            <input type="text" placeholder="Télétravail" name="methode" id="methode"/>
+            <textarea type="text" placeholder="Télétravail" name="methode" id="methode"> </textarea>
 
             <label class="switch">
                 <label class="smaller-label">Afficher</label>
@@ -86,7 +82,7 @@
 
         <div class="competences">
             <label>Compétences recherchées</label>
-            <input type="text" placeholder="Nous recherchons quelqu'un qui..." name="competences" id="competences"/>
+            <textarea type="text" placeholder="Nous recherchons quelqu'un qui..." name="competences" id="competences"> </textarea>
         </div>
 
 
@@ -94,7 +90,7 @@
 
         <div class="avantage">
             <label>Avantages proposés</label>
-            <input type="text" placeholder="À nos côtés, vous bénéficierez de..." name="avantage" id="avantage"/>
+            <textarea type="text" placeholder="À nos côtés, vous bénéficierez de..." name="avantage" id="avantage"> </textarea>
 
             <label class="switch">
                 <label class="smaller-label">Afficher</label>
@@ -108,7 +104,7 @@
 
         <div class="recrutement">
             <label>Processus de recrutement</label>
-            <input type="text" placeholder="Si vous êtes sélectionnés..." name="recrutement" id="recrutement"/>
+            <textarea type="text" placeholder="Si vous êtes sélectionnés..." name="recrutement" id="recrutement"> </textarea>
 
             <label class="switch">
                 <label class="smaller-label">Afficher</label>
@@ -143,7 +139,7 @@
 
         <div class="complementaire">
             <label>Informations complémentaires</label>
-            <input type="text" placeholder="Informations supplémentaires..." name="complementaire" id="complementaire"/>
+            <textarea type="text" placeholder="Informations supplémentaires..." name="complementaire" id="complementaire"> </textarea>
 
             <label class="switch">
                 <label class="smaller-label">Afficher</label>
@@ -167,9 +163,16 @@
     const categorieSelect = document.getElementById("categorie");
     const autreCategorie = document.getElementById("autre-categorie");
 
-    categorieSelect.addEventListener("change", function(){
-        autreCategorie.style.display = this.value === "autre" ? "block" : "none";
-    });
+    // Fonction pour gérer l'affichage/masquage
+    function toggleAutreCategorie() {
+        autreCategorie.style.display = categorieSelect.value === "autre" ? "block" : "none";
+    }
+
+    // Exécuter au chargement de la page
+    toggleAutreCategorie();
+
+    // Exécuter au changement
+    categorieSelect.addEventListener("change", toggleAutreCategorie);
 </script>
 
 <%- include("footer") %>

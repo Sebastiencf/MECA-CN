@@ -22,7 +22,7 @@
 
 
     <% if (offres.length == 0){ %>
-        <p> Désolé, nous n'avons actuellement pas d'offres d'emplois</p>
+        <p class="desole"> Désolé, nous n'avons actuellement pas d'offres d'emplois</p>
         <div class="ajouter-holder">
             <a href="/ajoutoffre" class="ajouter">
                 Ajouter une offre
@@ -82,7 +82,7 @@
                     <% indexOffre ++ %>
 
                     <div class="main-infos-holder">
-                        <%= element.intitule %>
+                        <%- element.intitule %>
 
 
 
@@ -98,21 +98,21 @@
                             <% if (element.SalaireEnable == 1) { %>
                                 <div class="type-holder">
                                     <i class="fa-regular fa-newspaper" style="color: rgb(39, 34, 200);"></i>
-                                    <p><%= element.type %></p>
+                                    <p><%- element.type %></p>
                                 </div>
-                                <p class="salary"><%= element.salaire %></p>
+                                <p class="salary"><%- element.salaire %></p>
 
                             <% }  else { %>
                                 <div class="type-holder">
                                     <i class="fa-regular fa-newspaper" style="color: rgb(39, 34, 200);"></i>
-                                    <p><%= element.type %></p>
+                                    <p><%- element.type %></p>
                                 </div>
                             <% } %>
                             
                         </div>
                         <div class="localisation-holder">
                             <img src="/img/icons/localisation_gris.svg" alt="localisation">
-                            <p> <%= element.localisation %> </p>
+                            <p> <%- element.localisation %> </p>
                         </div>
                         <div class="time-holder">
                             <p>

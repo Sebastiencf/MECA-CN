@@ -77,7 +77,8 @@ main > p {
 
 /* ── Inputs & selects ───────────────────────────────────────── */
 .ajout-form input[type="text"],
-.ajout-form select {
+.ajout-form select,
+.ajout-form textarea[type="text"] {
   width: 100%;
   padding: 13px 16px;
   border: 1.5px solid #dce6f5;
@@ -90,6 +91,10 @@ main > p {
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
   appearance: none;
   -webkit-appearance: none;
+}
+
+textarea{
+  resize:vertical;
 }
 
 .ajout-form input[type="text"]::placeholder {

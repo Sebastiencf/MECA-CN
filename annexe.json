@@ -1,4 +1,294 @@
 {
     "lastClientNumber": 4,
-    "lastDevisNumber": 8
+    "lastDevisNumber": 8,
+    "dataProduit": {
+        "VIS": {
+            "2": {
+                "lastProduit": 14
+            },
+            "3": {
+                "lastProduit": 14
+            },
+            "4": {
+                "lastProduit": 14
+            },
+            "5": {
+                "lastProduit": 14
+            },
+            "6": {
+                "lastProduit": 14
+            },
+            "8": {
+                "lastProduit": 127
+            },
+            "10": {
+                "lastProduit": 19
+            },
+            "12": {
+                "lastProduit": 28
+            }
+        },
+        "ECROU": {
+            "2": {
+                "lastProduit": 14
+            },
+            "4": {
+                "lastProduit": 35
+            },
+            "6": {
+                "lastProduit": 21
+            },
+            "8": {
+                "lastProduit": 17
+            },
+            "10": {
+                "lastProduit": 28
+            },
+            "12": {
+                "lastProduit": 14
+            }
+        },
+        "RONDELLE": {
+            "3": {
+                "lastProduit": 14
+            },
+            "4": {
+                "lastProduit": 14
+            },
+            "5": {
+                "lastProduit": 28
+            },
+            "6": {
+                "lastProduit": 21
+            },
+            "8": {
+                "lastProduit": 21
+            },
+            "10": {
+                "lastProduit": 14
+            }
+        },
+        "AXE": {
+            "5": {
+                "lastProduit": 77
+            },
+            "8": {
+                "lastProduit": 49
+            },
+            "10": {
+                "lastProduit": 42
+            },
+            "12": {
+                "lastProduit": 63
+            },
+            "16": {
+                "lastProduit": 14
+            },
+            "20": {
+                "lastProduit": 21
+            }
+        },
+        "ENTRETOISE": {
+            "4": {
+                "lastProduit": 28
+            },
+            "6": {
+                "lastProduit": 28
+            },
+            "8": {
+                "lastProduit": 56
+            },
+            "12": {
+                "lastProduit": 21
+            },
+            "16": {
+                "lastProduit": 14
+            }
+        },
+        "POULIE": {
+            "20": {
+                "lastProduit": 14
+            },
+            "25": {
+                "lastProduit": 42
+            },
+            "30": {
+                "lastProduit": 28
+            },
+            "40": {
+                "lastProduit": 14
+            }
+        },
+        "BAGUE": {
+            "6": {
+                "lastProduit": 21
+            },
+            "8": {
+                "lastProduit": 35
+            },
+            "10": {
+                "lastProduit": 35
+            },
+            "15": {
+                "lastProduit": 63
+            },
+            "20": {
+                "lastProduit": 14
+            }
+        },
+        "FLASQUE": {
+            "30": {
+                "lastProduit": 21
+            },
+            "40": {
+                "lastProduit": 28
+            },
+            "50": {
+                "lastProduit": 56
+            },
+            "60": {
+                "lastProduit": 14
+            }
+        },
+        "SUPPORT": {
+            "8": {
+                "lastProduit": 42
+            },
+            "10": {
+                "lastProduit": 21
+            },
+            "12": {
+                "lastProduit": 21
+            },
+            "16": {
+                "lastProduit": 35
+            }
+        },
+        "PLATINE": {
+            "50": {
+                "lastProduit": 35
+            },
+            "80": {
+                "lastProduit": 21
+            },
+            "100": {
+                "lastProduit": 49
+            }
+        },
+        "BRIDE": {
+            "10": {
+                "lastProduit": 21
+            },
+            "12": {
+                "lastProduit": 14
+            },
+            "16": {
+                "lastProduit": 28
+            },
+            "20": {
+                "lastProduit": 14
+            }
+        },
+        "DOUILLE": {
+            "6": {
+                "lastProduit": 28
+            },
+            "8": {
+                "lastProduit": 98
+            },
+            "10": {
+                "lastProduit": 56
+            },
+            "12": {
+                "lastProduit": 14
+            },
+            "16": {
+                "lastProduit": 35
+            }
+        },
+        "PIGNON": {
+            "20": {
+                "lastProduit": 56
+            },
+            "25": {
+                "lastProduit": 35
+            },
+            "30": {
+                "lastProduit": 70
+            },
+            "40": {
+                "lastProduit": 14
+            }
+        },
+        "ENGRENAGE": {
+            "40": {
+                "lastProduit": 42
+            },
+            "50": {
+                "lastProduit": 56
+            },
+            "60": {
+                "lastProduit": 21
+            }
+        },
+        "ARBRE": {
+            "10": {
+                "lastProduit": 35
+            },
+            "15": {
+                "lastProduit": 21
+            },
+            "20": {
+                "lastProduit": 28
+            },
+            "25": {
+                "lastProduit": 28
+            },
+            "30": {
+                "lastProduit": 21
+            }
+        },
+        "MANCHON": {
+            "8": {
+                "lastProduit": 14
+            },
+            "12": {
+                "lastProduit": 14
+            },
+            "16": {
+                "lastProduit": 14
+            },
+            "20": {
+                "lastProduit": 21
+            }
+        },
+        "COLLIER": {
+            "15": {
+                "lastProduit": 14
+            },
+            "20": {
+                "lastProduit": 28
+            },
+            "25": {
+                "lastProduit": 14
+            }
+        },
+        "TIGE": {
+            "4": {
+                "lastProduit": 21
+            },
+            "6": {
+                "lastProduit": 21
+            },
+            "8": {
+                "lastProduit": 49
+            },
+            "10": {
+                "lastProduit": 14
+            },
+            "12": {
+                "lastProduit": 14
+            }
+        }
+    }
 }
