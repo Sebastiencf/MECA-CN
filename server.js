@@ -368,6 +368,10 @@ app.get("/machines", async function (req, res) {
       (machine) => machine.type === "tournage/fraisage",
     );
 
+    const machineautre = machines.filter(
+      (machine) => machine.type === "autre",
+    );
+
     /*
     // ESSAI ===================================================
     const machineunique = machines[0];
@@ -392,6 +396,7 @@ app.get("/machines", async function (req, res) {
       machinestourneuses: machinestourneuses,
       machinefraiser: machinefraiser,
       machineglobale: machineglobale,
+      machineautre: machineautre,
     });
   } catch (err) {
     console.error(err);
@@ -440,6 +445,10 @@ app.get("/admin/machines", isAdmin, async function (req, res) {
     const machineglobale = machines.filter(
       (machine) => machine.type === "tournage/fraisage",
     );
+    
+    const machineautre = machines.filter(
+      (machine) => machine.type === "autre",
+    );
 
     const successMessage =
       req.query.success === "add"
@@ -454,6 +463,7 @@ app.get("/admin/machines", isAdmin, async function (req, res) {
       machinefraiser,
       machineglobale,
       successMessage,
+      machineautre: machineautre,
     });
   } catch (err) {
     console.error(err);
