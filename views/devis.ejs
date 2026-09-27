@@ -1,5 +1,42 @@
 <%# Request (devis) form %> <%- include("header") %>
 
+<style>
+  .devis-fieldset-disabled {
+    opacity: 0.5;
+    filter: grayscale(40%);
+    pointer-events: none;
+  }
+</style>
+
+
+<% if (role === "admin") { %>
+  <div class="admin-devis-toggle" style="max-width: 900px; margin: 20px auto; padding: 16px 20px; background: #eef3fb; border: 1px solid #c7d7f0; border-radius: 12px; display:flex; align-items:center; justify-content: space-between; gap:16px; flex-wrap: wrap;">
+    <div>
+      <strong>Gestion des demandes de devis</strong>
+      <p style="margin:4px 0 0; color:#475569; font-size:0.9rem;">
+        Statut actuel :
+        <span style="font-weight:700; color: <%= devisActif ? '#16a34a' : '#dc2626' %>;">
+          <%= devisActif ? "Formulaire actif" : "Formulaire bloqué" %>
+        </span>
+      </p>
+    </div>
+    <form method="POST" action="/admin/toggle-devis">
+      <button type="submit" style="padding:10px 18px; border-radius: 8px; border:none; cursor:pointer; font-weight:600; background: <%= devisActif ? '#dc2626' : '#16a34a' %>; color:#fff;">
+        <%= devisActif ? "Bloquer les demandes" : "Réactiver les demandes" %>
+      </button>
+    </form>
+  </div>
+<% } %>
+
+<% if (!devisActif && role !== "admin") { %>
+  <div class="devis-disabled-warning" style="max-width: 900px; margin: 20px auto; padding: 16px 20px; background:#fef3c7; border-left:4px solid #f59e0b; border-radius:8px;">
+    <p style="margin:0; color:#78350f; font-weight:600;">⚠️ Les demandes de devis sont temporairement suspendues.</p>
+    <p style="margin:4px 0 0; color:#78350f; font-size:0.9rem;">
+      Merci de réessayer ultérieurement, ou contactez-nous directement via notre page de <a href="/contact">contact</a>.
+    </p>
+  </div>
+<% } %>
+
 <!-- Modal Captcha -->
 <div class="captcha-modal-overlay" id="captcha-modal" aria-hidden="true">
   <div class="captcha-modal" role="dialog" aria-modal="true" aria-labelledby="captcha-modal-title">
@@ -32,7 +69,7 @@
       <h1>Vous voulez un devis ? <span>Nous nous en occupons.</span></h1>
       <p class="devis-hero-text">
         Vous avez un projet d"usinage complexe ou une pièce spécifique à
-        réaliser ? Transmettez-nous vos plans. Nous analysons vos besoins
+        réaliser ? Transmettez-nous vos plans. Nous analyserons vos besoins
         techniques avec précision.
       </p>
     </div>
@@ -54,447 +91,454 @@
         method="post"
         enctype="multipart/form-data"
       >
-        <section class="form-step active" id="step-1">
-          <h2>Renseignez vos <span>informations</span></h2>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="username">Nom complet *</label>
-              <input type="text" id="username" name="nom" placeholder="Votre nom" required />
+        <fieldset
+          style="border:none; padding:0; margin:0;"
+          <% if (!devisActif && role !== "admin") { %>
+            disabled class="devis-fieldset-disabled"
+          <% } %>
+        >
+          <section class="form-step active" id="step-1">
+            <h2>Renseignez vos <span>informations</span></h2>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="username">Nom complet *</label>
+                <input type="text" id="username" name="nom" placeholder="Votre nom" required />
+              </div>
+              <div class="form-group">
+                <label for="entreprise">Nom de l'entreprise *</label>
+                <input type="text" id="entreprise" name="entreprise" placeholder="Société" required />
+              </div>
             </div>
-            <div class="form-group">
-              <label for="entreprise">Nom de l'entreprise *</label>
-              <input type="text" id="entreprise" name="entreprise" placeholder="Société" required />
+            <div class="form-row">
+              <div class="form-group">
+                <label for="mail">Adresse email *</label>
+                <input
+                  type="email"
+                  name="email"
+                  id="mail"
+                  placeholder="votre@email.com"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="phone">Téléphone *</label>
+                <input type="tel" id="phone" name="telephone" placeholder="06 .. .. .. .." required/>
+              </div>
             </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="mail">Adresse email *</label>
-              <input
-                type="email"
-                name="email"
-                id="mail"
-                placeholder="votre@email.com"
-                required
-              />
+            <div class="nav-btns mobile-only">
+              <button type="button" class="btn-next" onclick="nextStep(2)">
+                Suivant →
+              </button>
             </div>
-            <div class="form-group">
-              <label for="phone">Téléphone *</label>
-              <input type="tel" id="phone" name="telephone" placeholder="06 .. .. .. .." required/>
-            </div>
-          </div>
-          <div class="nav-btns mobile-only">
-            <button type="button" class="btn-next" onclick="nextStep(2)">
-              Suivant →
-            </button>
-          </div>
-        </section>
+          </section>
 
-        <section class="form-step" id="step-2">
-          <button
-            type="button"
-            class="btn-back mobile-only"
-            onclick="nextStep(1)"
-          >
-            ← Retourner en arrière
-          </button>
-          <h2>Détails du <span>produit</span></h2>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="name">Nom du produit *</label>
-              <input
-                type="text"
-                name="produit"
-                id="name"
-                placeholder="Ex: Engrenage"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="matiere">Matière souhaitée</label>
-              <input
-                type="text"
-                name="matiere"
-                id="matiere"
-                placeholder="Ex: Acier, Alu..."
-              />
-              <input type="hidden" name="matiere_fourniture" id="matiere-fourniture-hidden" value="" />
-              <span id="matiere-fourniture-label" style="color: #64748b; font-size: 0.9rem; display: block; margin-top: 4px;">Fournisseur matière : <strong>À définir</strong></span>
-            </div>
-             <!-- Modale fourniture matière -->
-              <div class="matiere-modal-overlay" id="matiere-modal" aria-hidden="true">
-                <div class="matiere-modal" role="dialog" aria-modal="true" aria-labelledby="matiere-modal-title">
-                  <h3 id="matiere-modal-title">Fourniture de la matière</h3>
-                  <p>Concernant la matière <strong id="matiere-modal-nom"></strong>, qui la fournit ?</p>
-                  <div class="matiere-modal-actions">
-                    <button type="button" id="matiere-client">✔ Je la fournis moi-même</button>
-                    <button type="button" id="matiere-entreprise" class="btn-matiere-highlight">✔ MECA-CN la fournit</button>
+          <section class="form-step" id="step-2">
+            <button
+              type="button"
+              class="btn-back mobile-only"
+              onclick="nextStep(1)"
+            >
+              ← Retourner en arrière
+            </button>
+            <h2>Détails du <span>produit</span></h2>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Nom du produit *</label>
+                <input
+                  type="text"
+                  name="produit"
+                  id="name"
+                  placeholder="Ex: Engrenage"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="matiere">Matière souhaitée</label>
+                <input
+                  type="text"
+                  name="matiere"
+                  id="matiere"
+                  placeholder="Ex: Acier, Alu..."
+                />
+                <input type="hidden" name="matiere_fourniture" id="matiere-fourniture-hidden" value="" />
+                <span id="matiere-fourniture-label" style="color: #64748b; font-size: 0.9rem; display: block; margin-top: 4px;">Fournisseur matière : <strong>À définir</strong></span>
+              </div>
+              <!-- Modale fourniture matière -->
+                <div class="matiere-modal-overlay" id="matiere-modal" aria-hidden="true">
+                  <div class="matiere-modal" role="dialog" aria-modal="true" aria-labelledby="matiere-modal-title">
+                    <h3 id="matiere-modal-title">Fourniture de la matière</h3>
+                    <p>Concernant la matière <strong id="matiere-modal-nom"></strong>, qui la fournit ?</p>
+                    <div class="matiere-modal-actions">
+                      <button type="button" id="matiere-client">✔ Je la fournis moi-même</button>
+                      <button type="button" id="matiere-entreprise" class="btn-matiere-highlight">✔ MECA-CN la fournit</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-          </div>
-          <div class="nav-btns mobile-only">
-            <button type="button" class="btn-next" onclick="nextStep(3)">
-              Suivant →
-            </button>
-          </div>
-        </section>
-
-        <section class="form-step" id="step-3">
-          <button
-            type="button"
-            class="btn-back mobile-only"
-            onclick="nextStep(2)"
-          >
-            ← Retourner en arrière
-          </button>
-          <h2>Quantité et <span>délais</span></h2>
-
-          <div class="form-group" style="margin-bottom: 24px">
-            <label for="qte">Quantité demandée *</label>
-            <input
-              type="number"
-              name="quantite"
-              id="qte"
-              min="1"
-              placeholder="Nombre de pièces"
-              required
-            />
-          </div>
-
-
-          <div class="form-group" style="margin-bottom : 24px;">
-            <label for="type_usinage">Procédé souhaité </label>
-            <em style="font-weight:400; color:#64748B; margin:-5px; font-size:0.8rem;">(optionnel)</em> 
-            <select name="type_usinage" id="type_usinage" class="procece-form">
-              <option claue="" selected>Je ne sais pas</option>
-              <option value="fraisage">Fraisage</option>
-              <option value="tournage">Tournage</option>
-              <option value="les_deux">Les deux</option>
-            </select>
-
-            <p class="usinage-savoir-plus"><em>Pour en savoir plus sur ce que sont le tournage et le fraisage, <a href="/usinage">cliquez ici</a></em></p>
-         </div>
-
-         <!-- ========== Dimensions tournage =========== -->
-        <div id="dims-tournage" class="form-row dims-group" style="margin-bottom: 24px; display:none; flex-wrap:wrap;">
-          <div class="form-group">
-            <label for="longueur">Longueur *</label>
-            <div class="input-unit-group">
-              <input type="number" id="longueur" name="display_longueur" min="0.01" step="0.01" placeholder="Long." />
-              <select class="unit-selector" id="unit_longueur" aria-label="Unité de la longueur de la pièce">
-                <option value="mm">mm</option>
-                <option value="cm">cm</option>
-                <option value="dm">dm</option>
-              </select>
             </div>
-            <input type="hidden" name="longueur" />
-          </div>
-          <div class="form-group">
-            <label for="diametre">Diamètre *</label>
-            <div class="input-unit-group">
-              <input type="number" id="diametre" name="display_diametre" min="0.01" step="0.01" placeholder="Diamètre" />
-              <select class="unit-selector" id="unit_diametre" aria-label="Unité du diamètre de la pièce">
-                <option value="mm">mm</option>
-                <option value="cm">cm</option>
-                <option value="dm">dm</option>
-              </select>
-            </div>
-            <input type="hidden" name="diametre" />
-          </div>
-        </div>
-
-        <!-- ========== Dimensions fraisage ========== -->
-        <div id="dims-fraisage" class="form-row dims-group" style="margin-bottom: 24px; display:none; flex-wrap:wrap;">
-
-          <div class="form-group">
-            <div class="tooltip-holder">
-              <label for="dim_x">Dimension X *</label>
-              <span class="tooltip-wrap">
-                <span class="tooltip-icon">?</span>
-                <span class="tooltip-bubble">Longueur de la pièce (axe horizontal principal)</span>
-              </span>
-            </div>
-            <div class="input-unit-group">
-              <input type="number" id="dim_x" name="display_dim_x" min="0.01" step="0.01" placeholder="Long." />
-              <select class="unit-selector" id="unit_x" aria-label="Unité de la dimension X">
-                <option value="mm">mm</option>
-                <option value="cm">cm</option>
-                <option value="dm">dm</option>
-              </select>
-            </div>
-            <input type="hidden" name="dim_x" />
-          </div>
-
-          <div class="form-group">
-            <div class="tooltip-holder">
-              <label for="dim_y">Dimension Y *</label>
-              <span class="tooltip-wrap">
-                <span class="tooltip-icon">?</span>
-                <span class="tooltip-bubble">Largeur de la pièce (axe horizontal secondaire)</span>
-              </span>
-            </div>
-            <div class="input-unit-group">
-              <input type="number" id="dim_y" name="display_dim_y" min="0.01" step="0.01" placeholder="Larg." />
-              <select class="unit-selector" id="unit_y" aria-label="Unité de la dimension Y">
-                <option value="mm">mm</option>
-                <option value="cm">cm</option>
-                <option value="dm">dm</option>
-              </select>
-            </div>
-            <input type="hidden" name="dim_y" />
-          </div>
-
-          <div class="form-group">
-            <div class="tooltip-holder">
-              <label for="dim_z">Dimension Z *</label>
-              <span class="tooltip-wrap">
-                <span class="tooltip-icon">?</span>
-                <span class="tooltip-bubble">Hauteur de la pièce (axe vertical)</span>
-              </span>
-            </div>
-            <div class="input-unit-group">
-              <input type="number" id="dim_z" name="display_dim_z" min="0.01" step="0.01" placeholder="Haut." />
-              <select class="unit-selector" id="unit_z" aria-label="Unité de la dimension Z">
-                <option value="mm">mm</option>
-                <option value="cm">cm</option>
-                <option value="dm">dm</option>
-              </select>
-            </div>
-            <input type="hidden" name="dim_z" />
-          </div>
-        </div>
-
-          <label for="date_livraison_input">Choisissez une date de livraison souhaitée *</label>
-          <div class="elegant-calencar">
-            <input
-              type="hidden"
-              name="date_livraison"
-              id="date_livraison_input"
-              required
-            />
-
-            <div id="calendar-header-box" class="clearfix">
-              <div class="pre-button">←</div>
-              <div class="head-info">
-                <div class="head-day"></div>
-                <div class="head-month"></div>
-              </div>
-              <div class="next-button">→</div>
-            </div>
-            <table id="calendar">
-              <thead>
-                <tr>
-                  <th>Lun</th>
-                  <th>Mar</th>
-                  <th>Mer</th>
-                  <th>Jeu</th>
-                  <th>Ven</th>
-                  <th>Sam</th>
-                  <th>Dim</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="nav-btns mobile-only">
-            <button type="button" class="btn-next" onclick="nextStep(4)">
-              Suivant →
-            </button>
-          </div>
-        </section>
-
-        <section class="form-step" id="step-4">
-          <button
-            type="button"
-            class="btn-back mobile-only"
-            onclick="nextStep(3)"
-          >
-            ← Retourner en arrière
-          </button>
-          <h2>Plans et <span>fichiers</span></h2>
-          <div class="upload-box">
-            <div class="upload-icon">⇪</div>
-            <label for="fichiers-input">
-              <p>Glissez-déposez vos plans</p>
-            </label>
-            <span>Fichiers 3D, PDF, images...</span>
-            <button type="button" class="upload-button">
-              Chercher un/des fichiers
-            </button>
-            <input type="file" name="fichiers" multiple id="fichiers-input" />
-          </div>
-          <p class="upload-restrictions">
-            Les fichiers compressés (ZIP) ne sont pas acceptés. <br />Taille
-            maximale par fichier : 15 Mo. <br />Taille totale maximale : 30 Mo.
-            <small><br><br>Si vous possèdez des fichiers de plus de 30 Mo, nous vous conseillons <br>de les transformer en <a href="/aide">lien Google Drive</a> et de renseigner ce lien <br>dans la section "Informations Complémentaires".</small>
-          </p>
-          <br />
-          <div class="upload-files-preview" id="upload-files-preview">
-            <p class="upload-files-empty">Aucun fichier sélectionné.</p>
-          </div>
-          <!-- Avertissement fichier volumineux -->
-          <div id="google-drive-warning" class="google-drive-warning" style="display: none; margin-top: 16px; padding: 12px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px;">
-            <p style="margin: 0; color: #78350f; font-size: 14px;"><strong>⚠️ Fichier volumineux détecté</strong><br>
-            <span id="google-drive-warning-text" style="display: block; margin-top: 4px;"></span></p>
-          </div>
-          <div class="nav-btns mobile-only">
-            <button type="button" class="btn-next" onclick="nextStep(5)">
-              Suivant →
-            </button>
-          </div>
-        </section>
-
-        <div
-          class="confirm-modal-overlay"
-          id="confirm-modal"
-          aria-hidden="true"
-        >
-          <div
-            class="confirm-modal modality-office"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="confirm-modal-title"
-          >
-            <h3 id="confirm-modal-title">Confirmer la suppression</h3>
-            <p>Êtes-vous sûr de vouloir supprimer ce fichier ?</p>
-            <div class="confirm-modal-actions">
-              <button type="button" class="btn-modal-cancel" id="cancel-remove">
-                Annuler
-              </button>
-              <button
-                type="button"
-                class="btn-modal-confirm"
-                id="confirm-remove"
-              >
-                Supprimer
+            <div class="nav-btns mobile-only">
+              <button type="button" class="btn-next" onclick="nextStep(3)">
+                Suivant →
               </button>
             </div>
-          </div>
-        </div>
+          </section>
 
-        <div class="error-modal-overlay" id="error-modal" aria-hidden="true">
-          <div
-            class="error-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="error-modal-title"
-          >
-            <h3 id="error-modal-title">Dimensions incompatibles</h3>
-            <p id="error-modal-message">
-              Les dimensions de votre pièce dépassent les capacités de nos
-              machines.
+          <section class="form-step" id="step-3">
+            <button
+              type="button"
+              class="btn-back mobile-only"
+              onclick="nextStep(2)"
+            >
+              ← Retourner en arrière
+            </button>
+            <h2>Quantité et <span>délais</span></h2>
+
+            <div class="form-group" style="margin-bottom: 24px">
+              <label for="qte">Quantité demandée *</label>
+              <input
+                type="number"
+                name="quantite"
+                id="qte"
+                min="1"
+                placeholder="Nombre de pièces"
+                required
+              />
+            </div>
+
+
+            <div class="form-group" style="margin-bottom : 24px;">
+              <label for="type_usinage">Procédé souhaité </label>
+              <em style="font-weight:400; color:#64748B; margin:-5px; font-size:0.8rem;">(optionnel)</em> 
+              <select name="type_usinage" id="type_usinage" class="procece-form">
+                <option claue="" selected>Je ne sais pas</option>
+                <option value="fraisage">Fraisage</option>
+                <option value="tournage">Tournage</option>
+                <option value="les_deux">Les deux</option>
+              </select>
+
+              <p class="usinage-savoir-plus"><em>Pour en savoir plus sur ce que sont le tournage et le fraisage, <a href="/usinage">cliquez ici</a></em></p>
+          </div>
+
+          <!-- ========== Dimensions tournage =========== -->
+          <div id="dims-tournage" class="form-row dims-group" style="margin-bottom: 24px; display:none; flex-wrap:wrap;">
+            <div class="form-group">
+              <label for="longueur">Longueur *</label>
+              <div class="input-unit-group">
+                <input type="number" id="longueur" name="display_longueur" min="0.01" step="0.01" placeholder="Long." />
+                <select class="unit-selector" id="unit_longueur" aria-label="Unité de la longueur de la pièce">
+                  <option value="mm">mm</option>
+                  <option value="cm">cm</option>
+                  <option value="dm">dm</option>
+                </select>
+              </div>
+              <input type="hidden" name="longueur" />
+            </div>
+            <div class="form-group">
+              <label for="diametre">Diamètre *</label>
+              <div class="input-unit-group">
+                <input type="number" id="diametre" name="display_diametre" min="0.01" step="0.01" placeholder="Diamètre" />
+                <select class="unit-selector" id="unit_diametre" aria-label="Unité du diamètre de la pièce">
+                  <option value="mm">mm</option>
+                  <option value="cm">cm</option>
+                  <option value="dm">dm</option>
+                </select>
+              </div>
+              <input type="hidden" name="diametre" />
+            </div>
+          </div>
+
+          <!-- ========== Dimensions fraisage ========== -->
+          <div id="dims-fraisage" class="form-row dims-group" style="margin-bottom: 24px; display:none; flex-wrap:wrap;">
+
+            <div class="form-group">
+              <div class="tooltip-holder">
+                <label for="dim_x">Dimension X *</label>
+                <span class="tooltip-wrap">
+                  <span class="tooltip-icon">?</span>
+                  <span class="tooltip-bubble">Longueur de la pièce (axe horizontal principal)</span>
+                </span>
+              </div>
+              <div class="input-unit-group">
+                <input type="number" id="dim_x" name="display_dim_x" min="0.01" step="0.01" placeholder="Long." />
+                <select class="unit-selector" id="unit_x" aria-label="Unité de la dimension X">
+                  <option value="mm">mm</option>
+                  <option value="cm">cm</option>
+                  <option value="dm">dm</option>
+                </select>
+              </div>
+              <input type="hidden" name="dim_x" />
+            </div>
+
+            <div class="form-group">
+              <div class="tooltip-holder">
+                <label for="dim_y">Dimension Y *</label>
+                <span class="tooltip-wrap">
+                  <span class="tooltip-icon">?</span>
+                  <span class="tooltip-bubble">Largeur de la pièce (axe horizontal secondaire)</span>
+                </span>
+              </div>
+              <div class="input-unit-group">
+                <input type="number" id="dim_y" name="display_dim_y" min="0.01" step="0.01" placeholder="Larg." />
+                <select class="unit-selector" id="unit_y" aria-label="Unité de la dimension Y">
+                  <option value="mm">mm</option>
+                  <option value="cm">cm</option>
+                  <option value="dm">dm</option>
+                </select>
+              </div>
+              <input type="hidden" name="dim_y" />
+            </div>
+
+            <div class="form-group">
+              <div class="tooltip-holder">
+                <label for="dim_z">Dimension Z *</label>
+                <span class="tooltip-wrap">
+                  <span class="tooltip-icon">?</span>
+                  <span class="tooltip-bubble">Hauteur de la pièce (axe vertical)</span>
+                </span>
+              </div>
+              <div class="input-unit-group">
+                <input type="number" id="dim_z" name="display_dim_z" min="0.01" step="0.01" placeholder="Haut." />
+                <select class="unit-selector" id="unit_z" aria-label="Unité de la dimension Z">
+                  <option value="mm">mm</option>
+                  <option value="cm">cm</option>
+                  <option value="dm">dm</option>
+                </select>
+              </div>
+              <input type="hidden" name="dim_z" />
+            </div>
+          </div>
+
+            <label for="date_livraison_input">Choisissez une date de livraison souhaitée *</label>
+            <div class="elegant-calencar">
+              <input
+                type="hidden"
+                name="date_livraison"
+                id="date_livraison_input"
+                required
+              />
+
+              <div id="calendar-header-box" class="clearfix">
+                <div class="pre-button">←</div>
+                <div class="head-info">
+                  <div class="head-day"></div>
+                  <div class="head-month"></div>
+                </div>
+                <div class="next-button">→</div>
+              </div>
+              <table id="calendar">
+                <thead>
+                  <tr>
+                    <th>Lun</th>
+                    <th>Mar</th>
+                    <th>Mer</th>
+                    <th>Jeu</th>
+                    <th>Ven</th>
+                    <th>Sam</th>
+                    <th>Dim</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="nav-btns mobile-only">
+              <button type="button" class="btn-next" onclick="nextStep(4)">
+                Suivant →
+              </button>
+            </div>
+          </section>
+
+          <section class="form-step" id="step-4">
+            <button
+              type="button"
+              class="btn-back mobile-only"
+              onclick="nextStep(3)"
+            >
+              ← Retourner en arrière
+            </button>
+            <h2>Plans et <span>fichiers</span></h2>
+            <div class="upload-box">
+              <div class="upload-icon">⇪</div>
+              <label for="fichiers-input">
+                <p>Glissez-déposez vos plans</p>
+              </label>
+              <span>Fichiers 3D, PDF, images...</span>
+              <button type="button" class="upload-button">
+                Chercher un/des fichiers
+              </button>
+              <input type="file" name="fichiers" multiple id="fichiers-input" />
+            </div>
+            <p class="upload-restrictions">
+              Les fichiers compressés (ZIP) ne sont pas acceptés. <br />Taille
+              maximale par fichier : 15 Mo. <br />Taille totale maximale : 30 Mo.
+              <small><br><br>Si vous possèdez des fichiers de plus de 30 Mo, nous vous conseillons <br>de les transformer en <a href="/aide">lien Google Drive</a> et de renseigner ce lien <br>dans la section "Informations Complémentaires".</small>
             </p>
-            <div class="error-modal-actions">
-              <button type="button" class="btn-modal-ok" id="close-error-modal">
-                Compris
+            <br />
+            <div class="upload-files-preview" id="upload-files-preview">
+              <p class="upload-files-empty">Aucun fichier sélectionné.</p>
+            </div>
+            <!-- Avertissement fichier volumineux -->
+            <div id="google-drive-warning" class="google-drive-warning" style="display: none; margin-top: 16px; padding: 12px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px;">
+              <p style="margin: 0; color: #78350f; font-size: 14px;"><strong>⚠️ Fichier volumineux détecté</strong><br>
+              <span id="google-drive-warning-text" style="display: block; margin-top: 4px;"></span></p>
+            </div>
+            <div class="nav-btns mobile-only">
+              <button type="button" class="btn-next" onclick="nextStep(5)">
+                Suivant →
               </button>
             </div>
-          </div>
-        </div>
+          </section>
 
-        <section class="form-step" id="step-5">
-          <button
-            type="button"
-            class="btn-back mobile-only"
-            onclick="nextStep(4)"
+          <div
+            class="confirm-modal-overlay"
+            id="confirm-modal"
+            aria-hidden="true"
           >
-            ← Retourner en arrière
-          </button>
-          <h2>Description <span>complémentaire</span></h2>
-          <!-- Note pour fichiers volumineux -->
-          <div id="step5-google-drive-note" style="display: none; margin-bottom: 20px; padding: 12px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px;">
-            <p style="margin: 0; color: #78350f; font-size: 14px;"><strong>📎 Fichier volumineux</strong><br>
-            Vous avez téléchargé un fichier volumineux. Pour améliorer la transmission, vous pouvez <strong>renseigner le lien Google Drive</strong> ci-dessous (optionnel).</p>
+            <div
+              class="confirm-modal modality-office"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="confirm-modal-title"
+            >
+              <h3 id="confirm-modal-title">Confirmer la suppression</h3>
+              <p>Êtes-vous sûr de vouloir supprimer ce fichier ?</p>
+              <div class="confirm-modal-actions">
+                <button type="button" class="btn-modal-cancel" id="cancel-remove">
+                  Annuler
+                </button>
+                <button
+                  type="button"
+                  class="btn-modal-confirm"
+                  id="confirm-remove"
+                >
+                  Supprimer
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="form-group full">
-            <label for="description">Avez-vous d'autres informations ?</label>
-            <textarea
-              name="description"
-              rows="6"
-              id="description"
-              placeholder="Précisions techniques, finitions... Lien Google Drive si fichier volumineux (ex: https://drive.google.com/file/d/...)"
-              maxlength="8192"
-            ></textarea>
+
+          <div class="error-modal-overlay" id="error-modal" aria-hidden="true">
+            <div
+              class="error-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="error-modal-title"
+            >
+              <h3 id="error-modal-title">Dimensions incompatibles</h3>
+              <p id="error-modal-message">
+                Les dimensions de votre pièce dépassent les capacités de nos
+                machines.
+              </p>
+              <div class="error-modal-actions">
+                <button type="button" class="btn-modal-ok" id="close-error-modal">
+                  Compris
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="nav-btns mobile-only">
-            <button type="button" class="btn-next" onclick="nextStep(6)">
-              Voir le récapitulatif →
+
+          <section class="form-step" id="step-5">
+            <button
+              type="button"
+              class="btn-back mobile-only"
+              onclick="nextStep(4)"
+            >
+              ← Retourner en arrière
             </button>
-          </div>
-        </section>
+            <h2>Description <span>complémentaire</span></h2>
+            <!-- Note pour fichiers volumineux -->
+            <div id="step5-google-drive-note" style="display: none; margin-bottom: 20px; padding: 12px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px;">
+              <p style="margin: 0; color: #78350f; font-size: 14px;"><strong>📎 Fichier volumineux</strong><br>
+              Vous avez téléchargé un fichier volumineux. Pour améliorer la transmission, vous pouvez <strong>renseigner le lien Google Drive</strong> ci-dessous (optionnel).</p>
+            </div>
+            <div class="form-group full">
+              <label for="description">Avez-vous d'autres informations ?</label>
+              <textarea
+                name="description"
+                rows="6"
+                id="description"
+                placeholder="Précisions techniques, finitions... Lien Google Drive si fichier volumineux (ex: https://drive.google.com/file/d/...)"
+                maxlength="8192"
+              ></textarea>
+            </div>
+            <div class="nav-btns mobile-only">
+              <button type="button" class="btn-next" onclick="nextStep(6)">
+                Voir le récapitulatif →
+              </button>
+            </div>
+          </section>
 
-        <section class="form-step" id="step-6">
-          <button
-            type="button"
-            class="btn-back mobile-only"
-            onclick="nextStep(5)"
-          >
-            ← Modifier mes informations
-          </button>
-          <h2 class="pc-hidden">Validez vos <span>données</span></h2>
+          <section class="form-step" id="step-6">
+            <button
+              type="button"
+              class="btn-back mobile-only"
+              onclick="nextStep(5)"
+            >
+              ← Modifier mes informations
+            </button>
+            <h2 class="pc-hidden">Validez vos <span>données</span></h2>
 
-          <div id="recap-display" class="recap-box pc-hidden"></div>
+            <div id="recap-display" class="recap-box pc-hidden"></div>
 
-          <button type="submit" class="devis-submit">
-            Envoyer la demande définitive
-          </button>
-        </section>
+            <button type="submit" class="devis-submit">
+              Envoyer la demande définitive
+            </button>
+          </section>
+        </fieldset>
       </form>
     </div>
   </section>

@@ -95,7 +95,7 @@
 
 .timeline-event.left {
     left: 0;
-    text-align: right;
+    text-align: left;
 }
 
 .timeline-event.right {
@@ -125,7 +125,7 @@
 .timeline-card {
     display: inline-block;
     max-width: 460px;
-    padding: 28px 26px;
+    padding: 28px 30px;
     background: #ffffff;
     border-radius: 24px;
     box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
@@ -152,6 +152,7 @@
     margin: 0;
     color: #475569;
     line-height: 1.8;
+    font-size: 0.97rem;
 }
 
 .adaptabilite-holder {
@@ -160,7 +161,7 @@
     padding: 0 24px;
     display:flex;
     flex-direction:column;
-    gap:50px;
+    gap:25px;
 }
 
 .adaptabilite-holder h2 {
@@ -171,7 +172,7 @@
 
 .adaptabilite-holder p {
     margin: 0 0 28px;
-    max-width: 820px;
+    max-width: 85%;
     color: #475569;
     line-height: 1.9;
     font-size: 1rem;

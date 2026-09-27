@@ -118,6 +118,11 @@ const globalStorage = multer({storage: storageGlobal})
 
 
 
+// CONFIG data.json
+const dataJsonPath = path.join(__dirname, "data.json");
+
+
+
 
 //ANCHOR: Configuration express
 // Settings d'express
@@ -237,6 +242,29 @@ async function compressImage(req, res, next){
     res.status(500).send("Erreur compression");
   }
 };
+
+
+//ANCHOR: Lecture de l'état des devis
+function readDevisStatus() {
+  try {
+    const raw = fs.readFileSync(dataJsonPath, "utf-8");
+    const data = JSON.parse(raw);
+    return data.devis === 0 ? 0 : 1; // sécurité : tout ce qui n'est pas 0 => actif
+  } catch (err) {
+    console.error("Erreur lecture data.json :", err);
+    return 1; // en cas de souci, on laisse le formulaire actif par défaut
+  }
+}
+
+
+//ANCHOR: Modification de l'état des devis
+function writeDevisStatus(value) {
+  try {
+    fs.writeFileSync(dataJsonPath, JSON.stringify({ devis: value }, null, 2));
+  } catch (err) {
+    console.error("Erreur écriture data.json :", err);
+  }
+}
 
 
 
@@ -511,9 +539,7 @@ app.get("/devis", async function (req, res) {
     const [dimensions] = await pool.query(
       "SELECT MAX(d_x) as max_x, MAX(d_y) as max_y, MAX(d_z) as max_z, MAX(longueur_max) as max_longueur, MAX(diametre_max) as max_diametre, MAX(alesage) as max_alesage FROM machines",
     );
-    // console.log(dimensions[0]);
 
-    // Générer une question math aléatoire
     const a = Math.floor(Math.random() * 10) + 1;
     const b = Math.floor(Math.random() * 10) + 1;
     const ops = [
@@ -523,29 +549,26 @@ app.get("/devis", async function (req, res) {
     ];
     const op = ops[Math.floor(Math.random() * ops.length)];
     const devis_pre = "devis";
-    //console.log(req.session.role)
 
-    // Stocker la réponse en session (jamais exposée au client)
     req.session.devisCaptchaAnswer = op.answer;
+
+    const devisActif = readDevisStatus(); // ← AJOUT
 
     res.render("devis", {
       page_css1: "headerclient.css",
       page_css2: "devis.css",
       maxDimensions: dimensions[0],
       role: req.session.role,
-      captchaQuestion: op.label, // ex: "7 + 3"
+      captchaQuestion: op.label,
       page_devis: devis_pre,
-      meta_description: `
-        MECA-CN fabrique des pièces mécaniques de haute qualité en 
-        respectant vos délais et contraintes. Contactez-nous pour vos projets d’usinage.
-      `
+      devisActif: devisActif, // ← AJOUT
+      meta_description: `...`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send("Erreur serveur");
   }
 });
-
 
 //ANCHOR:  Page de contact
 /*
@@ -3130,6 +3153,21 @@ Limitation Multer à 10 fichiers (uploadProduits.array("fichiers", 10)) pour év
  */
 app.post("/envoyer-devis", uploadProduits.array("fichiers", 10) , async (req, res) => {
     try {
+
+      if (readDevisStatus() !== 1) {
+        if (req.files && req.files.length > 0) {
+          req.files.forEach((file) => {
+            fs.unlink(file.path, () => {});
+          });
+        }
+        return res.render("confirmation_devis", {
+          success: false,
+          message: "Les demandes de devis sont actuellement suspendues. Merci de réessayer plus tard.",
+          page_css1: "headerclient.css",
+          page_css2: "devis.css",
+        });
+      }
+      
       // Captcha
       const userAnswer = parseInt(req.body.captcha_answer, 10);
       const expectedAnswer = req.session.devisCaptchaAnswer;
@@ -3914,7 +3952,18 @@ function buildResetEmail(code) {
 
 
 
-
+//ANCHOR: Activation / désactivation des demandes de devis (admin)
+app.post("/admin/toggle-devis", isAdmin, async function (req, res) {
+  try {
+    const statutActuel = readDevisStatus();
+    const nouveauStatut = statutActuel === 1 ? 0 : 1;
+    writeDevisStatus(nouveauStatut);
+    res.redirect("/devis");
+  } catch (err) {
+    console.error("Erreur toggle devis :", err);
+    res.status(500).send("Erreur serveur");
+  }
+});
 
 
 
@@ -3945,6 +3994,7 @@ Afin d'afficher ce bouton, voici le code à insérer :
 À SUPPRIMER JUSTE AVANT LA MISE EN LIGNE SUR LE SERVEUR
 ---
 */
+/*
 app.post("/connexionrapide", async function (req, res) {
   try {
     req.session.userID = 1;
@@ -3955,7 +4005,7 @@ app.post("/connexionrapide", async function (req, res) {
     res.status(500).send("Erreur serveur");
   }
 });
-
+*/
 
 
 
